@@ -29,7 +29,7 @@
     <widget class="QLineEdit" name="IPv4Address">
      <property name="geometry">
       <rect>
-       <x>70</x>
+       <x>100</x>
        <y>30</y>
        <width>101</width>
        <height>20</height>
@@ -38,14 +38,17 @@
      <property name="inputMask">
       <string>000.000.000.000;_</string>
      </property>
+     <property name="text">
+      <string>127.0.0.1</string>
+     </property>
     </widget>
     <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
-       <x>10</x>
+       <x>40</x>
        <y>20</y>
        <width>62</width>
-       <height>44</height>
+       <height>31</height>
       </rect>
      </property>
      <layout class="QFormLayout" name="formLayout">
@@ -74,6 +77,16 @@
       </item>
      </layout>
     </widget>
+    <widget class="QLineEdit" name="lineEdit">
+     <property name="geometry">
+      <rect>
+       <x>210</x>
+       <y>30</y>
+       <width>41</width>
+       <height>20</height>
+      </rect>
+     </property>
+    </widget>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -82,7 +95,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>18</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

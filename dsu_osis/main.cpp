@@ -14,5 +14,5 @@ int main(int argc, char *argv[])
 #if 0
 * Min windows size (do not hide basic GUI elements by resizing)
 * Use QSettings (ip-addr, mode, other parameters). Save/Restore
-
+* Create Icon
 #endif

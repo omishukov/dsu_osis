@@ -47,12 +47,12 @@
       <rect>
        <x>40</x>
        <y>20</y>
-       <width>62</width>
+       <width>56</width>
        <height>44</height>
       </rect>
      </property>
-     <layout class="QFormLayout" name="formLayout">
-      <item row="0" column="0">
+     <layout class="QVBoxLayout" name="verticalLayout">
+      <item>
        <widget class="QRadioButton" name="ClientRB">
         <property name="text">
          <string>client</string>
@@ -65,7 +65,7 @@
         </attribute>
        </widget>
       </item>
-      <item row="1" column="0">
+      <item>
        <widget class="QRadioButton" name="ServerRB">
         <property name="text">
          <string>server</string>
@@ -77,7 +77,7 @@
       </item>
      </layout>
     </widget>
-    <widget class="QLineEdit" name="lineEdit">
+    <widget class="QLineEdit" name="IPv4Port">
      <property name="geometry">
       <rect>
        <x>210</x>

@@ -16,12 +16,22 @@ public:
    ~MainWindow();
 
 private:
+   void loadConnectionSettings();
    void setIpValitation();
    void readSettings();
    void writeSettings();
 
 private:
    Ui::MainWindow *ui;
+   typedef enum
+   {
+      CLIENT,
+      SERVER
+   } ConnectAs;
+
+   ConnectAs ConnectionType;
+   QString IpAddress;
+   QString IpPort;
 };
 
 #endif // MAINWINDOW_H

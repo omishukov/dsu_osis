@@ -16,6 +16,11 @@ public:
    ~MainWindow();
 
 private:
+   void setIpValitation();
+   void readSettings();
+   void writeSettings();
+
+private:
    Ui::MainWindow *ui;
 };
 

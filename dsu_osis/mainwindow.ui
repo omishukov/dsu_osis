@@ -36,10 +36,10 @@
       </rect>
      </property>
      <property name="inputMask">
-      <string>000.000.000.000;_</string>
+      <string/>
      </property>
      <property name="text">
-      <string>127.0.0.1</string>
+      <string/>
      </property>
     </widget>
     <widget class="QWidget" name="layoutWidget">
@@ -48,7 +48,7 @@
        <x>40</x>
        <y>20</y>
        <width>62</width>
-       <height>31</height>
+       <height>44</height>
       </rect>
      </property>
      <layout class="QFormLayout" name="formLayout">
@@ -95,7 +95,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>21</height>
+     <height>18</height>
     </rect>
    </property>
   </widget>

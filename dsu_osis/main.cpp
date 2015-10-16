@@ -9,3 +9,10 @@ int main(int argc, char *argv[])
 
    return a.exec();
 }
+
+// Backlog
+#if 0
+* Min windows size (do not hide basic GUI elements by resizing)
+* Use QSettings (ip-addr, mode, other parameters). Save/Restore
+
+#endif

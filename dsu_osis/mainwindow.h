@@ -15,6 +15,9 @@ public:
    explicit MainWindow(QWidget *parent = 0);
    ~MainWindow();
 
+private slots:
+   void on_ClientRB_clicked();
+
 private:
    void loadConnectionSettings();
    void setIpValitation();

@@ -52,6 +52,8 @@ void MainWindow::loadConnectionSettings()
           }
       }
       ui->IPv4Address->setText(IpAddress);
+      ui->IPv4Address->setDisabled(true);
+      ui->ServerRB->setChecked(true);
    }
    ui->IPv4Port->setText(IpPort);
 }
@@ -98,4 +100,11 @@ void MainWindow::writeSettings()
    settings.setValue("size", size());
    settings.setValue("pos", pos());
    settings.endGroup();
+}
+
+void MainWindow::on_ClientRB_clicked()
+{
+   bool checked = ui->ClientRB->isChecked();
+   ConnectionType = CLIENT;
+
 }

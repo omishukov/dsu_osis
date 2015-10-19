@@ -18,6 +18,8 @@ public:
 private slots:
    void on_ClientRB_clicked();
 
+   void on_ServerRB_clicked();
+
 private:
    void loadConnectionSettings();
    void setIpValitation();

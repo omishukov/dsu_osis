@@ -40,18 +40,7 @@ void MainWindow::loadConnectionSettings()
    }
    else // SERVER
    {
-      // find out which IP to connect to
-      QList<QHostAddress> ipAddressesList = QNetworkInterface::allAddresses();
-      // use the first non-localhost IPv4 address
-      for (int i = 0; i < ipAddressesList.size(); ++i)
-      {
-         if (ipAddressesList.at(i) != QHostAddress::LocalHost && ipAddressesList.at(i).toIPv4Address())
-         {
-            IpAddress = ipAddressesList.at(i).toString();
-            break;
-          }
-      }
-      ui->IPv4Address->setText(IpAddress);
+      ui->IPv4Address->clear();
       ui->IPv4Address->setDisabled(true);
       ui->ServerRB->setChecked(true);
    }
@@ -104,7 +93,20 @@ void MainWindow::writeSettings()
 
 void MainWindow::on_ClientRB_clicked()
 {
-   bool checked = ui->ClientRB->isChecked();
-   ConnectionType = CLIENT;
+   if (ui->ClientRB->isChecked())
+   {
+      ConnectionType = CLIENT;
+      ui->IPv4Address->setText(IpAddress);
+      ui->IPv4Address->setDisabled(false);
+   }
+}
 
+void MainWindow::on_ServerRB_clicked()
+{
+   if (ui->ServerRB->isChecked())
+   {
+      ConnectionType = SERVER;
+      ui->IPv4Address->clear();
+      ui->IPv4Address->setDisabled(true);
+   }
 }

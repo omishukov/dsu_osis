@@ -14,9 +14,11 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp
+        mainwindow.cpp \
+    calcconnectionthread.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += mainwindow.h \
+    calcconnectionthread.h
 
 FORMS    += mainwindow.ui
 

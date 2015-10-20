@@ -16,9 +16,7 @@ public:
    ~MainWindow();
 
 private slots:
-   void on_ClientRB_clicked();
-
-   void on_ServerRB_clicked();
+   void on_ClientServerCB_activated(int index);
 
 private:
    void loadConnectionSettings();

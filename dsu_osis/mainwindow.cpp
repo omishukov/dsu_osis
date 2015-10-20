@@ -34,6 +34,11 @@ void MainWindow::loadConnectionSettings()
 {
    readSettings();
 
+   if (ui->ClientServerCB->currentIndex() != ConnectionType)
+   {
+      ui->ClientServerCB->setCurrentIndex(ConnectionType);
+   }
+
    if (ConnectionType == CLIENT)
    {
       ui->IPv4Address->setText(IpAddress);
@@ -42,7 +47,6 @@ void MainWindow::loadConnectionSettings()
    {
       ui->IPv4Address->clear();
       ui->IPv4Address->setDisabled(true);
-      ui->ServerRB->setChecked(true);
    }
    ui->IPv4Port->setText(IpPort);
 }
@@ -91,22 +95,23 @@ void MainWindow::writeSettings()
    settings.endGroup();
 }
 
-void MainWindow::on_ClientRB_clicked()
+void MainWindow::on_ClientServerCB_activated(int index)
 {
-   if (ui->ClientRB->isChecked())
+   if (index != ConnectionType)
    {
-      ConnectionType = CLIENT;
-      ui->IPv4Address->setText(IpAddress);
-      ui->IPv4Address->setDisabled(false);
-   }
-}
+      ConnectionType = ConnectAs(index);
 
-void MainWindow::on_ServerRB_clicked()
-{
-   if (ui->ServerRB->isChecked())
-   {
-      ConnectionType = SERVER;
-      ui->IPv4Address->clear();
-      ui->IPv4Address->setDisabled(true);
+      if (ConnectionType == CLIENT)
+      {
+         ConnectionType = CLIENT;
+         ui->IPv4Address->setText(IpAddress);
+         ui->IPv4Address->setDisabled(false);
+      }
+      else if (ConnectionType == SERVER)
+      {
+         ConnectionType = SERVER;
+         ui->IPv4Address->clear();
+         ui->IPv4Address->setDisabled(true);
+      }
    }
 }

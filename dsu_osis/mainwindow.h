@@ -18,8 +18,9 @@ public:
 
 private slots:
    void on_ClientServerCB_activated(int index);
-
    void on_ConnectButton_clicked();
+
+   void showConnecting();
 
 private:
    void loadConnectionSettings();

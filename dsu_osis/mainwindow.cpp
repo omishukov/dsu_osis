@@ -22,6 +22,8 @@ MainWindow::MainWindow(QWidget *parent) :
    setIpValitation();
 
    loadConnectionSettings();
+
+   connect(&OsisLink, SIGNAL(connecting()), this, SLOT(showConnecting()));
 }
 
 MainWindow::~MainWindow()
@@ -131,5 +133,17 @@ void MainWindow::on_ConnectButton_clicked()
 
       default:
          break;
+   }
+}
+
+void MainWindow::showConnecting()
+{
+   if(ui->ConnectionStatusLabel->isHidden())
+   {
+      ui->ConnectionStatusLabel->show();
+   }
+   else
+   {
+      ui->ConnectionStatusLabel->hide();
    }
 }

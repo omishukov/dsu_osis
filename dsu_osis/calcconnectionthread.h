@@ -9,6 +9,7 @@
 
 class CalcConnectionThread : public QThread
 {
+   Q_OBJECT
 public:
    CalcConnectionThread(QObject *parent = 0);
    ~CalcConnectionThread();
@@ -16,8 +17,11 @@ public:
     void establishConnection(const QString &hostName, quint16 port);
     void destroyConnection();
     void run() Q_DECL_OVERRIDE;
+    void runAsClient();
+    void runAsServer();
 
 signals:
+    void connecting();
 
 public slots:
     void connected();
@@ -31,7 +35,7 @@ private:
     bool quit;
     QString IpAddress;
     quint16 IpPort;
-    QTcpSocket OsisSocket;
+    QTcpSocket* OsisSocket;
     QMutex Mutex;
     QSemaphore WaitEvent;
 

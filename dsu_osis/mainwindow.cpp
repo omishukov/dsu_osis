@@ -23,7 +23,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
    loadConnectionSettings();
 
-   connect(&OsisLink, SIGNAL(connecting()), this, SLOT(showConnecting()));
+   connect(&OsisLink, SIGNAL(UpdateConnectionState()), this, SLOT(showConnectionState()));
 }
 
 MainWindow::~MainWindow()
@@ -120,9 +120,9 @@ void MainWindow::on_ClientServerCB_activated(int index)
 
 void MainWindow::on_ConnectButton_clicked()
 {
-   switch (ConnectionStatus)
+   switch (OsisLink.GetState())
    {
-      case DISCONNECTED:
+      case CalcConnectionThread::DISCONNECTED:
       {
          ui->ConnectionStatusLabel->setText("Connecting...");
          ui->ConnectButton->setText("Cancel");
@@ -136,14 +136,24 @@ void MainWindow::on_ConnectButton_clicked()
    }
 }
 
-void MainWindow::showConnecting()
+void MainWindow::showConnectionState()
 {
-   if(ui->ConnectionStatusLabel->isHidden())
+   switch(OsisLink.GetState())
    {
-      ui->ConnectionStatusLabel->show();
+      case CalcConnectionThread::CONNECTING:
+         {
+            if(ui->ConnectionStatusLabel->isHidden())
+            {
+               ui->ConnectionStatusLabel->show();
+            }
+            else
+            {
+               ui->ConnectionStatusLabel->hide();
+            }
+         }
+         break;
+      default:
+         break;
    }
-   else
-   {
-      ui->ConnectionStatusLabel->hide();
-   }
+
 }

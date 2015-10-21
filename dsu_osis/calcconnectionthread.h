@@ -14,19 +14,28 @@ public:
    CalcConnectionThread(QObject *parent = 0);
    ~CalcConnectionThread();
 
-    void establishConnection(const QString &hostName, quint16 port);
+   typedef enum
+   {
+      DISCONNECTED,
+      CONNECTING,
+      CONNECTED
+   } ConnectState;
+
+   void establishConnection(const QString &hostName, quint16 port);
     void destroyConnection();
     void run() Q_DECL_OVERRIDE;
     void runAsClient();
     void runAsServer();
+    ConnectState GetState() { return state; };
 
 signals:
-    void connecting();
+    void UpdateConnectionState();
 
 public slots:
     void connected();
     void disconnected();
     void readyRead();
+    void handleConnectionError(QAbstractSocket::SocketError socketError);
 
 private:
     void Stop();
@@ -38,7 +47,7 @@ private:
     QTcpSocket* OsisSocket;
     QMutex Mutex;
     QSemaphore WaitEvent;
-
+    ConnectState state;
 };
 
 #endif // CALCCONNECTIONTHREAD_H

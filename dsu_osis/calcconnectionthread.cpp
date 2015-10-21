@@ -1,7 +1,9 @@
 #include "calcconnectionthread.h"
 
 CalcConnectionThread::CalcConnectionThread(QObject *parent)
-   : QThread(parent), quit(false)
+   : QThread(parent),
+     quit(false),
+     state(DISCONNECTED)
 {
 }
 
@@ -32,7 +34,7 @@ void CalcConnectionThread::run()
    }
    else
    {
-      //SERVER. ToDO.
+      runAsServer();
    }
 
 }
@@ -46,20 +48,23 @@ void CalcConnectionThread::runAsClient()
 
    OsisSocket = new QTcpSocket;
 
+   connect(OsisSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(handleConnectionError(QAbstractSocket::SocketError)));
    connect(OsisSocket, SIGNAL(connected()),this, SLOT(connected()));
    connect(OsisSocket, SIGNAL(disconnected()),this, SLOT(disconnected()));
    connect(OsisSocket, SIGNAL(readyRead()),this, SLOT(readyRead()));
 
    while (!quit)
    {
-      OsisSocket->connectToHost(IpAddress, IpPort);
+      state = CONNECTING;
+      OsisSocket->connectToHost(IpAddress, IpPort, QIODevice::ReadOnly);
 
-      if (!OsisSocket->waitForConnected(500))
+      if (!OsisSocket->waitForConnected(10000))
       {
-         emit connecting();
+         QAbstractSocket::SocketError err = OsisSocket->error();
+         emit UpdateConnectionState();
          continue;
       }
-      while (!quit)
+      while (state == CONNECTED)
       {
          WaitEvent.acquire();
          if (quit)
@@ -68,24 +73,48 @@ void CalcConnectionThread::runAsClient()
          }
       }
    }
+   OsisSocket->disconnectFromHost();
    OsisSocket->disconnect();
    delete OsisSocket;
    OsisSocket = 0;
 }
 
-void CalcConnectionThread::connected()
+void CalcConnectionThread::runAsServer()
 {
 
 }
 
+void CalcConnectionThread::connected()
+{
+   state = CONNECTED;
+   emit UpdateConnectionState();
+}
+
 void CalcConnectionThread::disconnected()
 {
-
+   state = DISCONNECTED;
+   WaitEvent.release();
+   emit UpdateConnectionState();
 }
 
 void CalcConnectionThread::readyRead()
 {
 
+}
+
+void CalcConnectionThread::handleConnectionError(QAbstractSocket::SocketError socketError)
+{
+   switch (socketError) {
+   case QAbstractSocket::RemoteHostClosedError:
+       break;
+   case QAbstractSocket::HostNotFoundError:
+       break;
+   case QAbstractSocket::ConnectionRefusedError:
+       break;
+   default:
+       QString tcpError = OsisSocket->errorString();
+       break;
+   }
 }
 
 void CalcConnectionThread::Stop()

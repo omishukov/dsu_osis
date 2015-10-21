@@ -20,7 +20,7 @@ private slots:
    void on_ClientServerCB_activated(int index);
    void on_ConnectButton_clicked();
 
-   void showConnecting();
+   void showConnectionState();
 
 private:
    void loadConnectionSettings();
@@ -37,17 +37,9 @@ private:
       SERVER
    } ConnectAs;
 
-   typedef enum
-   {
-      DISCONNECTED,
-      CONNECTING,
-      CONNECTED
-   } ConnectState;
-
    ConnectAs ConnectionType;
    QString IpAddress;
    QString IpPort;
-   ConnectState ConnectionStatus;
    CalcConnectionThread OsisLink;
 };
 

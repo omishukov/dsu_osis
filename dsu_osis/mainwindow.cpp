@@ -115,3 +115,21 @@ void MainWindow::on_ClientServerCB_activated(int index)
       }
    }
 }
+
+void MainWindow::on_ConnectButton_clicked()
+{
+   switch (ConnectionStatus)
+   {
+      case DISCONNECTED:
+      {
+         ui->ConnectionStatusLabel->setText("Connecting...");
+         ui->ConnectButton->setText("Cancel");
+         OsisLink.establishConnection(ConnectionType == CLIENT? IpAddress : "", IpPort.toUShort());
+      }
+
+      break;
+
+      default:
+         break;
+   }
+}

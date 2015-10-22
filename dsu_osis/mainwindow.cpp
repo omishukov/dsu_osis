@@ -157,3 +157,13 @@ void MainWindow::showConnectionState()
    }
 
 }
+
+void MainWindow::on_IPv4Address_editingFinished()
+{
+   IpAddress = ui->IPv4Address->text();
+}
+
+void MainWindow::on_IPv4Port_editingFinished()
+{
+    IpPort = ui->IPv4Port->text();
+}

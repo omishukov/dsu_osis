@@ -53,26 +53,30 @@ void CalcConnectionThread::runAsClient()
    connect(OsisSocket, SIGNAL(disconnected()),this, SLOT(disconnected()));
    connect(OsisSocket, SIGNAL(readyRead()),this, SLOT(readyRead()));
 
+   ChangeState(CONNECTING);
    while (!quit)
    {
-      state = CONNECTING;
       OsisSocket->connectToHost(IpAddress, IpPort, QIODevice::ReadOnly);
 
-      if (!OsisSocket->waitForConnected(10000))
+      if (!OsisSocket->waitForConnected(1000))
       {
-         QAbstractSocket::SocketError err = OsisSocket->error();
-         emit UpdateConnectionState();
+         ChangeState(CONNECTING);
          continue;
       }
+      ChangeState(CONNECTED);
+
       while (state == CONNECTED)
       {
          WaitEvent.acquire();
          if (quit)
          {
-            continue;
+            break;
          }
       }
    }
+
+   ChangeState(DISCONNECTED);
+
    OsisSocket->disconnectFromHost();
    OsisSocket->disconnect();
    delete OsisSocket;
@@ -86,15 +90,13 @@ void CalcConnectionThread::runAsServer()
 
 void CalcConnectionThread::connected()
 {
-   state = CONNECTED;
-   emit UpdateConnectionState();
+   ChangeState(CONNECTED);
 }
 
 void CalcConnectionThread::disconnected()
 {
-   state = DISCONNECTED;
+   ChangeState(DISCONNECTED);
    WaitEvent.release();
-   emit UpdateConnectionState();
 }
 
 void CalcConnectionThread::readyRead()
@@ -131,4 +133,10 @@ void CalcConnectionThread::Stop()
          terminate();
       }
    }
+}
+
+void CalcConnectionThread::ChangeState(ConnectState newstate)
+{
+   state = newstate;
+   emit UpdateConnectionState();
 }

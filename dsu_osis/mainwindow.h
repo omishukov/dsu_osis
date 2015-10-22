@@ -22,6 +22,10 @@ private slots:
 
    void showConnectionState();
 
+   void on_IPv4Address_editingFinished();
+
+   void on_IPv4Port_editingFinished();
+
 private:
    void loadConnectionSettings();
    void setIpValitation();

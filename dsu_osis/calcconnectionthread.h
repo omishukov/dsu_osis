@@ -39,6 +39,7 @@ public slots:
 
 private:
     void Stop();
+    void ChangeState(ConnectState newstate);
 
 private:
     bool quit;

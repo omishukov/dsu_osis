@@ -23,6 +23,9 @@
       <height>71</height>
      </rect>
     </property>
+    <property name="styleSheet">
+     <string notr="true"/>
+    </property>
     <property name="title">
      <string>CalcFS connection</string>
     </property>
@@ -121,6 +124,9 @@
      </property>
     </widget>
     <widget class="QPushButton" name="ConnectButton">
+     <property name="enabled">
+      <bool>true</bool>
+     </property>
      <property name="geometry">
       <rect>
        <x>260</x>

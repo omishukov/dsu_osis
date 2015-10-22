@@ -123,13 +123,21 @@ void MainWindow::on_ConnectButton_clicked()
    switch (OsisLink.GetState())
    {
       case CalcConnectionThread::DISCONNECTED:
-      {
-         ui->ConnectionStatusLabel->setText("Connecting...");
-         ui->ConnectButton->setText("Cancel");
-         OsisLink.establishConnection(ConnectionType == CLIENT? IpAddress : "", IpPort.toUShort());
-      }
+         {
+            ui->ConnectionStatusLabel->setText("Connecting...");
+            ui->ConnectButton->setEnabled(false);
+            OsisLink.establishConnection(ConnectionType == CLIENT? IpAddress : "", IpPort.toUShort());
+         }
+         break;
 
-      break;
+      case CalcConnectionThread::CONNECTING:
+      case CalcConnectionThread::CONNECTED:
+         {  //Abort connection attempt
+            ui->ConnectionStatusLabel->setText("Aborting...");
+            ui->ConnectButton->setEnabled(false);
+            OsisLink.abortConnection();
+         }
+         break;
 
       default:
          break;
@@ -142,14 +150,22 @@ void MainWindow::showConnectionState()
    {
       case CalcConnectionThread::CONNECTING:
          {
-            if(ui->ConnectionStatusLabel->isHidden())
-            {
-               ui->ConnectionStatusLabel->show();
-            }
-            else
-            {
-               ui->ConnectionStatusLabel->hide();
-            }
+            ui->ConnectionStatusLabel->setText("Connecting...");
+            ui->ConnectButton->setText("Cancel");
+            ui->ConnectButton->setEnabled(true);
+         }
+         break;
+      case CalcConnectionThread::DISCONNECTED:
+         {
+            ui->ConnectionStatusLabel->setText("Disconnected");
+            ui->ConnectButton->setText("Connect");
+            ui->ConnectButton->setEnabled(true);
+         }
+      case CalcConnectionThread::CONNECTED:
+         {
+            ui->ConnectionStatusLabel->setText("Connected");
+            ui->ConnectButton->setText("Disconnect");
+            ui->ConnectButton->setEnabled(true);
          }
          break;
       default:

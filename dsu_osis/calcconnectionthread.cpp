@@ -18,7 +18,13 @@ void CalcConnectionThread::establishConnection(const QString &hostName, quint16 
    Stop();
    IpAddress = hostName;
    IpPort = port;
+   quit = false;
    start();
+}
+
+void CalcConnectionThread::abortConnection()
+{
+   Stop();
 }
 
 void CalcConnectionThread::destroyConnection()
@@ -75,12 +81,12 @@ void CalcConnectionThread::runAsClient()
       }
    }
 
-   ChangeState(DISCONNECTED);
-
    OsisSocket->disconnectFromHost();
    OsisSocket->disconnect();
    delete OsisSocket;
    OsisSocket = 0;
+
+   ChangeState(DISCONNECTED);
 }
 
 void CalcConnectionThread::runAsServer()
@@ -137,6 +143,9 @@ void CalcConnectionThread::Stop()
 
 void CalcConnectionThread::ChangeState(ConnectState newstate)
 {
-   state = newstate;
-   emit UpdateConnectionState();
+   if (state != newstate)
+   {
+      state = newstate;
+      emit UpdateConnectionState();
+   }
 }

@@ -36,7 +36,6 @@ public slots:
    void connected();
    void disconnected();
    void readyRead();
-   void handleConnectionError(QAbstractSocket::SocketError socketError);
 
 private:
    void Stop();

@@ -24,3 +24,5 @@ FORMS    += mainwindow.ui
 
 DISTFILES += \
     ../README.md
+
+LIBS += -lws2_32

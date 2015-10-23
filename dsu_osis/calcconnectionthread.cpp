@@ -1,4 +1,5 @@
 #include "calcconnectionthread.h"
+#include <winsock2.h>
 
 CalcConnectionThread::CalcConnectionThread(QObject *parent)
    : QThread(parent),
@@ -54,7 +55,6 @@ void CalcConnectionThread::runAsClient()
 
    OsisSocket = new QTcpSocket;
 
-   connect(OsisSocket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(handleConnectionError(QAbstractSocket::SocketError)));
    connect(OsisSocket, SIGNAL(connected()),this, SLOT(connected()));
    connect(OsisSocket, SIGNAL(disconnected()),this, SLOT(disconnected()));
    connect(OsisSocket, SIGNAL(readyRead()),this, SLOT(readyRead()));
@@ -108,21 +108,6 @@ void CalcConnectionThread::disconnected()
 void CalcConnectionThread::readyRead()
 {
 
-}
-
-void CalcConnectionThread::handleConnectionError(QAbstractSocket::SocketError socketError)
-{
-   switch (socketError) {
-   case QAbstractSocket::RemoteHostClosedError:
-       break;
-   case QAbstractSocket::HostNotFoundError:
-       break;
-   case QAbstractSocket::ConnectionRefusedError:
-       break;
-   default:
-       QString tcpError = OsisSocket->errorString();
-       break;
-   }
 }
 
 void CalcConnectionThread::Stop()

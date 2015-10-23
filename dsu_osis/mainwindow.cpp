@@ -161,6 +161,7 @@ void MainWindow::showConnectionState()
             ui->ConnectButton->setText("Connect");
             ui->ConnectButton->setEnabled(true);
          }
+         break;
       case CalcConnectionThread::CONNECTED:
          {
             ui->ConnectionStatusLabel->setText("Connected");

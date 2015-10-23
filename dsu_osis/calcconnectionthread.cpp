@@ -4,6 +4,7 @@
 CalcConnectionThread::CalcConnectionThread(QObject *parent)
    : QThread(parent),
      quit(false),
+     OsisSocket(0),
      state(DISCONNECTED)
 {
 }
@@ -52,7 +53,6 @@ void CalcConnectionThread::runAsClient()
    {
       delete OsisSocket;
    }
-
    OsisSocket = new QTcpSocket;
 
    connect(OsisSocket, SIGNAL(connected()),this, SLOT(connected()));
@@ -71,13 +71,10 @@ void CalcConnectionThread::runAsClient()
       }
       ChangeState(CONNECTED);
 
-      while (state == CONNECTED)
+      if (state == CONNECTED)
       {
-         WaitEvent.acquire();
-         if (quit)
-         {
-            break;
-         }
+         m_pEventLoop = new QEventLoop();
+         m_pEventLoop->exec();
       }
    }
 
@@ -102,19 +99,26 @@ void CalcConnectionThread::connected()
 void CalcConnectionThread::disconnected()
 {
    ChangeState(DISCONNECTED);
-   WaitEvent.release();
+   Stop();
 }
 
 void CalcConnectionThread::readyRead()
 {
-
+   QByteArray qba = OsisSocket->readAll();
+   int size = qba.size();
+   if (size)
+   {
+      processData(qba);
+   }
 }
 
 void CalcConnectionThread::Stop()
 {
    if (isRunning())
    {
+      m_pEventLoop->exit();
       quit = true;
+
       if (!WaitEvent.tryAcquire())
       {
          WaitEvent.release();
@@ -133,4 +137,9 @@ void CalcConnectionThread::ChangeState(ConnectState newstate)
       state = newstate;
       emit UpdateConnectionState();
    }
+}
+
+void CalcConnectionThread::processData(const QByteArray &qba)
+{
+
 }

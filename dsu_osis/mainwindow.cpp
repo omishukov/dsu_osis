@@ -153,6 +153,9 @@ void MainWindow::showConnectionState()
             ui->ConnectionStatusLabel->setText("Connecting...");
             ui->ConnectButton->setText("Cancel");
             ui->ConnectButton->setEnabled(true);
+            ui->ClientServerCB->setEnabled(false);
+            ui->IPv4Address->setEnabled(false);
+            ui->IPv4Port->setEnabled(false);
          }
          break;
       case CalcConnectionThread::DISCONNECTED:
@@ -160,6 +163,9 @@ void MainWindow::showConnectionState()
             ui->ConnectionStatusLabel->setText("Disconnected");
             ui->ConnectButton->setText("Connect");
             ui->ConnectButton->setEnabled(true);
+            ui->ClientServerCB->setEnabled(true);
+            ui->IPv4Address->setEnabled(true);
+            ui->IPv4Port->setEnabled(true);
          }
          break;
       case CalcConnectionThread::CONNECTED:

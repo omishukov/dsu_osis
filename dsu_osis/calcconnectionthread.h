@@ -4,8 +4,6 @@
 #include <QThread>
 #include <QTcpSocket>
 #include <QAbstractSocket>
-#include <QMutex>
-#include <QSemaphore>
 #include <QEventLoop>
 
 class CalcConnectionThread : public QThread
@@ -41,15 +39,14 @@ public slots:
 private:
    void Stop();
    void ChangeState(ConnectState newstate);
-   void processData(const QByteArray& qba);
+   qint32 getFirstCharPosition(QByteArray& qba, quint8 tag);
+
 
 private:
    bool quit;
    QString IpAddress;
    quint16 IpPort;
    QTcpSocket* OsisSocket;
-   QMutex Mutex;
-   QSemaphore WaitEvent;
    ConnectState state;
    QEventLoop* m_pEventLoop;
 };

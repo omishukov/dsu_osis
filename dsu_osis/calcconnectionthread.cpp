@@ -1,6 +1,9 @@
 #include "calcconnectionthread.h"
 #include <winsock2.h>
 
+const quint8 STX = 0x02;
+const quint8 ETX = 0x03;
+
 CalcConnectionThread::CalcConnectionThread(QObject *parent)
    : QThread(parent),
      quit(false),
@@ -16,7 +19,6 @@ CalcConnectionThread::~CalcConnectionThread()
 
 void CalcConnectionThread::establishConnection(const QString &hostName, quint16 port)
 {
-   QMutexLocker locker(&Mutex);
    Stop();
    IpAddress = hostName;
    IpPort = port;
@@ -66,16 +68,10 @@ void CalcConnectionThread::runAsClient()
 
       if (!OsisSocket->waitForConnected(1000))
       {
-         ChangeState(CONNECTING);
          continue;
       }
-      ChangeState(CONNECTED);
-
-      if (state == CONNECTED)
-      {
-         m_pEventLoop = new QEventLoop();
-         m_pEventLoop->exec();
-      }
+      m_pEventLoop = new QEventLoop();
+      m_pEventLoop->exec();
    }
 
    OsisSocket->disconnectFromHost();
@@ -105,12 +101,30 @@ void CalcConnectionThread::disconnected()
 void CalcConnectionThread::readyRead()
 {
    QByteArray qba = OsisSocket->readAll();
-   int size = qba.size();
-   if (size)
+   if (qba.size() > 0)
    {
-      processData(qba);
+      qint32 posSTX = getFirstCharPosition(qba, STX);
+      qint32 posETX = getFirstCharPosition(qba, ETX);
+
+      if (posSTX >= 0 && posETX >= 0 && posETX > posSTX)
+      {
+         // Normal case
+      }
    }
 }
+
+qint32 CalcConnectionThread::getFirstCharPosition(QByteArray& qba, quint8 tag)
+{
+   for (int i = 0; i < qba.size(); i++)
+   {
+      if (qba.at(i) == tag)
+      {
+         return i;
+      }
+   }
+   return -1;
+}
+
 
 void CalcConnectionThread::Stop()
 {
@@ -119,10 +133,6 @@ void CalcConnectionThread::Stop()
       m_pEventLoop->exit();
       quit = true;
 
-      if (!WaitEvent.tryAcquire())
-      {
-         WaitEvent.release();
-      }
       if (!wait(3000))
       {
          terminate();
@@ -137,9 +147,4 @@ void CalcConnectionThread::ChangeState(ConnectState newstate)
       state = newstate;
       emit UpdateConnectionState();
    }
-}
-
-void CalcConnectionThread::processData(const QByteArray &qba)
-{
-
 }

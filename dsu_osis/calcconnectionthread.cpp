@@ -109,6 +109,7 @@ void CalcConnectionThread::readyRead()
       if (posSTX >= 0 && posETX >= 0 && posETX > posSTX)
       {
          // Normal case
+         QByteArray newdata = qba.mid(posSTX+1, posETX - posSTX -1);
       }
    }
 }

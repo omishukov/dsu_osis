@@ -23,6 +23,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
    loadConnectionSettings();
 
+   OsisData = new OsisDataProvider();
+
+   OsisLink.setDataIf(OsisData);
+
    connect(&OsisLink, SIGNAL(UpdateConnectionState()), this, SLOT(showConnectionState()));
 }
 

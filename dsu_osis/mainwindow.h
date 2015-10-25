@@ -3,6 +3,8 @@
 
 #include <QMainWindow>
 #include "calcconnectionthread.h"
+#include "osisdataprovider.h"
+
 
 namespace Ui {
    class MainWindow;
@@ -45,6 +47,7 @@ private:
    QString IpAddress;
    QString IpPort;
    CalcConnectionThread OsisLink;
+   OsisDataProvider* OsisData;
 };
 
 #endif // MAINWINDOW_H

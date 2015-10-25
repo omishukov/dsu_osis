@@ -1,5 +1,4 @@
 #include "calcconnectionthread.h"
-#include <winsock2.h>
 
 const quint8 STX = 0x02;
 const quint8 ETX = 0x03;
@@ -15,6 +14,11 @@ CalcConnectionThread::CalcConnectionThread(QObject *parent)
 CalcConnectionThread::~CalcConnectionThread()
 {
    Stop();
+}
+
+void CalcConnectionThread::setDataIf(OsisDataIf* osisDataIf)
+{
+   osisData = osisDataIf;
 }
 
 void CalcConnectionThread::establishConnection(const QString &hostName, quint16 port)
@@ -106,11 +110,17 @@ void CalcConnectionThread::readyRead()
       qint32 posSTX = getFirstCharPosition(qba, STX);
       qint32 posETX = getFirstCharPosition(qba, ETX);
 
+      // Normal case
+      // STX was first, ETX also present
       if (posSTX >= 0 && posETX >= 0 && posETX > posSTX)
       {
-         // Normal case
          QByteArray newdata = qba.mid(posSTX+1, posETX - posSTX -1);
+         osisData->DataInd(newdata);
+
+         // Is there any data left after ETX
+         qba.remove(0,posETX);
       }
+
    }
 }
 

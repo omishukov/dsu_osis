@@ -117,9 +117,10 @@ void CalcConnectionThread::readyRead()
          QByteArray newdata = qba.mid(posSTX+1, posETX - posSTX -1);
          osisData->DataInd(newdata);
 
-         // Is there any data left after ETX
          qba.remove(0,posETX);
+         continue;
       }
+      if (posSTX >= 0 && posETX >= 0 && posETX > posSTX)
 
    }
 }

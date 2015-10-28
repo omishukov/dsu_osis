@@ -7,7 +7,8 @@ CalcConnectionThread::CalcConnectionThread(QObject *parent)
    : QThread(parent),
      quit(false),
      OsisSocket(0),
-     state(DISCONNECTED)
+     state(DISCONNECTED),
+     osisData(0)
 {
 }
 
@@ -105,22 +106,76 @@ void CalcConnectionThread::disconnected()
 void CalcConnectionThread::readyRead()
 {
    QByteArray qba = OsisSocket->readAll();
-   if (qba.size() > 0)
+   processData(qba);
+}
+
+void CalcConnectionThread::processData(QByteArray& qba)
+{
+   while (osisData && qba.size() > 0)
    {
       qint32 posSTX = getFirstCharPosition(qba, STX);
       qint32 posETX = getFirstCharPosition(qba, ETX);
 
-      // Normal case
-      // STX was first, ETX also present
-      if (posSTX >= 0 && posETX >= 0 && posETX > posSTX)
+      // STX and ETX present
+      if (posSTX >= 0 && posETX >= 0)
       {
-         QByteArray newdata = qba.mid(posSTX+1, posETX - posSTX -1);
-         osisData->DataInd(newdata);
-
-         qba.remove(0,posETX);
+         bool complMsg = false;
+         // Complete OSIS message
+         if (posETX > posSTX)
+         {  // [s....es..]
+            newdata = qba.mid(posSTX+1, posETX - posSTX -1);
+            complMsg = true;
+         }
+         else
+         {  // [...es....e..]
+            if (!tempdata.isEmpty())
+            {
+               newdata = tempdata;
+               newdata.append(qba.mid(0, posETX));
+               tempdata.clear();
+               complMsg = true;
+            }
+         }
+         if (complMsg)
+         {
+            osisData->DataInd(newdata);
+            newdata.clear();
+         }
+         qba.remove(0,posETX + 1);
          continue;
       }
-      if (posSTX >= 0 && posETX >= 0 && posETX > posSTX)
+      // STX present, ETX missing
+      if (posSTX >= 0 && posETX == -1)
+      {  // [.s......]
+         // Beginning of OSIS message
+         if (!tempdata.isEmpty())
+         {
+            tempdata.clear();
+         }
+         tempdata = qba.mid(posSTX + 1);
+         qba.clear();
+         continue;
+      }
+
+      // STX missing, STX present
+      if (posSTX == -1 && posETX >= 0)
+      { // [........e...]
+         if (!tempdata.isEmpty())
+         {
+            tempdata.append(qba.mid(0, posETX));
+            osisData->DataInd(tempdata);
+            tempdata.clear();
+         }
+         qba.remove(0, posETX + 1);
+         continue;
+      }
+
+      //STX and ETX missing
+      if (posSTX == -1 && posETX == -1)
+      {
+         tempdata.clear();
+         qba.clear();
+      }
 
    }
 }

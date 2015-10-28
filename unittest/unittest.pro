@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += testlib
+QT       += network
 
 QT       -= gui
 
@@ -15,5 +16,9 @@ CONFIG   -= app_bundle
 TEMPLATE = app
 
 
-SOURCES += tst_unittesttest.cpp
+SOURCES += tst_unittesttest.cpp \
+    ../dsu_osis/calcconnectionthread.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
+
+HEADERS += \
+    ../dsu_osis/calcconnectionthread.h

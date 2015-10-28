@@ -28,7 +28,8 @@ public:
    void run() Q_DECL_OVERRIDE;
    void runAsClient();
    void runAsServer();
-   ConnectState GetState() { return state; };
+   ConnectState GetState() { return state; }
+   void processData(QByteArray& qba);
 
 signals:
    void UpdateConnectionState();
@@ -52,6 +53,8 @@ private:
    ConnectState state;
    QEventLoop* m_pEventLoop;
    OsisDataIf* osisData;
+   QByteArray newdata;
+   QByteArray tempdata;
 };
 
 #endif // CALCCONNECTIONTHREAD_H

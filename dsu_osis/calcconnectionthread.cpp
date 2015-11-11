@@ -8,7 +8,8 @@ CalcConnectionThread::CalcConnectionThread(QObject *parent)
      quit(false),
      OsisSocket(0),
      state(DISCONNECTED),
-     osisData(0)
+     osisData(0),
+     logfile(0)
 {
 }
 
@@ -20,6 +21,11 @@ CalcConnectionThread::~CalcConnectionThread()
 void CalcConnectionThread::setDataIf(OsisDataIf* osisDataIf)
 {
    osisData = osisDataIf;
+}
+
+void CalcConnectionThread::SetLogIf(QFile* f)
+{
+   logfile = f;
 }
 
 void CalcConnectionThread::establishConnection(const QString &hostName, quint16 port)

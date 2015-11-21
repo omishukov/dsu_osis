@@ -5,7 +5,7 @@
 #include <QTcpSocket>
 #include <QAbstractSocket>
 #include <QEventLoop>
-#include <QFile>
+#include <QTextStream>
 #include "osisdataif.h"
 
 class CalcConnectionThread : public QThread
@@ -23,7 +23,7 @@ public:
    } ConnectState;
 
    void setDataIf(class OsisDataIf* osisDataIf);
-   void SetLogIf(QFile* f);
+   void SetLogIf(QTextStream* f);
    void establishConnection(const QString &hostName, quint16 port);
    void abortConnection();
    void destroyConnection();
@@ -57,7 +57,7 @@ private:
    OsisDataIf* osisData;
    QByteArray newdata;
    QByteArray tempdata;
-   QFile* logfile;
+   QTextStream* logfile;
 };
 
 #endif // CALCCONNECTIONTHREAD_H

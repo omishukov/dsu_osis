@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QFile>
 #include "calcconnectionthread.h"
 #include "osisdataprovider.h"
 
@@ -48,6 +49,7 @@ private:
    QString IpPort;
    CalcConnectionThread OsisLink;
    OsisDataProvider* OsisData;
+   QFile *f;
 };
 
 #endif // MAINWINDOW_H

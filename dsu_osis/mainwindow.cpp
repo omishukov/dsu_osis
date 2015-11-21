@@ -7,7 +7,7 @@
 #include <QRegExpValidator>
 #include <QSettings>
 #include <QtNetwork>
-#include <QFile>
+#include <QTextStream>
 
 const QString inifile = "osisc.ini";
 
@@ -30,19 +30,20 @@ MainWindow::MainWindow(QWidget *parent) :
 
    connect(&OsisLink, SIGNAL(UpdateConnectionState()), this, SLOT(showConnectionState()));
 
-   QFile f("osislog.txt");
-   if (f.open(QIODevice::ReadWrite | QIODevice::Text))
+   f = new QFile("osislog.txt");
+   if (f->open(QIODevice::ReadWrite | QIODevice::Text))
    {
-      if (!f.isSequential())
+      if (!f->isSequential())
       {
-          f.seek(f.size());
+          f->seek(f->size());
       }
-      OsisLink.SetLogIf(&f);
+      OsisLink.SetLogIf(new QTextStream(f));
    }
 }
 
 MainWindow::~MainWindow()
 {
+   f->close();
    writeSettings();
    delete ui;
 }

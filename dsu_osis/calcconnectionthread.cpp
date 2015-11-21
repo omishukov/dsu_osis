@@ -1,3 +1,4 @@
+#include <QDateTime>
 #include "calcconnectionthread.h"
 
 const quint8 STX = 0x02;
@@ -15,6 +16,7 @@ CalcConnectionThread::CalcConnectionThread(QObject *parent)
 
 CalcConnectionThread::~CalcConnectionThread()
 {
+   delete logfile;
    Stop();
 }
 
@@ -23,7 +25,7 @@ void CalcConnectionThread::setDataIf(OsisDataIf* osisDataIf)
    osisData = osisDataIf;
 }
 
-void CalcConnectionThread::SetLogIf(QFile* f)
+void CalcConnectionThread::SetLogIf(QTextStream* f)
 {
    logfile = f;
 }
@@ -112,6 +114,11 @@ void CalcConnectionThread::disconnected()
 void CalcConnectionThread::readyRead()
 {
    QByteArray qba = OsisSocket->readAll();
+   if (logfile)
+   {
+      QString logString(qba);
+      *logfile << QDateTime::currentDateTime().toString("dd/MM/yyyy hh:mm:ss.zzz") << ": " << logString << endl;
+   }
    processData(qba);
 }
 

@@ -29,3 +29,5 @@ DISTFILES += \
     ../README.md
 
 LIBS += -lws2_32
+
+CONFIG += static

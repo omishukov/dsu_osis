@@ -9,16 +9,18 @@ QT       += network
 
 QT       -= gui
 
-TARGET = tst_unittesttest
+TARGET = osis_unittest
 CONFIG   += console
 CONFIG   -= app_bundle
 
 TEMPLATE = app
 
 
-SOURCES += tst_unittesttest.cpp \
-    ../dsu_osis/calcconnectionthread.cpp
+SOURCES += \
+    ../dsu_osis/calcconnectionthread.cpp \
+    osis_unittestmain.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
-    ../dsu_osis/calcconnectionthread.h
+    ../dsu_osis/calcconnectionthread.h \
+    osis_unittest.h

@@ -1,7 +1,5 @@
 #include <QString>
-#include <QtTest>
-#include "../dsu_osis/osisdataif.h"
-#include "../dsu_osis/calcconnectionthread.h"
+#include <osis_unittest.h>
 
 const QByteArray data1_1("<Isu_Osis Part=\"1\" version=\"2.0\" Counter=\"1\" IsuCalcFs=\"3.1.1\" Database=\"11137\">");
 const QByteArray data1_2("<Segment_Running Segment_ID=\"1\">");
@@ -12,35 +10,6 @@ const QByteArray data1_5("</Isu_Osis>");
 const QByteArray STX("\x02");
 const QByteArray ETX("\x03");
 const QByteArray CRLF("\x0D\x0A");
-
-
-class OsisDataIfStub: public OsisDataIf
-{
-public:
-   virtual ~OsisDataIfStub() {osisData.clear();}
-   virtual void DataInd(class QByteArray& qba) { osisData.append(qba);}
-
-public:
-   QByteArray osisData;
-};
-
-class UnittestTest : public QObject
-{
-   Q_OBJECT
-
-public:
-   UnittestTest();
-
-private Q_SLOTS:
-   void initTestCase();
-   void cleanupTestCase();
-   void testCase1();
-   void testCase2();
-
-private:
-   CalcConnectionThread* osisLink;
-   OsisDataIfStub* osisDataIf;
-};
 
 UnittestTest::UnittestTest()
 {
@@ -123,5 +92,3 @@ void UnittestTest::testCase2()
 }
 
 QTEST_APPLESS_MAIN(UnittestTest)
-
-#include "tst_unittesttest.moc"

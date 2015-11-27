@@ -18,9 +18,13 @@ TEMPLATE = app
 
 SOURCES += \
     ../dsu_osis/calcconnectionthread.cpp \
-    osis_unittestmain.cpp
+    osis_unittestmain.cpp \
+    osislink_test.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
     ../dsu_osis/calcconnectionthread.h \
     osis_unittest.h
+
+DISTFILES += \
+    data/seg_run_jdg.xml

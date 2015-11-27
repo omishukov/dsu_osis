@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="windows-1250" ?>
+<Isu_Osis Part="1" version="2.0" Counter="1" IsuCalcFs="3.1.1" Database="11137">
+        <Segment_Running Segment_ID="1" >
+                <Action Command="JDG"  Current_Start_Number= "4" Judge_ID="-1" />
+        </Segment_Running>
+</Isu_Osis>

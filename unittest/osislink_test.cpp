@@ -10,10 +10,27 @@ const QByteArray STX("\x02");
 const QByteArray ETX("\x03");
 const QByteArray CRLF("\x0D\x0A");
 
-void UnittestTest::testCase1()
+void UnittestTest::OsisLintTestInit()
+{
+   osisLink = new CalcConnectionThread();
+   osisDataStubIf = new OsisDataIfStub();
+   osisLink->setDataIf(osisDataStubIf);
+}
+
+void UnittestTest::OsisLintTestClean()
+{
+   osisLink->setDataIf(0);
+   delete osisLink;
+   delete osisDataStubIf;
+}
+
+void UnittestTest::ReceiveStxEtx()
 {
    QByteArray qbaReq;
    QByteArray qbaInd;
+
+   OsisLintTestInit();
+
    qbaInd.append(data1_1);
    qbaInd.append(data1_2);
    qbaInd.append(data1_3);
@@ -26,15 +43,20 @@ void UnittestTest::testCase1()
    qbaReq.append(ETX);
 
    osisLink->processData(qbaReq);
-   QVERIFY2(qbaInd == osisDataIf->osisData, "Failure");
+   QVERIFY2(qbaInd == osisDataStubIf->osisData, "Failure");
 
-   osisDataIf->osisData.clear();
+   osisDataStubIf->osisData.clear();
+
+   OsisLintTestClean();
 }
 
-void UnittestTest::testCase2()
+void UnittestTest::ReceiveStxEtxMultiple()
 {
    QByteArray qbaReq;
    QByteArray qbaInd;
+
+   OsisLintTestInit();
+
    qbaInd.append(data1_1);
    qbaInd.append(data1_2);
    qbaInd.append(data1_3);
@@ -64,7 +86,9 @@ void UnittestTest::testCase2()
    qbaReq.append(ETX);
    osisLink->processData(qbaReq);
 
-   QVERIFY2(qbaInd == osisDataIf->osisData, "Failure");
+   QVERIFY2(qbaInd == osisDataStubIf->osisData, "Failure");
 
-   osisDataIf->osisData.clear();
+   osisDataStubIf->osisData.clear();
+
+   OsisLintTestClean();
 }

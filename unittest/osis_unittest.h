@@ -2,12 +2,13 @@
 #define OSIS_UNITTEST_H
 #include <QtTest>
 #include "../dsu_osis/osisdataif.h"
+#include "../dsu_osis/osisdataprovider.h"
 #include "../dsu_osis/calcconnectionthread.h"
 
 class OsisDataIfStub: public OsisDataIf
 {
 public:
-   virtual ~OsisDataIfStub() {osisData.clear();}
+   virtual ~OsisDataIfStub() { osisData.clear(); }
    virtual void DataInd(class QByteArray& qba) { osisData.append(qba);}
 
 public:
@@ -24,12 +25,27 @@ public:
 private Q_SLOTS:
    void initTestCase();
    void cleanupTestCase();
-   void testCase1();
-   void testCase2();
+
+   // OsisLink
+   void ReceiveStxEtx();
+   void ReceiveStxEtxMultiple();
+
+   //XmlParse
+   void ParseOsisMsg();
 
 private:
+   // OsisLink Helpers
+   void OsisLintTestInit();
+   void OsisLintTestClean();
+   OsisDataIfStub* osisDataStubIf;
+
+   // OsisXml Helpers
+   void OsisXmlTestInit();
+   void OsisXmlTestClean();
+   bool GetXmlData(QByteArray& qba, const QString &filename);
+
    CalcConnectionThread* osisLink;
-   OsisDataIfStub* osisDataIf;
+   OsisDataProvider* osisDataIf;
 };
 
 #endif // OSIS_UNITTEST_H

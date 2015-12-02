@@ -34,6 +34,14 @@ public:
 
    Q_ENUM(OsisEventElements)
    Q_ENUM(OsisEventAttributes)
+
+private:
+   int event_ID;
+   QString event_Name;
+   QString event_Abbreviation;
+   QString event_Type;
+   QString event_CmpType;
+   QString event_ExtDt;
 };
 
 #endif // EVENT_H

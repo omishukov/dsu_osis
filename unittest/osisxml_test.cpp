@@ -31,7 +31,7 @@ void UnittestTest::ParseOsisMsg()
    OsisXmlTestInit();
 
    QByteArray qba;
-   QString filename("../unittest/data/seg_run_jdg.xml");
+   QString filename("../unittest/data/event.xml");
    QVERIFY(GetXmlData(qba, filename));
    osisLink->processData(qba);
 

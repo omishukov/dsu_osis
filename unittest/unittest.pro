@@ -22,14 +22,17 @@ SOURCES += \
     osis_unittestmain.cpp \
     osislink_test.cpp \
     osisxml_test.cpp \
-    ../dsu_osis/osisdataprovider.cpp
+    ../dsu_osis/osisdataprovider.cpp \
+    ../dsu_osis/event.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
     ../dsu_osis/calcconnectionthread.h \
     osis_unittest.h \
-    ../dsu_osis/osisdataprovider.h
+    ../dsu_osis/osisdataprovider.h \
+    ../dsu_osis/event.h
 
 DISTFILES += \
     data/seg_run_jdg.xml \
-    data/seg_run_clr.xml
+    data/seg_run_clr.xml \
+    data/event.xml

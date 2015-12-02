@@ -1,10 +1,18 @@
 #include "osisdataprovider.h"
 #include <QDomDocument>
 #include <QtDebug>
+#include <QMetaEnum>
+#include "event.h"
 
 OsisDataProvider::OsisDataProvider()
+   : osisEvent(0)
 {
 
+}
+
+OsisDataProvider::~OsisDataProvider()
+{
+   delete osisEvent;
 }
 
 void OsisDataProvider::DataInd(QByteArray& qba)
@@ -30,8 +38,28 @@ void OsisDataProvider::DataInd(QByteArray& qba)
       if(!e.isNull())
       {
          QString tagName = e.tagName();
-
          qDebug() << tagName << endl; // the node really is an element.
+
+         const QMetaObject &mo = OsisDataProvider::staticMetaObject;
+         int index = mo.indexOfEnumerator("OsisMessageType");
+         QMetaEnum metaEnum = mo.enumerator(index);
+
+         switch(metaEnum.keyToValue(tagName.toLocal8Bit().constData()))
+         {
+            case Event_Overview:
+            {
+               if (!osisEvent)
+               {
+                  osisEvent = new OsisEvent();
+               }
+               osisEvent->AddEvent(e);
+            }
+            break;
+
+            default:
+            break;
+         }
+
       }
       n = n.nextSibling();
    }

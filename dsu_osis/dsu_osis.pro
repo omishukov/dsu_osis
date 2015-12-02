@@ -17,12 +17,14 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     calcconnectionthread.cpp \
-    osisdataprovider.cpp
+    osisdataprovider.cpp \
+    event.cpp
 
 HEADERS  += mainwindow.h \
     calcconnectionthread.h \
     osisdataif.h \
-    osisdataprovider.h
+    osisdataprovider.h \
+    event.h
 
 FORMS    += mainwindow.ui
 

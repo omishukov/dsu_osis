@@ -1,18 +1,17 @@
-#include "osisdataprovider.h"
-#include <QDomDocument>
 #include <QtDebug>
 #include <QMetaEnum>
-#include "event.h"
+#include "osisdataprovider.h"
+#include "osis/event.h"
 
 OsisDataProvider::OsisDataProvider()
-   : osisEvent(0)
+   : osisMsg(new OsisXml())
 {
 
 }
 
 OsisDataProvider::~OsisDataProvider()
 {
-   delete osisEvent;
+   delete osisMsg;
 }
 
 void OsisDataProvider::DataInd(QByteArray& qba)
@@ -31,37 +30,39 @@ void OsisDataProvider::DataInd(QByteArray& qba)
    }
    QDomElement docElem = doc.documentElement();
 
+   if (!docElem.tagName().contains("Isu_Osis"))
+   {
+      qDebug() << "XML Parser Error: the message shall start with <Isu_Osis>" << endl;
+      return;
+   }
+
    QDomNode n = docElem.firstChild();
+   osisMsg->ProcessOsisData(n);
+
+#if 0
    while(!n.isNull())
    {
       QDomElement e = n.toElement(); // try to convert the node to an element.
-      if(!e.isNull())
+      if(e.isNull())
       {
-         QString tagName = e.tagName();
-         qDebug() << tagName << endl; // the node really is an element.
-
-         const QMetaObject &mo = OsisDataProvider::staticMetaObject;
-         int index = mo.indexOfEnumerator("OsisMessageType");
-         QMetaEnum metaEnum = mo.enumerator(index);
-
-         switch(metaEnum.keyToValue(tagName.toLocal8Bit().constData()))
-         {
-            case Event_Overview:
-            {
-               if (!osisEvent)
-               {
-                  osisEvent = new OsisEvent();
-               }
-               osisEvent->AddEvent(e);
-            }
-            break;
-
-            default:
-            break;
-         }
-
+         // Warning: An empty element
+         continue;
       }
+      switch(metaEnum.keyToValue(e.tagName().toLocal8Bit().constData()))
+      {
+         case Event_Overview:
+            ProcessEvent(e);
+            break;
+         case Segment_Start:
+            ProcessSegmentStart(e);
+            break;
+
+         default:
+            break;
+      }
+
       n = n.nextSibling();
    }
+#endif
 }
 

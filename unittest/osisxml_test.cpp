@@ -26,12 +26,24 @@ bool UnittestTest::GetXmlData(QByteArray& qba, const QString &filename)
    return true;
 }
 
-void UnittestTest::ParseOsisMsg()
+void UnittestTest::ParseOsisEventOverview()
 {
    OsisXmlTestInit();
 
    QByteArray qba;
    QString filename("../unittest/data/event.xml");
+   QVERIFY(GetXmlData(qba, filename));
+   osisLink->processData(qba);
+
+   OsisXmlTestClean();
+}
+
+void UnittestTest::ParseOsisSegmentStart()
+{
+   OsisXmlTestInit();
+
+   QByteArray qba;
+   QString filename("../unittest/data/seg_start.xml");
    QVERIFY(GetXmlData(qba, filename));
    osisLink->processData(qba);
 

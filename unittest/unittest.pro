@@ -13,6 +13,7 @@ QT       -= gui
 TARGET = osis_unittest
 CONFIG   += console
 CONFIG   -= app_bundle
+CONFIG   += c++11
 
 TEMPLATE = app
 
@@ -23,16 +24,31 @@ SOURCES += \
     osislink_test.cpp \
     osisxml_test.cpp \
     ../dsu_osis/osisdataprovider.cpp \
-    ../dsu_osis/event.cpp
+    ../dsu_osis/osis/event.cpp \
+    ../dsu_osis/osis/category.cpp \
+    ../dsu_osis/osis/criteria.cpp \
+    ../dsu_osis/osis/segment.cpp \
+    ../dsu_osis/osis/osisxml.cpp \
+    osisxml_recursive.cpp \
+    ../dsu_osis/osis/segmentstart.cpp \
+    ../dsu_osis/osis/deduction.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
     ../dsu_osis/calcconnectionthread.h \
     osis_unittest.h \
     ../dsu_osis/osisdataprovider.h \
-    ../dsu_osis/event.h
+    ../dsu_osis/osis/event.h \
+    ../dsu_osis/osis/category.h \
+    ../dsu_osis/osis/criteria.h \
+    ../dsu_osis/osis/segment.h \
+    ../dsu_osis/osis/osisxml.h \
+    ../dsu_osis/osis/segmentstart.h \
+    ../dsu_osis/osis/deduction.h
 
 DISTFILES += \
     data/seg_run_jdg.xml \
     data/seg_run_clr.xml \
-    data/event.xml
+    data/event.xml \
+    data/seg_start.xml \
+    data/event_clear.xml

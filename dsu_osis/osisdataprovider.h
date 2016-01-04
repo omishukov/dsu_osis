@@ -3,11 +3,15 @@
 
 #include <QObject>
 #include <QByteArray>
+#include <QDomDocument>
 #include "osisdataif.h"
+#include "osis/osisxml.h"
 
+#if 0
 // Action codes (AC) started with a number cannot be used in enums.
 // Add a prefix to received AC string before using it in QMetaEnum.
 const QString ActionCodePrefix = "AC_";
+#endif
 
 class OsisDataProvider: public QObject, public OsisDataIf
 {
@@ -20,35 +24,6 @@ public:
    virtual void DataInd(class QByteArray& qba);
 
 public:
-   enum OsisMessageType
-   {
-      Event_Overview,
-      Segment_Start,
-      Segment_Running,
-      Segment_Statistic
-   };
-
-   enum OsisEventOverviewEventElements
-   {
-      Category_List
-   };
-
-   enum OsisEventOverviewEventCategoryListElements
-   {
-      Category
-   };
-
-   enum OsisEventOverviewEventCategoryListCategoryAttributes
-   {
-      _ID, // Identifier
-      _Name, // e.g. Ladies, Men, Pairs, Ice Dancing
-      _Level, // See category level code
-      _Gender, // See category gender code
-      _Type, // See category type code
-      _TypeName, // !!Undocumented, "Men"/"Ladies"
-      _Tec_Id, // -
-      _ExtDt, // RSC Code
-   };
 
 #if 0
 char CategoryLevel[10][] =
@@ -62,7 +37,6 @@ char CategoryLevel[10][] =
 {"Basic Novice A", "NBA"},
 {"Basic Novice B", "NBB"},
 {"Advanced Novice", "NAD"}};
-#endif
 
    enum OsisEventOverviewEventCategoryListCategoryElements
    {
@@ -155,14 +129,13 @@ char CategoryLevel[10][] =
       AC_VTR, // Victory Ceremony
       AC_WUP  // send warm up group
    };
-
-   Q_ENUM(OsisMessageType)
-   Q_ENUM(OsisSegmentRunningElements)
-   Q_ENUM(OsisSegmentRunningActionAttributes)
-   Q_ENUM(OsisSegmentRunningAction)
+#endif
 
 private:
-   class OsisEvent* osisEvent;
+   bool ProcessOsisData(QDomNode& n);
+   bool ProcessOsisElement(QDomNode& n);
+
+   OsisXml* osisMsg;
 };
 
 #endif // OSISDATAPROVIDER_H

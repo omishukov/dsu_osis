@@ -25,13 +25,15 @@ public:
 private Q_SLOTS:
    void initTestCase();
    void cleanupTestCase();
+   void RecursiveTest();
 
    // OsisLink
    void ReceiveStxEtx();
    void ReceiveStxEtxMultiple();
 
    //XmlParse
-   void ParseOsisMsg();
+   void ParseOsisEventOverview();
+   void ParseOsisSegmentStart();
 
 private:
    // OsisLink Helpers

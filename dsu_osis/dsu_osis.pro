@@ -18,13 +18,25 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     calcconnectionthread.cpp \
     osisdataprovider.cpp \
-    event.cpp
+    osis/criteria.cpp \
+    osis/category.cpp \
+    osis/event.cpp \
+    osis/osisxml.cpp \
+    osis/segment.cpp \
+    osis/segmentstart.cpp \
+    osis/deduction.cpp
 
 HEADERS  += mainwindow.h \
     calcconnectionthread.h \
     osisdataif.h \
     osisdataprovider.h \
-    event.h
+    osis/criteria.h \
+    osis/category.h \
+    osis/segment.h \
+    osis/osisxml.h \
+    osis/event.h \
+    osis/segmentstart.h \
+    osis/deduction.h
 
 FORMS    += mainwindow.ui
 

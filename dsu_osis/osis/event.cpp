@@ -1,52 +1,46 @@
 #include <QDomDocument>
 #include <QMetaEnum>
 #include "event.h"
+#include "deduction.h"
 
 OsisEvent::OsisEvent()
-   : event_ID(-1)
+   : event_ID(-1),
+     event_ODF(-1),
+     Current_Category(-1),
+     Current_Segment(-1),
+     ActiveSegment(0)
 {
 }
 
 OsisEvent::~OsisEvent()
 {
+   if (ActiveSegment)
+   {
+      delete ActiveSegment;
+   }
+   foreach (OsisCategory* category, CategoryMap)
+   {
+      delete category;
+   }
+   foreach (OsisSegment* segment, SegmentMap)
+   {
+      delete segment;
+   }
 }
 
-void OsisEvent::AddEvent(const QDomElement &element)
+bool OsisEvent::ProcessEvent(QDomElement &eventElement)
 {
-   QDomNode child = element.firstChild();
-   QDomNode::NodeType t = child.nodeType();
-   if (t != QDomNode::ElementNode)
-   {
-      return; // Error
-   }
-
-   QDomElement e = child.toElement(); // try to convert the node to an element.
-   if(e.isNull())
-   {
-      return; // Error
-   }
-
-   QString tagName = e.tagName();
-
-   const QMetaObject &mo = OsisEvent::staticMetaObject;
-   int index = mo.indexOfEnumerator("OsisEventElements");
-   QMetaEnum metaEnum = mo.enumerator(index);
-
-   if(metaEnum.keyToValue(tagName.toLocal8Bit().constData()) != Event)
-   {
-      return; // Error
-   }
-
-   QDomNamedNodeMap attr = e.attributes();
+   // Parse and save <Event> attributes
+   QDomNamedNodeMap attr = eventElement.attributes();
    int size = attr.size();
    if (!size)
    {
-      return; // Error
+      return false; // Error
    }
 
-   index = mo.indexOfEnumerator("OsisEventAttributes");
-   metaEnum = mo.enumerator(index);
-
+   const QMetaObject &mo = OsisEvent::staticMetaObject;
+   int index = mo.indexOfEnumerator("OsisEventAttributes");
+   QMetaEnum metaEnum = mo.enumerator(index);
    for (int i = 0; i < size; i++)
    {
       QDomAttr at = attr.item(i).toAttr();
@@ -71,9 +65,153 @@ void OsisEvent::AddEvent(const QDomElement &element)
          case ExtDt:
             event_ExtDt = at.value();
             break;
+         case ODF:
+            event_ODF = at.value().toInt();
+            break;
          default:
             break;
       }
    }
 
+   return true;
+}
+
+bool OsisEvent::ProcessCategory(QDomElement& categoryElement)
+{
+   OsisCategory* newCategory = new OsisCategory();
+
+   if (!newCategory->ProcessCategoryAttributes(categoryElement))
+   {
+      return false; // Report Error: Invalid Category attributes
+   }
+
+   Current_Category = newCategory->GetId();
+   if (Current_Category == -1)
+   {
+      return false; // Report Warning: Invalid Category
+   }
+
+   if (CategoryMap.contains(Current_Category))
+   {
+      OsisCategory* existingCategory = CategoryMap.value(Current_Category);
+      *existingCategory = *newCategory;
+      delete newCategory;
+   }
+   else
+   {
+      CategoryMap.insert(Current_Category, newCategory);
+   }
+
+   return true;
+}
+
+bool OsisEvent::ProcessSegmentStart(QDomElement& e)
+{
+   OsisSegmentStart* segmentStart = new OsisSegmentStart();
+
+   if (!segmentStart->ProcessSegmentStartAttributes(e))
+   {
+      return false;
+   }
+
+   if (ActiveSegment)
+   {
+      delete ActiveSegment;
+   }
+
+   ActiveSegment = segmentStart;
+
+   return true;
+}
+
+
+bool OsisEvent::ProcessSegment(QDomElement& e)
+{
+   if (Current_Category == -1)
+   {
+      return false;
+   }
+
+   OsisSegment* newSegment = new OsisSegment(Current_Category);
+
+   if (!newSegment->ProcessSegmentAttributes(e))
+   {
+      return false; // Error in Segment attributes
+   }
+
+   int SegmentId = newSegment->GetID();
+
+   if (SegmentId == -1)
+   {
+      return false; // Report Warning: Invalid Category
+   }
+   else
+   {
+      if (SegmentMap.contains(SegmentId))
+      {
+         OsisSegment* existingSegment = SegmentMap.value(SegmentId);
+         *existingSegment = *newSegment;
+         delete newSegment;
+      }
+      else
+      {
+         SegmentMap.insert(SegmentId, newSegment);
+      }
+   }
+   return true;
+}
+
+bool OsisEvent::ProcessCriteria(QDomElement& criteriaElement)
+{
+   if (Current_Segment == -1)
+   {
+      return false;
+   }
+
+   OsisSegmentMap::iterator si = SegmentMap.find(Current_Segment);
+   if (si == SegmentMap.end())
+   {
+      return false;
+   }
+
+   OsisCriteria* newCriteria = new OsisCriteria(Current_Segment);
+
+   if (!newCriteria->ProcessCriteriaAttributes(criteriaElement))
+   {
+      return false; // Error in Segment attributes
+   }
+
+   si.value()->InsertCriteria(newCriteria);
+
+   return true;
+}
+
+bool OsisEvent::ProcessDeduction(QDomElement& deductionElement)
+{
+   if (Current_Segment == -1)
+   {
+      return false;
+   }
+
+   OsisSegmentMap::iterator si = SegmentMap.find(Current_Segment);
+   if (si == SegmentMap.end())
+   {
+      return false;
+   }
+   OsisDeduction* newDeduction = new OsisDeduction();
+
+   if (!newDeduction->ProcessDeductionAttributes(deductionElement))
+   {
+      return false;
+   }
+
+   si.value()->InsertDeduction(newDeduction);
+
+   return true;
+}
+
+void OsisEvent::ProcessingDone()
+{
+   Current_Category = -1;
+   Current_Segment = -1;
 }

@@ -57,7 +57,7 @@ bool OsisXml::ProcessOsisElement(QDomNode& n)
       case Official:
 //         return event.ProcessOfficial(e);
       case Participant:
-//         return event.ProcessParticipant(e);
+         return event.ProcessParticipant(e);
       case Segment:
          return event.ProcessSegment(e);
       case Athlete:

@@ -47,6 +47,7 @@ public:
    bool ProcessParticipant(QDomElement& participantElement);
    bool ProcessAthlete(QDomElement& athleteElement);
 
+
    void ProcessingDone();
 
 private:

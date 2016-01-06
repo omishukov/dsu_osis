@@ -210,6 +210,15 @@ bool OsisEvent::ProcessDeduction(QDomElement& deductionElement)
    return true;
 }
 
+bool OsisEvent::ProcessParticipant(QDomElement& participantElement)
+{
+   if (ActiveSegment->GetSegmentId() == -1)
+   {
+      return false;
+   }
+
+}
+
 void OsisEvent::ProcessingDone()
 {
    Current_Category = -1;

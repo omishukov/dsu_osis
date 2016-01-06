@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     osis/osisxml.cpp \
     osis/segment.cpp \
     osis/segmentstart.cpp \
-    osis/deduction.cpp
+    osis/deduction.cpp \
+    osis/participant.cpp
 
 HEADERS  += mainwindow.h \
     calcconnectionthread.h \
@@ -36,7 +37,8 @@ HEADERS  += mainwindow.h \
     osis/osisxml.h \
     osis/event.h \
     osis/segmentstart.h \
-    osis/deduction.h
+    osis/deduction.h \
+    osis/participant.h
 
 FORMS    += mainwindow.ui
 

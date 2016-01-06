@@ -11,12 +11,12 @@ public:
    explicit OsisSegmentStart(QObject *parent = 0);
    OsisSegmentStart& operator=(const OsisSegmentStart &copy);
 
-   int GetSegmentId() { return SS_Segment_ID; }
-   int GetCategoryId() { return SS_Category_ID; }
-   int GetSegmentIndex() { return SS_Segment_Index; }
-   int GetStartingParticipant() { return SS_Starting_Participant; }
-   int GetNextParticipant() { return SS_Next_Participant; }
-   int GetLastFinishedParticipant() { return SS_LastFinished_Participant; }
+   inline int GetSegmentId() { return SS_Segment_ID; }
+   inline int GetCategoryId() { return SS_Category_ID; }
+   inline int GetSegmentIndex() { return SS_Segment_Index; }
+   inline int GetStartingParticipant() { return SS_Starting_Participant; }
+   inline int GetNextParticipant() { return SS_Next_Participant; }
+   inline int GetLastFinishedParticipant() { return SS_LastFinished_Participant; }
 
    bool ProcessSegmentStartAttributes(QDomElement& segmentStartElement);
 

@@ -31,7 +31,8 @@ SOURCES += \
     ../dsu_osis/osis/osisxml.cpp \
     osisxml_recursive.cpp \
     ../dsu_osis/osis/segmentstart.cpp \
-    ../dsu_osis/osis/deduction.cpp
+    ../dsu_osis/osis/deduction.cpp \
+    ../dsu_osis/osis/participant.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
@@ -44,7 +45,8 @@ HEADERS += \
     ../dsu_osis/osis/segment.h \
     ../dsu_osis/osis/osisxml.h \
     ../dsu_osis/osis/segmentstart.h \
-    ../dsu_osis/osis/deduction.h
+    ../dsu_osis/osis/deduction.h \
+    ../dsu_osis/osis/participant.h
 
 DISTFILES += \
     data/seg_run_jdg.xml \

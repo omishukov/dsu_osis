@@ -43,7 +43,8 @@ HEADERS  += mainwindow.h \
 FORMS    += mainwindow.ui
 
 DISTFILES += \
-    ../README.md
+    ../README.md \
+    LICENSE.txt
 
 LIBS += -lws2_32
 

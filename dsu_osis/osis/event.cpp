@@ -9,6 +9,7 @@
 #include <QMetaEnum>
 #include "event.h"
 #include "deduction.h"
+#include "participant.h"
 
 OsisEvent::OsisEvent()
    : event_ID(-1),
@@ -219,7 +220,14 @@ bool OsisEvent::ProcessDeduction(QDomElement& deductionElement)
 
 bool OsisEvent::ProcessParticipant(QDomElement& participantElement)
 {
-   if (ActiveSegment->GetSegmentId() == -1)
+   if (ActiveSegment->GetSegmentId() == -1 || ActiveSegment->GetCategoryId() == -1)
+   {
+      return false;
+   }
+
+   OsisParticipant* newParticipant = new OsisParticipant();
+
+   if (!newParticipant->ProcessAttributes(participantElement))
    {
       return false;
    }

@@ -10,6 +10,7 @@
 
 OsisParticipant::OsisParticipant(QObject *parent)
    : QObject(parent)
+   , Participant_ID(-1)
    , Participant_Status(Status_MAX)
 {
    for (int i = 0; i < 6; ++i)
@@ -48,14 +49,16 @@ bool OsisParticipant::ProcessAttributes(QDomElement& participantElement)
             Participant_ID = at.value().toInt();
             break;
          case Status:
-         {
-            const QMetaObject &moPS = OsisParticipant::staticMetaObject;
-            int indexPS = moPS.indexOfEnumerator("OsisParticipantStatus");
-            QMetaEnum metaEnumPS = moPS.enumerator(indexPS);
-            Participant_Status = static_cast<enum OsisParticipantStatus>(metaEnumPS.keyToValue(at.value().toLocal8Bit().constData()));
-         }
-         break;
-
+            {
+               uint Status = getEnumKey(OsisParticipant::staticMetaObject, "OsisParticipantStatus", at.value().toLocal8Bit().constData());
+               if (Status > Status_MAX)
+               {
+                  // Error report
+                  break;
+               }
+               Participant_Status = static_cast<enum OsisParticipantStatus>(Status);
+            }
+            break;
          case Type:
             break;
          case Full_Name:

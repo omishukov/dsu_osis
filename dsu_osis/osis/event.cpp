@@ -231,7 +231,7 @@ bool OsisEvent::ProcessParticipant(QDomElement& participantElement)
    {
       return false;
    }
-
+   return true;
 }
 
 void OsisEvent::ProcessingDone()

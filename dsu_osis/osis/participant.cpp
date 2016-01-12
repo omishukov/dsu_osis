@@ -10,6 +10,7 @@
 
 OsisParticipant::OsisParticipant(QObject *parent)
    : QObject(parent)
+   , OsisData(OsisParticipant::staticMetaObject)
    , Participant_ID(-1)
    , Participant_Status(Status_MAX)
 {
@@ -27,10 +28,6 @@ OsisParticipant::OsisParticipant(QObject *parent)
 
 bool OsisParticipant::ProcessAttributes(QDomElement& participantElement)
 {
-   const QMetaObject &mo = OsisParticipant::staticMetaObject;
-   int index = mo.indexOfEnumerator("OsisParticipantAttributes");
-   QMetaEnum metaEnum = mo.enumerator(index);
-
    // Parse and save <Participant> attributes
    QDomNamedNodeMap attr = participantElement.attributes();
    int size = attr.size();
@@ -43,18 +40,17 @@ bool OsisParticipant::ProcessAttributes(QDomElement& participantElement)
    {
       QDomAttr at = attr.item(i).toAttr();
 
-      switch (metaEnum.keyToValue(at.name().toLocal8Bit().constData()))
+      switch (getEnumKey("OsisParticipantAttributes", at.name().toLocal8Bit().constData()))
       {
          case ID:
             Participant_ID = at.value().toInt();
             break;
          case Status:
             {
-               uint Status = getEnumKey(OsisParticipant::staticMetaObject, "OsisParticipantStatus", at.value().toLocal8Bit().constData());
+               uint Status = getEnumKey("OsisParticipantStatus", at.value().toLocal8Bit().constData());
                if (Status > Status_MAX)
                {
-                  // Error report
-                  break;
+                  break; // Error report
                }
                Participant_Status = static_cast<enum OsisParticipantStatus>(Status);
             }

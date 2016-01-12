@@ -13,11 +13,14 @@
 class OsisData
 {
 public:
-   OsisData();
+   OsisData(const QMetaObject &_mo);
 
    virtual bool ProcessAttributes(QDomElement& osisElement) = 0;
 
-   int getEnumKey(const QMetaObject &mo, const char* enumTypeName, const char* enumName);
+   int getEnumKey(const char* enumTypeName, const char* enumName);
+
+private:
+   const QMetaObject &mo;
 };
 
 #endif // OSISDATA_H

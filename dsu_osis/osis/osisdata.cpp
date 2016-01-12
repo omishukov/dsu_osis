@@ -8,12 +8,12 @@
 #include "osisdata.h"
 #include <QMetaEnum>
 
-OsisData::OsisData()
+OsisData::OsisData(const QMetaObject& _mo)
+   : mo(_mo)
 {
-
 }
 
-int OsisData::getEnumKey(const QMetaObject& mo, const char* enumTypeName, const char* enumName)
+int OsisData::getEnumKey(const char* enumTypeName, const char* enumName)
 {
    QMetaEnum metaEnum = mo.enumerator(mo.indexOfEnumerator(enumTypeName));
    return metaEnum.keyToValue(enumName);

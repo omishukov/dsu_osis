@@ -29,6 +29,8 @@ private slots:
 
    void on_IPv4Port_editingFinished();
 
+   void on_LogDataCB_stateChanged(int arg1);
+
 private:
    void loadConnectionSettings();
    void setIpValitation();

@@ -16,6 +16,7 @@ CalcConnectionThread::CalcConnectionThread(QObject *parent)
      quit(false),
      OsisSocket(0),
      state(DISCONNECTED),
+     m_pEventLoop(0),
      osisData(0),
      logfile(0)
 {
@@ -98,6 +99,8 @@ void CalcConnectionThread::runAsClient()
    OsisSocket->disconnect();
    delete OsisSocket;
    OsisSocket = 0;
+   delete m_pEventLoop;
+   m_pEventLoop = 0;
 
    ChangeState(DISCONNECTED);
 }
@@ -217,7 +220,10 @@ void CalcConnectionThread::Stop()
 {
    if (isRunning())
    {
-      m_pEventLoop->exit();
+      if (m_pEventLoop && m_pEventLoop->isRunning())
+      {
+         m_pEventLoop->exit();
+      }
       quit = true;
 
       if (!wait(3000))

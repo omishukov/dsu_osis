@@ -18,6 +18,11 @@
 
 const QString inifile = "osisc.ini";
 
+const int LOG_DATA = 0;
+const int LOG_ERROR = 1;
+const int LOG_WARN = 2;
+bool logopt[3] = {false, false, false}; // data, error, warning
+
 MainWindow::MainWindow(QWidget *parent) :
    QMainWindow(parent),
    ui(new Ui::MainWindow),
@@ -98,6 +103,12 @@ void MainWindow::readSettings()
    IpPort = settings.value("port", "0").toString();
    settings.endGroup();
 
+   settings.beginGroup("Logging");
+   logopt[LOG_DATA] = settings.value("Data", false).toBool();
+   logopt[LOG_ERROR] = settings.value("Error", false).toBool();
+   logopt[LOG_WARN] = settings.value("Warning", false).toBool();
+   settings.endGroup();
+
    settings.beginGroup("MainWindow");
    resize(settings.value("size", QSize(400, 400)).toSize());
    move(settings.value("pos", QPoint(200, 200)).toPoint());
@@ -112,6 +123,12 @@ void MainWindow::writeSettings()
    settings.setValue("mode", ConnectionType);
    settings.setValue("address", IpAddress);
    settings.setValue("port", IpPort);
+   settings.endGroup();
+
+   settings.beginGroup("Logging");
+   settings.setValue("Data", logopt[LOG_DATA]);
+   settings.setValue("Error", logopt[LOG_ERROR]);
+   settings.setValue("Warning", logopt[LOG_WARN]);
    settings.endGroup();
 
    settings.beginGroup("MainWindow");
@@ -212,4 +229,9 @@ void MainWindow::on_IPv4Address_editingFinished()
 void MainWindow::on_IPv4Port_editingFinished()
 {
     IpPort = ui->IPv4Port->text();
+}
+
+void MainWindow::on_LogDataCB_stateChanged(int arg1)
+{
+   logopt[LOG_DATA] = arg1 > 0;
 }

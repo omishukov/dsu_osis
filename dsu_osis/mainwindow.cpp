@@ -15,15 +15,12 @@
 #include <QSettings>
 #include <QtNetwork>
 #include <QTextStream>
+#include "trace.h"
 
 const QString inifile = "osisc.ini";
+extern bool logopt[];
 
-const int LOG_DATA = 0;
-const int LOG_ERROR = 1;
-const int LOG_WARN = 2;
-bool logopt[3] = {false, false, false}; // data, error, warning
-
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(QString logName, QWidget *parent) :
    QMainWindow(parent),
    ui(new Ui::MainWindow),
    ConnectionType(SERVER),
@@ -34,33 +31,28 @@ MainWindow::MainWindow(QWidget *parent) :
 
    setIpValitation();
 
-   loadConnectionSettings();
+   loadSettings();
+
+   QFileInfo fi(logName);
+   QString logText("Logging to ");
+   logText.append(fi.fileName());
+   ui->Logging->setTitle(logText);
 
    OsisData = new OsisDataProvider();
 
    OsisLink.setDataIf(OsisData);
 
    connect(&OsisLink, SIGNAL(UpdateConnectionState()), this, SLOT(showConnectionState()));
-
-   f = new QFile("osislog.txt");
-   if (f->open(QIODevice::ReadWrite | QIODevice::Text))
-   {
-      if (!f->isSequential())
-      {
-          f->seek(f->size());
-      }
-      OsisLink.SetLogIf(new QTextStream(f));
-   }
 }
 
 MainWindow::~MainWindow()
 {
-   f->close();
    writeSettings();
    delete ui;
+   delete OsisData;
 }
 
-void MainWindow::loadConnectionSettings()
+void MainWindow::loadSettings()
 {
    readSettings();
 
@@ -79,6 +71,11 @@ void MainWindow::loadConnectionSettings()
       ui->IPv4Address->setDisabled(true);
    }
    ui->IPv4Port->setText(IpPort);
+
+   ui->LogDataCB->setChecked(logopt[LOG_DATA]);
+   ui->LogErrorCB->setChecked(logopt[LOG_ERROR]);
+   ui->LogWarningCB->setChecked(logopt[LOG_WARN]);
+   ui->LogDebugCB->setChecked(logopt[LOG_DEBUG]);
 }
 
 void MainWindow::setIpValitation()
@@ -107,6 +104,7 @@ void MainWindow::readSettings()
    logopt[LOG_DATA] = settings.value("Data", false).toBool();
    logopt[LOG_ERROR] = settings.value("Error", false).toBool();
    logopt[LOG_WARN] = settings.value("Warning", false).toBool();
+   logopt[LOG_DEBUG] = settings.value("Debug", false).toBool();
    settings.endGroup();
 
    settings.beginGroup("MainWindow");
@@ -129,6 +127,7 @@ void MainWindow::writeSettings()
    settings.setValue("Data", logopt[LOG_DATA]);
    settings.setValue("Error", logopt[LOG_ERROR]);
    settings.setValue("Warning", logopt[LOG_WARN]);
+   settings.setValue("Debug", logopt[LOG_DEBUG]);
    settings.endGroup();
 
    settings.beginGroup("MainWindow");
@@ -234,4 +233,19 @@ void MainWindow::on_IPv4Port_editingFinished()
 void MainWindow::on_LogDataCB_stateChanged(int arg1)
 {
    logopt[LOG_DATA] = arg1 > 0;
+}
+
+void MainWindow::on_LogErrorCB_stateChanged(int arg1)
+{
+   logopt[LOG_ERROR] = arg1 > 0;
+}
+
+void MainWindow::on_LogWarningCB_stateChanged(int arg1)
+{
+   logopt[LOG_WARN] = arg1 > 0;
+}
+
+void MainWindow::on_LogDebugCB_stateChanged(int arg1)
+{
+   logopt[LOG_DEBUG] = arg1 > 0;
 }

@@ -16,7 +16,7 @@ class MainWindow : public QMainWindow
    Q_OBJECT
 
 public:
-   explicit MainWindow(QWidget *parent = 0);
+   explicit MainWindow(QString logName, QWidget *parent = 0);
    ~MainWindow();
 
 private slots:
@@ -31,8 +31,14 @@ private slots:
 
    void on_LogDataCB_stateChanged(int arg1);
 
+   void on_LogErrorCB_stateChanged(int arg1);
+
+   void on_LogWarningCB_stateChanged(int arg1);
+
+   void on_LogDebugCB_stateChanged(int arg1);
+
 private:
-   void loadConnectionSettings();
+   void loadSettings();
    void setIpValitation();
    void readSettings();
    void writeSettings();
@@ -51,7 +57,6 @@ private:
    QString IpPort;
    CalcConnectionThread OsisLink;
    OsisDataProvider* OsisData;
-   QFile *f;
 };
 
 #endif // MAINWINDOW_H

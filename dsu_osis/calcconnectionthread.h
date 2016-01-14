@@ -23,7 +23,6 @@ public:
    } ConnectState;
 
    void setDataIf(class OsisDataIf* osisDataIf);
-   void SetLogIf(QTextStream* f);
    void establishConnection(const QString &hostName, quint16 port);
    void abortConnection();
    void destroyConnection();
@@ -57,7 +56,6 @@ private:
    OsisDataIf* osisData;
    QByteArray newdata;
    QByteArray tempdata;
-   QTextStream* logfile;
 };
 
 #endif // CALCCONNECTIONTHREAD_H

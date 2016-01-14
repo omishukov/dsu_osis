@@ -17,25 +17,18 @@ CalcConnectionThread::CalcConnectionThread(QObject *parent)
      OsisSocket(0),
      state(DISCONNECTED),
      m_pEventLoop(0),
-     osisData(0),
-     logfile(0)
+     osisData(0)
 {
 }
 
 CalcConnectionThread::~CalcConnectionThread()
 {
-   delete logfile;
    Stop();
 }
 
 void CalcConnectionThread::setDataIf(OsisDataIf* osisDataIf)
 {
    osisData = osisDataIf;
-}
-
-void CalcConnectionThread::SetLogIf(QTextStream* f)
-{
-   logfile = f;
 }
 
 void CalcConnectionThread::establishConnection(const QString &hostName, quint16 port)
@@ -124,11 +117,7 @@ void CalcConnectionThread::disconnected()
 void CalcConnectionThread::readyRead()
 {
    QByteArray qba = OsisSocket->readAll();
-   if (logfile)
-   {
-      QString logString(qba);
-      *logfile << QDateTime::currentDateTime().toString("dd/MM/yyyy hh:mm:ss.zzz") << ": " << logString << endl;
-   }
+   qInfo() << qba << endl;
    processData(qba);
 }
 

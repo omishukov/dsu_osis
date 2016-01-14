@@ -7,14 +7,81 @@
 
 #include "mainwindow.h"
 #include <QApplication>
+#include <QDateTime>
+#include "trace.h"
+
+QTextStream *out = 0;
+
+bool logopt[4] = {false, false, false, false}; // data, error, warning
+
+void logOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+{
+   QString debugdate = QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss.zzz");
+   switch (type)
+   {
+      case QtDebugMsg:
+         if (logopt[LOG_DEBUG])
+         {
+            debugdate += "[D]";
+         }
+         break;
+      case QtWarningMsg:
+         if (logopt[LOG_WARN])
+         {
+            debugdate += "[W]";
+         }
+         break;
+      case QtCriticalMsg:
+         if (logopt[LOG_ERROR])
+         {
+            debugdate += "[C]";
+         }
+         break;
+      case QtFatalMsg:
+         debugdate += "[F]";
+         break;
+      case QtInfoMsg:
+         if (logopt[LOG_DATA])
+         {
+            debugdate += "[I]";
+         }
+         break;
+   }
+
+   (*out) << debugdate << " " << msg << " (" << context.file << ":" << context.line << ")" << endl;
+
+//   if (QtFatalMsg == type)
+//   {
+//      abort();
+//   }
+}
 
 int main(int argc, char *argv[])
 {
+   QString fileName = argv[0];
+   fileName.replace(".exe", ".log");
+   QFile *log = new QFile(fileName);
+   if (log->open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
+   {
+      out = new QTextStream(log);
+   }
+   qInstallMessageHandler(logOutput);
+
    QApplication a(argc, argv);
-   MainWindow w;
+   MainWindow w(log->fileName());
    w.show();
 
-   return a.exec();
+   bool res = a.exec();
+
+   qInstallMessageHandler(0);
+   if (out)
+   {
+      delete out;
+   }
+   log->close();
+   delete log;
+
+   return res;
 }
 
 // Backlog

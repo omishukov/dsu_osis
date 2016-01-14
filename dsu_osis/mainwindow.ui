@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>418</width>
-    <height>351</height>
+    <width>454</width>
+    <height>264</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -161,7 +161,7 @@
      <rect>
       <x>10</x>
       <y>90</y>
-      <width>247</width>
+      <width>341</width>
       <height>56</height>
      </rect>
     </property>
@@ -169,13 +169,6 @@
      <string>Log to log.txt</string>
     </property>
     <layout class="QHBoxLayout" name="horizontalLayout">
-     <item>
-      <widget class="QCheckBox" name="LogDataCB">
-       <property name="text">
-        <string>Data</string>
-       </property>
-      </widget>
-     </item>
      <item>
       <widget class="QCheckBox" name="LogErrorCB">
        <property name="text">
@@ -191,13 +184,27 @@
       </widget>
      </item>
      <item>
+      <widget class="QCheckBox" name="LogDebugCB">
+       <property name="text">
+        <string>Debug</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="LogDataCB">
+       <property name="text">
+        <string>Data</string>
+       </property>
+      </widget>
+     </item>
+     <item>
       <spacer name="horizontalSpacer">
        <property name="orientation">
         <enum>Qt::Horizontal</enum>
        </property>
        <property name="sizeHint" stdset="0">
         <size>
-         <width>40</width>
+         <width>74</width>
          <height>20</height>
         </size>
        </property>
@@ -207,7 +214,6 @@
    </widget>
    <zorder>Connection</zorder>
    <zorder>Logging</zorder>
-   <zorder>verticalSpacer</zorder>
    <zorder>Logging</zorder>
   </widget>
   <widget class="QMenuBar" name="menuBar">
@@ -215,7 +221,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>418</width>
+     <width>454</width>
      <height>21</height>
     </rect>
    </property>

@@ -40,7 +40,8 @@ HEADERS  += mainwindow.h \
     osis/segmentstart.h \
     osis/deduction.h \
     osis/participant.h \
-    osis/osisdata.h
+    osis/osisdata.h \
+    trace.h
 
 FORMS    += mainwindow.ui
 

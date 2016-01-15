@@ -17,7 +17,8 @@ CalcConnectionThread::CalcConnectionThread(QObject *parent)
      OsisSocket(0),
      state(DISCONNECTED),
      m_pEventLoop(0),
-     osisData(0)
+     osisData(0),
+     StartPos(-1)
 {
 }
 
@@ -84,10 +85,12 @@ void CalcConnectionThread::runAsClient()
       {
          continue;
       }
+      qDebug() << "Connected to ISUCalcFS." << endl;
       m_pEventLoop = new QEventLoop();
       m_pEventLoop->exec();
    }
 
+   qDebug() << "Disconnected from ISUCalcFS." << endl;
    OsisSocket->disconnectFromHost();
    OsisSocket->disconnect();
    delete OsisSocket;
@@ -122,6 +125,41 @@ void CalcConnectionThread::readyRead()
 }
 
 void CalcConnectionThread::processData(QByteArray& qba)
+{
+   for (int i = 0; i < qba.size(); i++)
+   {
+      if (qba.at(i) == STX)
+      {
+         if (StartPos != -1)
+         {
+            newdata.clear();
+         }
+         StartPos = i + 1;
+      }
+      else if (qba.at(i) == ETX)
+      {
+         if (StartPos != -1)
+         {
+            if (!newdata.isEmpty())
+            {
+               StartPos = 0;
+            }
+            newdata.append(qba.mid(StartPos, i-1));
+
+            osisData->DataInd(newdata);
+
+            newdata.clear();
+            StartPos = -1;
+         }
+      }
+   }
+   if (StartPos != -1) // ETX was not at the end
+   {
+      newdata = qba.mid(StartPos);
+   }
+}
+
+void CalcConnectionThread::newProcessData(QByteArray& qba)
 {
    while (osisData && qba.size() > 0)
    {

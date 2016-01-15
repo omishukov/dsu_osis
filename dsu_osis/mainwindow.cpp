@@ -217,7 +217,6 @@ void MainWindow::showConnectionState()
       default:
          break;
    }
-
 }
 
 void MainWindow::on_IPv4Address_editingFinished()

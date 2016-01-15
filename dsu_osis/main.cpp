@@ -14,46 +14,50 @@ QTextStream *out = 0;
 
 bool logopt[4] = {false, false, false, false}; // data, error, warning
 
-void logOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+void logOutput(QtMsgType type, const QMessageLogContext &/*context*/, const QString &msg)
 {
+   bool enablePrint = false;
    QString debugdate = QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss.zzz");
    switch (type)
    {
       case QtDebugMsg:
          if (logopt[LOG_DEBUG])
          {
-            debugdate += "[D]";
+            debugdate += " [D]:";
+            enablePrint = true;
          }
          break;
       case QtWarningMsg:
          if (logopt[LOG_WARN])
          {
-            debugdate += "[W]";
+            debugdate += " [W]:";
+            enablePrint = true;
          }
          break;
       case QtCriticalMsg:
          if (logopt[LOG_ERROR])
          {
-            debugdate += "[C]";
+            debugdate += " [C]:";
+            enablePrint = true;
          }
          break;
       case QtFatalMsg:
-         debugdate += "[F]";
+         debugdate += " [F]:";
+         enablePrint = true;
          break;
       case QtInfoMsg:
          if (logopt[LOG_DATA])
          {
-            debugdate += "[I]";
+            debugdate += " [I]:";
+            enablePrint = true;
          }
          break;
    }
 
-   (*out) << debugdate << " " << msg << " (" << context.file << ":" << context.line << ")" << endl;
-
-//   if (QtFatalMsg == type)
-//   {
-//      abort();
-//   }
+   if (enablePrint)
+   {
+      (*out) << debugdate << " " << msg << endl;
+   }
 }
 
 int main(int argc, char *argv[])

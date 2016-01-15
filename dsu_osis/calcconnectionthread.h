@@ -31,6 +31,7 @@ public:
    void runAsServer();
    ConnectState GetState() { return state; }
    void processData(QByteArray& qba);
+   void newProcessData(QByteArray& qba);
 
 signals:
    void UpdateConnectionState();
@@ -56,6 +57,7 @@ private:
    OsisDataIf* osisData;
    QByteArray newdata;
    QByteArray tempdata;
+   int StartPos;
 };
 
 #endif // CALCCONNECTIONTHREAD_H

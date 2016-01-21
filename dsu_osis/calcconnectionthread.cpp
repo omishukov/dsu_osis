@@ -144,7 +144,7 @@ void CalcConnectionThread::processData(QByteArray& qba)
             {
                StartPos = 0;
             }
-            newdata.append(qba.mid(StartPos, i-1));
+            newdata.append(qba.mid(StartPos, i-StartPos));
 
             osisData->DataInd(newdata);
 
@@ -153,93 +153,11 @@ void CalcConnectionThread::processData(QByteArray& qba)
          }
       }
    }
+
    if (StartPos != -1) // ETX was not at the end
    {
       newdata = qba.mid(StartPos);
    }
-}
-
-void CalcConnectionThread::newProcessData(QByteArray& qba)
-{
-   while (osisData && qba.size() > 0)
-   {
-      qint32 posSTX = getFirstCharPosition(qba, STX);
-      qint32 posETX = getFirstCharPosition(qba, ETX);
-
-      // STX and ETX present
-      if (posSTX >= 0 && posETX >= 0)
-      {
-         bool complMsg = false;
-         // Complete OSIS message
-         if (posETX > posSTX)
-         {  // [s....es..]
-            newdata = qba.mid(posSTX+1, posETX - posSTX -1);
-            complMsg = true;
-         }
-         else
-         {  // [...es....e..]
-            if (!tempdata.isEmpty())
-            {
-               newdata = tempdata;
-               newdata.append(qba.mid(0, posETX));
-               tempdata.clear();
-               complMsg = true;
-            }
-         }
-         if (complMsg)
-         {
-            osisData->DataInd(newdata);
-            newdata.clear();
-         }
-         qba.remove(0,posETX + 1);
-         continue;
-      }
-      // STX present, ETX missing
-      if (posSTX >= 0 && posETX == -1)
-      {  // [.s......]
-         // Beginning of OSIS message
-         if (!tempdata.isEmpty())
-         {
-            tempdata.clear();
-         }
-         tempdata = qba.mid(posSTX + 1);
-         qba.clear();
-         continue;
-      }
-
-      // STX missing, STX present
-      if (posSTX == -1 && posETX >= 0)
-      { // [........e...]
-         if (!tempdata.isEmpty())
-         {
-            tempdata.append(qba.mid(0, posETX));
-            osisData->DataInd(tempdata);
-            tempdata.clear();
-         }
-         qba.remove(0, posETX + 1);
-         continue;
-      }
-
-      //STX and ETX missing
-      if (posSTX == -1 && posETX == -1)
-      {
-         tempdata.clear();
-         qba.clear();
-      }
-
-   }
-}
-
-qint32 CalcConnectionThread::getFirstCharPosition(QByteArray& qba, quint8 tag)
-{
-   for (int i = 0; i < qba.size(); i++)
-   {
-      if (qba.at(i) == tag)
-      {
-         return i;
-      }
-   }
-   return -1;
 }
 
 

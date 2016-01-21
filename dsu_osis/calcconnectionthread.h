@@ -31,7 +31,6 @@ public:
    void runAsServer();
    ConnectState GetState() { return state; }
    void processData(QByteArray& qba);
-   void newProcessData(QByteArray& qba);
 
 signals:
    void UpdateConnectionState();
@@ -56,7 +55,6 @@ private:
    QEventLoop* m_pEventLoop;
    OsisDataIf* osisData;
    QByteArray newdata;
-   QByteArray tempdata;
    int StartPos;
 };
 

@@ -68,23 +68,28 @@ void UnittestTest::ReceiveStxEtxMultiple()
    qbaReq.append(data1_1);
    qbaReq.append(ETX);
    osisLink->processData(qbaReq);
+   qbaReq.clear();
    qbaReq.append(STX);
    qbaReq.append(data1_2);
    qbaReq.append(ETX);
    osisLink->processData(qbaReq);
+   qbaReq.clear();
    qbaReq.append(STX);
    qbaReq.append(data1_3);
    qbaReq.append(ETX);
    osisLink->processData(qbaReq);
+   qbaReq.clear();
    qbaReq.append(STX);
    qbaReq.append(data1_4);
    qbaReq.append(ETX);
    osisLink->processData(qbaReq);
+   qbaReq.clear();
    qbaReq.append(STX);
    qbaReq.append(data1_5);
    qbaReq.append(CRLF);
    qbaReq.append(ETX);
    osisLink->processData(qbaReq);
+   qbaReq.clear();
 
    QVERIFY2(qbaInd == osisDataStubIf->osisData, "Failure");
 

@@ -5,6 +5,7 @@
  * Contributor(s):
  *   Oleksander Mishukov <dsu@mishukov.dk> */
 
+#include <QDebug>
 #include <QMetaEnum>
 #include "participant.h"
 
@@ -50,6 +51,7 @@ bool OsisParticipant::ProcessAttributes(QDomElement& participantElement)
                uint Status = getEnumKey("OsisParticipantStatus", at.value().toLocal8Bit().constData());
                if (Status > Status_MAX)
                {
+                  qCritical() << "Unknown <Participant> Status attribute: " << at.value() << endl;
                   break; // Error report
                }
                Participant_Status = static_cast<enum OsisParticipantStatus>(Status);

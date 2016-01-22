@@ -88,7 +88,7 @@ bool OsisEvent::ProcessCategory(QDomElement& categoryElement)
 {
    OsisCategory* newCategory = new OsisCategory();
 
-   if (!newCategory->ProcessCategoryAttributes(categoryElement))
+   if (!newCategory->ProcessAttributes(categoryElement))
    {
       return false; // Report Error: Invalid Category attributes
    }
@@ -184,7 +184,7 @@ bool OsisEvent::ProcessCriteria(QDomElement& criteriaElement)
 
    OsisCriteria* newCriteria = new OsisCriteria(Current_Segment);
 
-   if (!newCriteria->ProcessCriteriaAttributes(criteriaElement))
+   if (!newCriteria->ProcessAttributes(criteriaElement))
    {
       return false; // Error in Segment attributes
    }

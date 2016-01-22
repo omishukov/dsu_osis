@@ -10,65 +10,12 @@
 
 
 OsisCategory::OsisCategory()
-   : Category_ID(-1),
-     Category_Tec_Id(-1)
+   : OsisData(OsisCategory::staticMetaObject)
+   , Category_ID(-1)
+   , Category_Tec_Id(-1)
 {
 
 }
-
-bool OsisCategory::ProcessCategoryAttributes(QDomElement& categoryElement)
-{
-   const QMetaObject &mo = OsisCategory::staticMetaObject;
-   int index = mo.indexOfEnumerator("OsisCategoryAttributes");
-   QMetaEnum metaEnum = mo.enumerator(index);
-
-   // Parse and save <Category> attributes
-   QDomNamedNodeMap attr = categoryElement.attributes();
-   int size = attr.size();
-   if (!size)
-   {
-      return false; // Error
-   }
-
-   for (int i = 0; i < size; i++)
-   {
-      QDomAttr at = attr.item(i).toAttr();
-
-      switch (metaEnum.keyToValue(at.name().toLocal8Bit().constData()))
-      {
-         case ID:
-            Category_ID = at.value().toInt();
-            break;
-         case Name:
-            Category_Name = at.value();
-            break;
-         case Level:
-            Category_Level = at.value();
-            break;
-         case Gender:
-            Category_Gender = at.value();
-            break;
-         case Type:
-            Category_Type = at.value();
-            break;
-         case TypeName:
-            Category_TypeName = at.value();
-            break;
-         case Tec_Id:
-         case tec_id:
-            Category_Tec_Id = at.value().toInt();
-            break;
-         case ExtDt:
-            Category_ExtDt = at.value();
-            break;
-         default:
-            break;
-      }
-   }
-
-   return true;
-}
-
 
 OsisCategory& OsisCategory::operator=(const OsisCategory& copy)
 {
@@ -111,4 +58,38 @@ OsisCategory& OsisCategory::operator=(const OsisCategory& copy)
    }
 
    return *this;
+}
+
+void OsisCategory::ProcessAttribute(int key, QString& value)
+{
+   switch (static_cast<enum OsisElementAttributes>(key))
+   {
+      case ID:
+         Category_ID = value.toInt();
+         break;
+      case Name:
+         Category_Name = value;
+         break;
+      case Level:
+         Category_Level = value;
+         break;
+      case Gender:
+         Category_Gender = value;
+         break;
+      case Type:
+         Category_Type = value;
+         break;
+      case TypeName:
+         Category_TypeName = value;
+         break;
+      case Tec_Id:
+      case tec_id:
+         Category_Tec_Id = value.toInt();
+         break;
+      case ExtDt:
+         Category_ExtDt = value;
+         break;
+      default:
+         break;
+   }
 }

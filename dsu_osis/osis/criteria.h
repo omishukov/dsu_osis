@@ -11,8 +11,9 @@
 #include <QObject>
 #include <QDomDocument>
 #include <QMap>
+#include "osisdata.h"
 
-class OsisCriteria : public QObject
+class OsisCriteria : public QObject, public OsisData
 {
    Q_OBJECT
 public:
@@ -26,10 +27,10 @@ public:
    double GetFactor() { return CriFactor; }
    double GetPoints() { return CriPoints; }
 
-   bool ProcessCriteriaAttributes(QDomElement& criteriaElement);
+   void ProcessAttribute(int key, QString& value);
 
 public:
-   enum OsisCriteriaAttributes
+   enum OsisElementAttributes
    {
       Index, //  Index, used as identifier
       Cri_Name, // 40
@@ -37,7 +38,7 @@ public:
       Cri_Factor, //  Format “9.99”
       Points //  Format “9.99”
    };
-   Q_ENUM(OsisCriteriaAttributes)
+   Q_ENUM(OsisElementAttributes)
 
 signals:
 

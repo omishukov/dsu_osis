@@ -18,7 +18,7 @@ class OsisParticipant : public QObject, public OsisData
 public:
    explicit OsisParticipant(QObject *parent = 0);
 
-   enum OsisParticipantAttributes
+   enum OsisElementAttributes
    {
       ID, // Identifier
       Status, // See OsisParticipantStatus
@@ -111,12 +111,12 @@ public:
       PerfStatus_MAX
    };
 
-   Q_ENUM(OsisParticipantAttributes)
+   Q_ENUM(OsisElementAttributes)
    Q_ENUM(OsisParticipantStatus)
    Q_ENUM(OsisParticipantType)
    Q_ENUM(OsisPerformanceStatus)
 
-   bool ProcessAttributes(QDomElement& participantElement);
+   void ProcessAttribute(int key, QString& value);
 signals:
 
 public slots:

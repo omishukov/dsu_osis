@@ -11,8 +11,9 @@
 #include <QObject>
 #include <QDomDocument>
 #include <QMap>
+#include "osisdata.h"
 
-class OsisCategory: public QObject
+class OsisCategory: public QObject, public OsisData
 {
    Q_OBJECT
 
@@ -29,10 +30,10 @@ public:
    QString GetExtDt() { return Category_ExtDt; }
    QString GetTypeName() { return Category_TypeName; }
 
-   bool ProcessCategoryAttributes(QDomElement& categoryElement);
+   void ProcessAttribute(int key, QString& value);
 
 public:
-   enum OsisCategoryAttributes
+   enum OsisElementAttributes
    {
       ID, // Identifier
       Name, // e.g. Ladies, Men, Pairs, Ice Dancing
@@ -45,7 +46,7 @@ public:
       ExtDt // RSC Code
    };
 
-   Q_ENUM(OsisCategoryAttributes)
+   Q_ENUM(OsisElementAttributes)
 
 private:
    int Category_ID;

@@ -10,6 +10,7 @@
 
 OsisCriteria::OsisCriteria(int segmentId, QObject *parent)
    : QObject(parent)
+   , OsisData(OsisCriteria::staticMetaObject)
    , SegmentId(segmentId)
    , CriIndex(-1)
    , CriFactor(-1)
@@ -48,46 +49,27 @@ OsisCriteria& OsisCriteria::operator=(const OsisCriteria& copy)
    return *this;
 }
 
-bool OsisCriteria::ProcessCriteriaAttributes(QDomElement& criteriaElement)
+void OsisCriteria::ProcessAttribute(int key, QString& value)
 {
-   const QMetaObject &mo = OsisCriteria::staticMetaObject;
-   int index = mo.indexOfEnumerator("OsisCriteriaAttributes");
-   QMetaEnum metaEnum = mo.enumerator(index);
-
-   // Parse and save <Criteria> attributes
-   QDomNamedNodeMap attr = criteriaElement.attributes();
-   int size = attr.size();
-   if (!size)
+   switch (static_cast<enum OsisElementAttributes>(key))
    {
-      return false; // Error
+      case Index:
+         CriIndex = value.toInt();
+         break;
+      case Cri_Name:
+         CriName = value;
+         break;
+      case Cri_Abbrev:
+         CriAbbrev = value;
+         break;
+      case Cri_Factor:
+         CriFactor = value.toDouble();
+         break;
+      case Points:
+         CriPoints = value.toDouble();
+         break;
+      default:
+         break;
    }
-
-   for (int i = 0; i < size; i++)
-   {
-      QDomAttr at = attr.item(i).toAttr();
-
-      switch (metaEnum.keyToValue(at.name().toLocal8Bit().constData()))
-      {
-         case Index:
-            CriIndex = at.value().toInt();
-            break;
-         case Cri_Name:
-            CriName = at.value();
-            break;
-         case Cri_Abbrev:
-            CriAbbrev = at.value();
-            break;
-         case Cri_Factor:
-            CriFactor = at.value().toDouble();
-            break;
-         case Points:
-            CriPoints = at.value().toDouble();
-            break;
-         default:
-            break;
-      }
-   }
-
-   return true;
 }
 

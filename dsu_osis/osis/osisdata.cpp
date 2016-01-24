@@ -7,9 +7,11 @@
 
 #include "osisdata.h"
 #include <QMetaEnum>
+#include <QDebug>
 
-OsisData::OsisData(const QMetaObject& _mo)
+OsisData::OsisData(const QMetaObject& _mo, QString elementName)
    : mo(_mo)
+   , ElementName(elementName)
 {
 }
 
@@ -17,6 +19,30 @@ int OsisData::getEnumKey(const char* enumTypeName, const char* enumName)
 {
    QMetaEnum metaEnum = mo.enumerator(mo.indexOfEnumerator(enumTypeName));
    return metaEnum.keyToValue(enumName);
+}
+
+void OsisData::Update(OsisData& newData)
+{
+   Attribute.swap(newData.Attribute);
+
+   Attribute = newData.Attribute;
+
+}
+
+QString OsisData::GetAttribute(int key)
+{
+   QString empty;
+   return Attribute.find(key) != Attribute.end() ? Attribute[key] : empty;
+}
+
+int OsisData::GetAttributeInt(int key)
+{
+   return Attribute.find(key) != Attribute.end() ? Attribute[key].toInt() : -1;
+}
+
+double OsisData::GetAttributeDouble(int key)
+{
+   return Attribute.find(key) != Attribute.end() ? Attribute[key].toDouble() : -1;
 }
 
 bool OsisData::ProcessAttributes(QDomElement& criteriaElement)
@@ -33,8 +59,20 @@ bool OsisData::ProcessAttributes(QDomElement& criteriaElement)
    {
       QDomAttr at = attr.item(i).toAttr();
       QString value(at.value());
+      int key = getEnumKey("OsisElementAttributes", at.name().toLocal8Bit().constData());
 
-      ProcessAttribute(getEnumKey("OsisElementAttributes", at.name().toLocal8Bit().constData()), value);
+      if (key != -1)
+      {
+         if (Attribute.contains(key))
+         {
+            Attribute.remove(key);
+         }
+         Attribute[key] = value;
+      }
+      else
+      {
+         qCritical() << "<" << ElementName << ">:  Unknown attribute (" << value << ")" << endl;
+      }
    }
 
    return true;

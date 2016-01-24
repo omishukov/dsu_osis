@@ -90,7 +90,6 @@ public:
       FNR, // Final not reached
       DSQ, // Disqualified
       SEN, // Substitute entry
-      Status_MAX
    };
 
    enum OsisParticipantType
@@ -116,42 +115,11 @@ public:
    Q_ENUM(OsisParticipantType)
    Q_ENUM(OsisPerformanceStatus)
 
-   void ProcessAttribute(int key, QString& value);
 signals:
 
 public slots:
 
 private:
-   int Participant_ID;
-   enum OsisParticipantStatus Participant_Status;// See participant status code
-   enum OsisParticipantType Participant_Type; // See participant type code
-   QString Participant_Full_Name; // 60
-   QString Participant_Short_Name; // 30
-   QString Participant_TV_Long_Name; // 40
-   QString Participant_TV_Short_Name; // 30
-   QString Participant_ScbName1; // 30 ScoreboardName1
-   QString Participant_ScbName2; // 30 ScoreboardName2
-   QString Participant_ScbName3; // 30 ScoreboardName3
-   QString Participant_ScbName4; // 30 ScoreboardName4
-   QString Participant_Nation; // 3
-   QString Participant_Music; // 40 Music description
-   QString Participant_Coach; // 40 Coach Names
-   QString Participant_Club; // 11 Max length: singles = 5, couples = 11
-   QString Participant_ExtRef; // 10 Reference ID to external database
-   QString Participant_RegNum; // 16 ORIS registration number
-   QString Participant_TeamName; // -
-   QString Participant_TeamNation; // -
-
-   int Participant_Index; //
-   int Participant_TIndex; // Total display position
-   int Participant_TRank; // Total rank
-   double Participant_TPoint; // Total points, format: “0.00”
-   enum OsisPerformanceStatus Participant_SegmentStatus[6];
-   int Participant_SegmentRank[6];
-   int Participant_SegmentIndex[6];
-   double Participant_SegmentPoints[6];
-   int Participant_SegmentIIndex[6];
-   int Participant_SegmentIRank[6];
 };
 
 #endif // OSISPARTICIPANT_H

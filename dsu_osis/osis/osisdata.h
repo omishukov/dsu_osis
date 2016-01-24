@@ -9,19 +9,29 @@
 #define OSISDATA_H
 
 #include <QDomDocument>
+#include <QMap>
 
 class OsisData
 {
 public:
-   OsisData(const QMetaObject &_mo);
+   OsisData(const QMetaObject &_mo, QString elementName);
 
    virtual bool ProcessAttributes(QDomElement& osisElement);
-   virtual void ProcessAttribute(int key, QString& value) = 0;
    int getEnumKey(const char* enumTypeName, const char* enumName);
+   void Update(OsisData& newData);
 
 private:
-
    const QMetaObject &mo;
+
+protected:
+
+   QString GetAttribute(int key);
+   int GetAttributeInt(int key);
+   double GetAttributeDouble(int key);
+
+private:
+   QMap<int, QString> Attribute;
+   QString ElementName;
 };
 
 #endif // OSISDATA_H

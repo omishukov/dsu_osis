@@ -12,7 +12,7 @@
 
 QTextStream *out = 0;
 
-bool logopt[4] = {false, false, false, false}; // data, error, warning
+bool logopt[4] = {false, false, false, false}; // data, error, warning, debug
 
 void logOutput(QtMsgType type, const QMessageLogContext &/*context*/, const QString &msg)
 {

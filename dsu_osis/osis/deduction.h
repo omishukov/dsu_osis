@@ -11,40 +11,28 @@
 #include <QObject>
 #include <QDomDocument>
 #include <QMap>
+#include "osisdata.h"
 
-class OsisDeduction : public QObject
+class OsisDeduction : public QObject, public OsisData
 {
    Q_OBJECT
 public:
    explicit OsisDeduction(QObject *parent = 0);
 
-signals:
-
-public slots:
-
 public:
-   enum OsisDeductionAttributes
+   enum OsisElementAttributes
    {
       Index, // Index, used as identifier
       Ded_Name, // 40
       Ded_Value, // Format “9.99”
       Ded_Edit
    };
-   Q_ENUM(OsisDeductionAttributes)
+   Q_ENUM(OsisElementAttributes)
 
-   int GetIndex() { return DedIndex; }
-   QString GetName() { return DedName; }
-   double GetValue() { return DedValue; }
-   QString GetEdit() { return DedEdit; }
-   bool ProcessDeductionAttributes(QDomElement& deductionElement);
-
-private:
-   int DedIndex;
-   QString DedName;
-   double DedValue;
-   QString DedEdit;
-
-   OsisDeduction& operator=(const OsisDeduction &copy);
+   int GetIndex();
+   QString GetName();
+   double GetValue();
+   QString GetEdit();
 
 };
 

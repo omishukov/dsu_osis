@@ -26,7 +26,8 @@ SOURCES += main.cpp\
     osis/segmentstart.cpp \
     osis/deduction.cpp \
     osis/participant.cpp \
-    osis/osisdata.cpp
+    osis/osisdata.cpp \
+    isucompetition.cpp
 
 HEADERS  += mainwindow.h \
     calcconnectionthread.h \
@@ -41,7 +42,8 @@ HEADERS  += mainwindow.h \
     osis/deduction.h \
     osis/participant.h \
     osis/osisdata.h \
-    trace.h
+    trace.h \
+    isucompetition.h
 
 FORMS    += mainwindow.ui
 

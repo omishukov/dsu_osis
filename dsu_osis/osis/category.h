@@ -19,18 +19,16 @@ class OsisCategory: public QObject, public OsisData
 
 public:
    OsisCategory();
-   OsisCategory& operator=(const OsisCategory &category);
 
-   int GetId() { return Category_ID; }
-   int GetTecId() { return Category_Tec_Id; }
-   QString GetName() { return Category_Name; }
-   QString GetLevel() { return Category_Level; }
-   QString GetGender() { return Category_Gender; }
-   QString GetType() { return Category_Type; }
-   QString GetExtDt() { return Category_ExtDt; }
-   QString GetTypeName() { return Category_TypeName; }
-
-   void ProcessAttribute(int key, QString& value);
+   int GetId();
+   int GetTecId();
+   int Gettecid();
+   QString GetName();
+   QString GetLevel();
+   QString GetGender();
+   QString GetType();
+   QString GetExtDt();
+   QString GetTypeName();
 
 public:
    enum OsisElementAttributes
@@ -43,20 +41,12 @@ public:
       TypeName, // ???
       Tec_Id, // -
       tec_id, // -
-      ExtDt // RSC Code
+      ExtDt, // RSC Code
+      LAST_ATTRIBUTE
    };
 
    Q_ENUM(OsisElementAttributes)
 
-private:
-   int Category_ID;
-   int Category_Tec_Id;
-   QString Category_Name;
-   QString Category_Level;
-   QString Category_Gender;
-   QString Category_Type;
-   QString Category_ExtDt;
-   QString Category_TypeName;
 };
 
 typedef QMap <int, OsisCategory*> OsisCategoryMap;

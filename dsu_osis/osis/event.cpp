@@ -102,12 +102,7 @@ bool OsisEvent::ProcessCategory(QDomElement& categoryElement)
    if (CategoryMap.contains(Current_Category))
    {
       OsisCategory* existingCategory = CategoryMap.value(Current_Category);
-      *existingCategory = *newCategory;
-      delete newCategory;
-   }
-   else
-   {
-      CategoryMap.insert(Current_Category, newCategory);
+      existingCategory->Update(*newCategory);
    }
 
    return true;
@@ -208,7 +203,7 @@ bool OsisEvent::ProcessDeduction(QDomElement& deductionElement)
    }
    OsisDeduction* newDeduction = new OsisDeduction();
 
-   if (!newDeduction->ProcessDeductionAttributes(deductionElement))
+   if (!newDeduction->ProcessAttributes(deductionElement))
    {
       return false;
    }

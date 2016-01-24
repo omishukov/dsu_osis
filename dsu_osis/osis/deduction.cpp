@@ -10,49 +10,26 @@
 
 OsisDeduction::OsisDeduction(QObject *parent)
    : QObject(parent)
-   , DedIndex(-1)
-   , DedValue(-1)
+   , OsisData(OsisDeduction::staticMetaObject, "Deduction")
 {
-
 }
 
-bool OsisDeduction::ProcessDeductionAttributes(QDomElement& deductionElement)
+int OsisDeduction::GetIndex()
 {
-   const QMetaObject &mo = OsisDeduction::staticMetaObject;
-   int index = mo.indexOfEnumerator("OsisDeductionAttributes");
-   QMetaEnum metaEnum = mo.enumerator(index);
+   return GetAttributeInt(Index);
+}
 
-   // Parse and save <Deduction> attributes
-   QDomNamedNodeMap attr = deductionElement.attributes();
-   int size = attr.size();
-   if (!size)
-   {
-      return false; // Error
-   }
+QString OsisDeduction::GetName()
+{
+   return GetAttribute(Ded_Name);
+}
 
-   for (int i = 0; i < size; i++)
-   {
-      QDomAttr at = attr.item(i).toAttr();
+double OsisDeduction::GetValue()
+{
+   return GetAttributeDouble(Ded_Value);
+}
 
-      switch (metaEnum.keyToValue(at.name().toLocal8Bit().constData()))
-      {
-         case Index:
-            DedIndex = at.value().toInt();
-            break;
-         case Ded_Name:
-            DedName = at.value();
-            break;
-         case Ded_Edit:
-            DedEdit = at.value();
-            break;
-         case Ded_Value:
-            DedValue= at.value().toDouble();
-            break;
-         default:
-            break;
-      }
-   }
-
-   return true;
-
+QString OsisDeduction::GetEdit()
+{
+   return GetAttribute(Ded_Edit);
 }

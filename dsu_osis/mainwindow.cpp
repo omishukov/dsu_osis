@@ -38,7 +38,9 @@ MainWindow::MainWindow(QString logName, QWidget *parent) :
    logText.append(fi.fileName());
    ui->Logging->setTitle(logText);
 
-   OsisData = new OsisDataProvider();
+   //Competition = new IsuCompetition();
+
+   OsisData = new OsisDataProvider(/*Competition*/);
 
    OsisLink.setDataIf(OsisData);
 

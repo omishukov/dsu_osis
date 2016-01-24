@@ -18,16 +18,13 @@ class OsisCriteria : public QObject, public OsisData
    Q_OBJECT
 public:
    explicit OsisCriteria(int segmentId, QObject *parent = 0);
-   OsisCriteria& operator=(const OsisCriteria &copy);
 
-   int GetSegmentId() { return SegmentId; }
-   int GetIndex() { return CriIndex; }
-   QString GetName() { return CriName; }
-   QString GetAbbrev() { return CriAbbrev; }
-   double GetFactor() { return CriFactor; }
-   double GetPoints() { return CriPoints; }
-
-   void ProcessAttribute(int key, QString& value);
+   int GetSegmentId();
+   int GetIndex();
+   QString GetName();
+   QString GetAbbrev();
+   double GetFactor();
+   double GetPoints();
 
 public:
    enum OsisElementAttributes
@@ -46,11 +43,6 @@ public slots:
 
 private:
    int SegmentId;
-   int CriIndex;
-   QString CriName;
-   QString CriAbbrev;
-   double CriFactor;
-   double CriPoints;
 
 };
 

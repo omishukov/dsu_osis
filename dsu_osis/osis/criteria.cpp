@@ -10,66 +10,38 @@
 
 OsisCriteria::OsisCriteria(int segmentId, QObject *parent)
    : QObject(parent)
-   , OsisData(OsisCriteria::staticMetaObject)
+   , OsisData(OsisCriteria::staticMetaObject, "Criteria")
    , SegmentId(segmentId)
-   , CriIndex(-1)
-   , CriFactor(-1)
-   , CriPoints(-1)
 {
 }
 
-OsisCriteria& OsisCriteria::operator=(const OsisCriteria& copy)
+int OsisCriteria::GetSegmentId()
 {
-   if (this == &copy)
-   {
-      return *this;
-   }
-
-   if (copy.CriIndex != -1)
-   {
-      CriIndex = copy.CriIndex;
-   }
-   if (!copy.CriName.isNull())
-   {
-      CriName = copy.CriName;
-   }
-   if (!copy.CriAbbrev.isNull())
-   {
-      CriAbbrev = copy.CriAbbrev;
-   }
-   if (copy.CriFactor != -1)
-   {
-      CriFactor = copy.CriIndex;
-   }
-   if (copy.CriPoints != -1)
-   {
-      CriPoints = copy.CriPoints;
-   }
-
-   return *this;
+   return SegmentId;
 }
 
-void OsisCriteria::ProcessAttribute(int key, QString& value)
+int OsisCriteria::GetIndex()
 {
-   switch (static_cast<enum OsisElementAttributes>(key))
-   {
-      case Index:
-         CriIndex = value.toInt();
-         break;
-      case Cri_Name:
-         CriName = value;
-         break;
-      case Cri_Abbrev:
-         CriAbbrev = value;
-         break;
-      case Cri_Factor:
-         CriFactor = value.toDouble();
-         break;
-      case Points:
-         CriPoints = value.toDouble();
-         break;
-      default:
-         break;
-   }
+   return GetAttributeInt(Index);
+}
+
+QString OsisCriteria::GetName()
+{
+   return GetAttribute(Cri_Name);
+}
+
+QString OsisCriteria::GetAbbrev()
+{
+   return GetAttribute(Cri_Abbrev);
+}
+
+double OsisCriteria::GetFactor()
+{
+   return GetAttributeDouble(Cri_Factor);
+}
+
+double OsisCriteria::GetPoints()
+{
+   return GetAttributeDouble(Points);
 }
 

@@ -8,28 +8,10 @@
 #include <QMetaEnum>
 #include "deduction.h"
 
-OsisDeduction::OsisDeduction(QObject *parent)
+OsisDeduction::OsisDeduction(QDomElement& osisElement, QObject *parent)
    : QObject(parent)
    , OsisData(OsisDeduction::staticMetaObject, "Deduction")
+   , Segment_ID(-1)
 {
-}
-
-int OsisDeduction::GetIndex()
-{
-   return GetAttributeInt(Index);
-}
-
-QString OsisDeduction::GetName()
-{
-   return GetAttribute(Ded_Name);
-}
-
-double OsisDeduction::GetValue()
-{
-   return GetAttributeDouble(Ded_Value);
-}
-
-QString OsisDeduction::GetEdit()
-{
-   return GetAttribute(Ded_Edit);
+   ProcessAttributes(osisElement);
 }

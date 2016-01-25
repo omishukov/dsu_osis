@@ -35,16 +35,6 @@ QString OsisData::GetAttribute(int key)
    return Attribute.find(key) != Attribute.end() ? Attribute[key] : empty;
 }
 
-int OsisData::GetAttributeInt(int key)
-{
-   return Attribute.find(key) != Attribute.end() ? Attribute[key].toInt() : -1;
-}
-
-double OsisData::GetAttributeDouble(int key)
-{
-   return Attribute.find(key) != Attribute.end() ? Attribute[key].toDouble() : -1;
-}
-
 bool OsisData::ProcessAttributes(QDomElement& criteriaElement)
 {
    // Parse and save <Criteria> attributes

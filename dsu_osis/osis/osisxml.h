@@ -10,9 +10,10 @@
 
 #include <QDomDocument>
 #include <QObject>
-#include "event.h"
+#include "dataif.h"
+#include "competitionif.h"
 
-class OsisXml: public QObject
+class OsisXml: public QObject, public OsisDataIf
 {
    Q_OBJECT
 public:
@@ -61,13 +62,16 @@ public:
    Q_ENUM(OsisElements)
 
 public:
-   explicit OsisXml(QObject *parent = 0);
+   explicit OsisXml(OsisCompetitionIf *competition, QObject *parent = 0);
 
+   void DataInd(class QByteArray& qba);
+
+private:
    void ProcessOsisData(QDomNode& n);
    bool ProcessOsisTree(QDomNode& n);
    bool ProcessOsisElement(QDomNode& n);
 
-   OsisEvent event;
+   OsisCompetitionIf *Competition;
 };
 
 #endif // OSISXML_H

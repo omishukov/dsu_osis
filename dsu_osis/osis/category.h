@@ -9,26 +9,14 @@
 #define CATEGORY_H
 
 #include <QObject>
-#include <QDomDocument>
 #include <QMap>
 #include "osisdata.h"
 
 class OsisCategory: public QObject, public OsisData
 {
    Q_OBJECT
-
 public:
-   OsisCategory();
-
-   int GetId();
-   int GetTecId();
-   int Gettecid();
-   QString GetName();
-   QString GetLevel();
-   QString GetGender();
-   QString GetType();
-   QString GetExtDt();
-   QString GetTypeName();
+   OsisCategory(QDomElement& categoryElement);
 
 public:
    enum OsisElementAttributes

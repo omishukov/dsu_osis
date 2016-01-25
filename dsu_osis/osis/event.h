@@ -10,21 +10,18 @@
 
 #include <QObject>
 #include <QDomDocument>
-#include "criteria.h"
-#include "category.h"
-#include "segment.h"
-#include "segmentstart.h"
+#include "osisdata.h"
 
-class OsisEvent: public QObject
+class OsisEvent: public QObject, public OsisData
 {
    Q_OBJECT
 
 public:
-   OsisEvent();
+   OsisEvent(QDomElement& eventElement, QObject *parent = 0);
    ~OsisEvent();
 
 public:
-   enum OsisEventAttributes
+   enum OsisElementAttributes
    {
       ID, // Identifier
       Name, //
@@ -34,24 +31,12 @@ public:
       ExtDt, // Results System Codes
       ODF // ???
    };
-   Q_ENUM(OsisEventAttributes)
+   Q_ENUM(OsisElementAttributes)
 
 public:
-   bool ProcessEvent(QDomElement& eventElement);
-   bool ProcessEventAttributes(QDomElement& eventElement);
-   bool ProcessCategoryList(QDomElement& categoryListElement);
-   bool ProcessCategory(QDomElement& categoryElement);
-   bool ProcessSegmentStart(QDomElement& e);
-   bool ProcessCategoryAttributes(QDomElement& categoryElement, OsisCategory* newCategory);
-   bool ProcessSegmentList(QDomElement& categoryElement);
-   bool ProcessSegment(QDomElement& e);
-   bool ProcessSegmentAttributes(QDomElement& segmentElement, OsisSegment* newSegment);
-   bool ProcessCriteria(QDomElement& criteriaListElement);
    bool ProcessDeduction(QDomElement& deductionElement);
-   bool ProcessCriteriaAttributes(QDomElement& segmentElement, OsisCriteria* newCriteria);
    bool ProcessCriteriaList(QDomElement& criteriaListElement, int SegmentId);
    bool ProcessOfficial(QDomElement& officialElement);
-   bool ProcessParticipant(QDomElement& participantElement);
    bool ProcessAthlete(QDomElement& athleteElement);
 
 
@@ -68,10 +53,6 @@ private:
 
    int Current_Category;
    int Current_Segment;
-   OsisSegmentStart* ActiveSegment;
-
-   OsisCategoryMap CategoryMap;
-   OsisSegmentMap SegmentMap;
 };
 
 #endif // EVENT_H

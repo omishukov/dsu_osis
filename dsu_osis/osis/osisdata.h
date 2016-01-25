@@ -19,15 +19,10 @@ public:
    virtual bool ProcessAttributes(QDomElement& osisElement);
    int getEnumKey(const char* enumTypeName, const char* enumName);
    void Update(OsisData& newData);
+   QString GetAttribute(int key);
 
 private:
    const QMetaObject &mo;
-
-protected:
-
-   QString GetAttribute(int key);
-   int GetAttributeInt(int key);
-   double GetAttributeDouble(int key);
 
 private:
    QMap<int, QString> Attribute;

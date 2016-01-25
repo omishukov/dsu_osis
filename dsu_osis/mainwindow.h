@@ -4,7 +4,6 @@
 #include <QMainWindow>
 #include <QFile>
 #include "calcconnectionthread.h"
-#include "osisdataprovider.h"
 
 
 namespace Ui {
@@ -56,7 +55,7 @@ private:
    QString IpAddress;
    QString IpPort;
    CalcConnectionThread OsisLink;
-   OsisDataProvider* OsisData;
+   class IsuCompetition* Competition;
 };
 
 #endif // MAINWINDOW_H

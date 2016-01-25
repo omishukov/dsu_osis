@@ -17,14 +17,10 @@ class OsisCriteria : public QObject, public OsisData
 {
    Q_OBJECT
 public:
-   explicit OsisCriteria(int segmentId, QObject *parent = 0);
+   explicit OsisCriteria(QDomElement& osisElement, QObject *parent = 0);
 
-   int GetSegmentId();
-   int GetIndex();
-   QString GetName();
-   QString GetAbbrev();
-   double GetFactor();
-   double GetPoints();
+   void SetSegmentId(int segmentId) { SegmentId = segmentId; }
+   int GetSegmentId() { return SegmentId; }
 
 public:
    enum OsisElementAttributes
@@ -36,10 +32,6 @@ public:
       Points //  Format “9.99”
    };
    Q_ENUM(OsisElementAttributes)
-
-signals:
-
-public slots:
 
 private:
    int SegmentId;

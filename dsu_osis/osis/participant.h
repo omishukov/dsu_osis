@@ -9,14 +9,14 @@
 #define OSISPARTICIPANT_H
 
 #include <QObject>
-#include <QDomDocument>
+#include <QMap>
 #include "osisdata.h"
 
 class OsisParticipant : public QObject, public OsisData
 {
    Q_OBJECT
 public:
-   explicit OsisParticipant(QObject *parent = 0);
+   explicit OsisParticipant(QDomElement& osisElement, QObject *parent = 0);
 
    enum OsisElementAttributes
    {
@@ -121,5 +121,7 @@ public slots:
 
 private:
 };
+
+typedef QMap <int, OsisParticipant*> OsisParticipantMap;
 
 #endif // OSISPARTICIPANT_H

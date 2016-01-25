@@ -6,17 +6,26 @@
  *   Oleksander Mishukov <dsu@mishukov.dk> */
 
 #include <QMetaEnum>
+#include <QDebug>
 #include "osisxml.h"
+#include "event.h"
+#include "category.h"
+#include "segmentstart.h"
+#include "participant.h"
+#include "segment.h"
+#include "criteria.h"
+#include "deduction.h"
 
-OsisXml::OsisXml(QObject* parent)
+OsisXml::OsisXml(OsisCompetitionIf* competition, QObject* parent)
    : QObject(parent)
+   , Competition(competition)
 {
 }
 
 void OsisXml::ProcessOsisData(QDomNode& n)
 {
    ProcessOsisTree(n);
-   event.ProcessingDone();
+   Competition->ProcessingDone();
 }
 
 bool OsisXml::ProcessOsisTree(QDomNode& n)
@@ -56,23 +65,30 @@ bool OsisXml::ProcessOsisElement(QDomNode& n)
    switch(metaEnum.keyToValue(e.tagName().toLocal8Bit().constData()))
    {
       case Event:
-         return event.ProcessEvent(e);
+         Competition->AddEvent(new OsisEvent(e));
+         break;
       case Category:
-         return event.ProcessCategory(e);
+         Competition->AddCategory(new OsisCategory(e));
+         break;
       case Segment_Start:
-         return event.ProcessSegmentStart(e);
+         Competition->AddSegmentStart(new OsisSegmentStart(e));
+         break;
       case Official:
 //         return event.ProcessOfficial(e);
       case Participant:
-         return event.ProcessParticipant(e);
+         Competition->AddParticipant(new OsisParticipant(e));
+         break;
       case Segment:
-         return event.ProcessSegment(e);
+         Competition->AddSegment(new OsisSegment(e));
+         break;
       case Athlete:
 //         return event.ProcessAthlete(e);
       case Criteria:
-         return event.ProcessCriteria(e);
+         Competition->AddCriteria(new OsisCriteria(e));
+         break;
       case Deduction:
-         return event.ProcessDeduction(e);
+         Competition->AddDeduction(new OsisDeduction(e));
+         break;
       case Majority_Deduction:
 //         return ProcessMajorityDeduction(e);
       case Performance:
@@ -114,6 +130,32 @@ bool OsisXml::ProcessOsisElement(QDomNode& n)
    }
 
    return true;
+}
+
+void OsisXml::DataInd(QByteArray& qba)
+{
+   QByteArray osisData;
+   osisData.swap(qba);
+
+   QDomDocument doc;
+   QString errMsg;
+   int errLine;
+   int errColumn;
+   if (!doc.setContent(osisData, &errMsg, &errLine, &errColumn))
+   {
+      qCritical() << "XML Parser Error " << errMsg << " (" << errLine << ":" << errColumn << ")" << endl;
+      return;
+   }
+   QDomElement docElem = doc.documentElement();
+
+   if (!docElem.tagName().contains("Isu_Osis"))
+   {
+      qCritical() << "XML Parser Error: the message shall start with <Isu_Osis>" << endl;
+      return;
+   }
+
+   QDomNode n = docElem.firstChild();
+   ProcessOsisData(n);
 }
 
 

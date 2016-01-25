@@ -10,23 +10,13 @@
 
 #include <QObject>
 #include <QDomDocument>
+#include "osisdata.h"
 
-class OsisSegmentStart : public QObject
+class OsisSegmentStart : public QObject, public OsisData
 {
    Q_OBJECT
 public:
-   explicit OsisSegmentStart(QObject *parent = 0);
-   OsisSegmentStart& operator=(const OsisSegmentStart &copy);
-
-   inline int GetSegmentId() { return SS_Segment_ID; }
-   inline int GetCategoryId() { return SS_Category_ID; }
-   inline int GetSegmentIndex() { return SS_Segment_Index; }
-   inline int GetStartingParticipant() { return SS_Starting_Participant; }
-   inline int GetNextParticipant() { return SS_Next_Participant; }
-   inline int GetLastFinishedParticipant() { return SS_LastFinished_Participant; }
-
-   bool ProcessSegmentStartAttributes(QDomElement& segmentStartElement);
-
+   explicit OsisSegmentStart(QDomElement& segmentStartElement, QObject *parent = 0);
 
 public:
    enum OsisSegmentStartAttributes
@@ -44,14 +34,6 @@ public:
 signals:
 
 public slots:
-
-private:
-   int SS_Segment_ID;
-   int SS_Category_ID;
-   int SS_Segment_Index;
-   int SS_Starting_Participant;
-   int SS_Next_Participant;
-   int SS_LastFinished_Participant;
 };
 
 #endif // OSISSEGMENTSTART_H

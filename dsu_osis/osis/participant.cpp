@@ -9,9 +9,10 @@
 #include <QMetaEnum>
 #include "participant.h"
 
-OsisParticipant::OsisParticipant(QObject *parent)
+OsisParticipant::OsisParticipant(QDomElement& osisElement, QObject *parent)
    : QObject(parent)
    , OsisData(OsisParticipant::staticMetaObject, "Participant")
 {
+   ProcessAttributes(osisElement);
 }
 

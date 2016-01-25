@@ -16,6 +16,7 @@
 #include <QtNetwork>
 #include <QTextStream>
 #include "trace.h"
+#include "isucompetition.h"
 
 const QString inifile = "osisc.ini";
 extern bool logopt[];
@@ -40,9 +41,9 @@ MainWindow::MainWindow(QString logName, QWidget *parent) :
 
    //Competition = new IsuCompetition();
 
-   OsisData = new OsisDataProvider(/*Competition*/);
+   Competition = new IsuCompetition();
 
-   OsisLink.setDataIf(OsisData);
+   OsisLink.setDataIf(Competition->GetDataIf());
 
    connect(&OsisLink, SIGNAL(UpdateConnectionState()), this, SLOT(showConnectionState()));
 }
@@ -51,7 +52,7 @@ MainWindow::~MainWindow()
 {
    writeSettings();
    delete ui;
-   delete OsisData;
+   delete Competition;
 }
 
 void MainWindow::loadSettings()

@@ -9,52 +9,8 @@
 #include "category.h"
 
 
-OsisCategory::OsisCategory()
+OsisCategory::OsisCategory(QDomElement& categoryElement)
    : OsisData(OsisCategory::staticMetaObject, "Category")
 {
-}
-
-int OsisCategory::GetId()
-{
-   return GetAttributeInt(ID);
-}
-
-int OsisCategory::GetTecId()
-{
-   return GetAttributeInt(Tec_Id);
-}
-
-int OsisCategory::Gettecid()
-{
-   return GetAttributeInt(tec_id);
-}
-
-QString OsisCategory::GetName()
-{
-   return GetAttribute(Name);
-}
-
-QString OsisCategory::GetLevel()
-{
-   return GetAttribute(Level);
-}
-
-QString OsisCategory::GetGender()
-{
-   return GetAttribute(Gender);
-}
-
-QString OsisCategory::GetType()
-{
-   return GetAttribute(Type);
-}
-
-QString OsisCategory::GetExtDt()
-{
-   return GetAttribute(ExtDt);
-}
-
-QString OsisCategory::GetTypeName()
-{
-   return GetAttribute(TypeName);
+   ProcessAttributes(categoryElement);
 }

@@ -17,7 +17,6 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     calcconnectionthread.cpp \
-    osisdataprovider.cpp \
     osis/criteria.cpp \
     osis/category.cpp \
     osis/event.cpp \
@@ -31,8 +30,6 @@ SOURCES += main.cpp\
 
 HEADERS  += mainwindow.h \
     calcconnectionthread.h \
-    osisdataif.h \
-    osisdataprovider.h \
     osis/criteria.h \
     osis/category.h \
     osis/segment.h \
@@ -43,7 +40,9 @@ HEADERS  += mainwindow.h \
     osis/participant.h \
     osis/osisdata.h \
     trace.h \
-    isucompetition.h
+    isucompetition.h \
+    osis/dataif.h \
+    osis/competitionif.h
 
 FORMS    += mainwindow.ui
 

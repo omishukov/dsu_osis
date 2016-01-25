@@ -6,7 +6,7 @@
 #include <QAbstractSocket>
 #include <QEventLoop>
 #include <QTextStream>
-#include "osisdataif.h"
+#include "osis/dataif.h"
 
 class CalcConnectionThread : public QThread
 {

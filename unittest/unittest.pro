@@ -23,7 +23,6 @@ SOURCES += \
     osis_unittestmain.cpp \
     osislink_test.cpp \
     osisxml_test.cpp \
-    ../dsu_osis/osisdataprovider.cpp \
     ../dsu_osis/osis/event.cpp \
     ../dsu_osis/osis/category.cpp \
     ../dsu_osis/osis/criteria.cpp \
@@ -39,7 +38,6 @@ DEFINES += SRCDIR=\\\"$$PWD/\\\"
 HEADERS += \
     ../dsu_osis/calcconnectionthread.h \
     osis_unittest.h \
-    ../dsu_osis/osisdataprovider.h \
     ../dsu_osis/osis/event.h \
     ../dsu_osis/osis/category.h \
     ../dsu_osis/osis/criteria.h \
@@ -48,7 +46,9 @@ HEADERS += \
     ../dsu_osis/osis/segmentstart.h \
     ../dsu_osis/osis/deduction.h \
     ../dsu_osis/osis/participant.h \
-    ../dsu_osis/osis/osisdata.h
+    ../dsu_osis/osis/osisdata.h \
+    ../dsu_osis/osis/competitionif.h \
+    ../dsu_osis/osis/dataif.h
 
 DISTFILES += \
     data/seg_run_jdg.xml \

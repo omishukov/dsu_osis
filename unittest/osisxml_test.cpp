@@ -3,7 +3,7 @@
 void UnittestTest::OsisXmlTestInit()
 {
    osisLink = new CalcConnectionThread();
-   osisDataIf = new OsisDataProvider();
+   osisDataIf = new OsisXml();
    osisLink->setDataIf(osisDataIf);
 }
 

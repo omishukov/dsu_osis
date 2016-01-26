@@ -1,8 +1,7 @@
 #ifndef OSIS_UNITTEST_H
 #define OSIS_UNITTEST_H
 #include <QtTest>
-#include "../dsu_osis/osisdataif.h"
-#include "../dsu_osis/osisdataprovider.h"
+#include "../dsu_osis/osis/osisxml.h"
 #include "../dsu_osis/calcconnectionthread.h"
 
 class OsisDataIfStub: public OsisDataIf
@@ -47,7 +46,7 @@ private:
    bool GetXmlData(QByteArray& qba, const QString &filename);
 
    CalcConnectionThread* osisLink;
-   OsisDataProvider* osisDataIf;
+   OsisXml* osisDataIf;
 };
 
 #endif // OSIS_UNITTEST_H

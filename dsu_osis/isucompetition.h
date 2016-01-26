@@ -39,6 +39,7 @@ private:
    OsisParticipantMap Participants;
    OsisSegmentMap Segments;
    OsisCriteriaMap Criteries;
+   OsisDeductionMap Deductions;
 
 };
 

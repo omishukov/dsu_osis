@@ -52,6 +52,7 @@ void IsuCompetition::AddCategory(OsisCategory* newCategory)
    if (Categories.contains(Current_Category))
    {
       Categories.value(Current_Category)->Update(*newCategory);
+      delete newCategory;
    }
    else
    {
@@ -92,6 +93,7 @@ void IsuCompetition::AddParticipant(OsisParticipant* newParticipant)
    if (Participants.contains(PID))
    {
       Participants.value(PID)->Update(*newParticipant);
+      delete newParticipant;
    }
    else
    {
@@ -117,6 +119,7 @@ void IsuCompetition::AddSegment(OsisSegment* newSegment)
    if (Segments.contains(SID))
    {
       Segments.value(SID)->Update(*newSegment);
+      delete newSegment;
    }
    else
    {
@@ -149,6 +152,7 @@ void IsuCompetition::AddCriteria(OsisCriteria* newCriteria)
          {
             criteria->Update(*newCriteria);
             found = true;
+            delete newCriteria;
             break;
          }
       }
@@ -161,5 +165,36 @@ void IsuCompetition::AddCriteria(OsisCriteria* newCriteria)
 
 void IsuCompetition::AddDeduction(OsisDeduction* newDeduction)
 {
+   if (Current_Segment == -1)
+   {
+      qCritical() << "Undefined Segment ID when processing a Deduction : " << newDeduction->GetAttribute(OsisDeduction::Index) << " :" << newDeduction->GetAttribute(OsisDeduction::Ded_Name) << endl;
+      return;
+   }
+   newDeduction->SetSegmentId(Current_Segment);
 
+   bool ok;
+   int index = newDeduction->GetAttribute(OsisCriteria::Index).toInt(&ok);
+   if (!ok)
+   {
+      qCritical() << "Wrong Deduction Index: " << newDeduction->GetAttribute(OsisDeduction::Index) << " in Segment ID: " << Current_Segment << endl;
+      return;
+   }
+   bool found = false;
+   foreach (OsisDeduction* deduction, Deductions)
+   {
+      if (deduction->GetSegmentId() == Current_Segment)
+      {
+         if (deduction->GetAttribute(OsisDeduction::Index).toInt(&ok) == index && ok)
+         {
+            deduction->Update(*newDeduction);
+            found = true;
+            delete newDeduction;
+            break;
+         }
+      }
+   }
+   if (!found)
+   {
+      Deductions.insert(Current_Segment, newDeduction);
+   }
 }

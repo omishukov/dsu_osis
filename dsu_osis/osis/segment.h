@@ -10,6 +10,8 @@
 
 #include <QObject>
 #include "osisdata.h"
+#include "criteria.h"
+#include "deduction.h"
 
 class OsisSegment : public QObject, public OsisData
 {
@@ -17,8 +19,10 @@ class OsisSegment : public QObject, public OsisData
 public:
    explicit OsisSegment(QDomElement& osisElement, QObject *parent = 0);
 
+   inline int GetId() { return Id; }
    void SetCategoryId(int categoryID) { Category_ID = categoryID; }
-   int GetCategoryId() { return Category_ID; }
+   inline int GetCategoryId() { return Category_ID; }
+   void AddCriteria(OsisCriteria* newCriteria);
 
 public:
    enum OsisElementAttributes
@@ -44,7 +48,10 @@ public:
    Q_ENUM(OsisElementAttributes)
 
 private:
+   int Id;
    int Category_ID;
+   OsisCriteriaMap Criteries;
+   OsisDeductionMap Deductions;
 };
 
 typedef QMap <int, OsisSegment*> OsisSegmentMap;

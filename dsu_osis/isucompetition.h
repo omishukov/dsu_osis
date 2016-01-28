@@ -1,3 +1,10 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+ * Contributor(s):
+ *   Oleksander Mishukov <dsu@mishukov.dk> */
+
 #ifndef ISUCOMPETITION_H
 #define ISUCOMPETITION_H
 
@@ -10,6 +17,8 @@
 #include "osis/segment.h"
 #include "osis/criteria.h"
 #include "osis/deduction.h"
+#include "osis/majoritydeduction.h"
+#include "osis/official.h"
 
 class IsuCompetition: public OsisCompetitionIf
 {
@@ -22,10 +31,12 @@ public:
    void AddEvent(OsisEvent *newEvent);
    void AddCategory(OsisCategory *newCategory);
    void AddSegmentStart(OsisSegmentStart* newSegmentStart);
-   void AddParticipant(OsisParticipant* newParticipant);
    void AddSegment(OsisSegment* newSegment);
+   void AddParticipant(OsisParticipant* newParticipant);
    void AddCriteria(OsisCriteria* newCriteria);
    void AddDeduction(OsisDeduction* newDeduction);
+   void AddMajorityDeduction(OsisMajorityDeduction* newMajorityDeduction);
+   void AddOfficial(class OsisOfficial* newOfficial);
 
    void ProcessingDone() {}
 
@@ -38,9 +49,9 @@ private:
    int Current_Segment;
    OsisParticipantMap Participants;
    OsisSegmentMap Segments;
-   OsisCriteriaMap Criteries;
    OsisDeductionMap Deductions;
-
+   OsisMajorityDeductionMap MajorityDeductions;
+   OsisOfficialMap Officials;
 };
 
 #endif // ISUCOMPETITION_H

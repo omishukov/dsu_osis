@@ -5,6 +5,7 @@
  * Contributor(s):
  *   Oleksander Mishukov <dsu@mishukov.dk> */
 
+#include <QDebug>
 #include <QMetaEnum>
 #include "category.h"
 
@@ -13,4 +14,22 @@ OsisCategory::OsisCategory(QDomElement& categoryElement)
    : OsisData(OsisCategory::staticMetaObject, "Category")
 {
    ProcessAttributes(categoryElement);
+
+   bool ok;
+   Id = GetAttribute(OsisCategory::ID).toInt(&ok);
+   if (!ok)
+   {
+      Id = -1;
+      qCritical() << "Invalid category ID: " << GetAttribute(OsisCategory::ID) << ", Name:" << GetAttribute(OsisCategory::Name) << endl;
+   }
+}
+
+void OsisCategory::AddSegment(OsisSegment* newSegment)
+{
+   Segments.insert(newSegment->GetId(), newSegment);
+}
+
+void OsisCategory::AddParticipant(OsisParticipant* newParticipant)
+{
+   Participants.insert(newParticipant->GetId(), newParticipant);
 }

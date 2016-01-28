@@ -14,5 +14,12 @@ OsisParticipant::OsisParticipant(QDomElement& osisElement, QObject *parent)
    , OsisData(OsisParticipant::staticMetaObject, "Participant")
 {
    ProcessAttributes(osisElement);
-}
 
+   bool ok;
+   Id = GetAttribute(OsisParticipant::ID).toInt(&ok);
+   if (!ok)
+   {
+      Id = -1;
+      qCritical() << "Wrong Participant ID: " << GetAttribute(OsisParticipant::ID) << ", Name:" << GetAttribute(OsisParticipant::Full_Name) << endl;
+   }
+}

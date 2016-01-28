@@ -15,6 +15,8 @@
 #include "segment.h"
 #include "criteria.h"
 #include "deduction.h"
+#include "majoritydeduction.h"
+#include "official.h"
 
 OsisXml::OsisXml(OsisCompetitionIf* competition, QObject* parent)
    : QObject(parent)
@@ -74,7 +76,8 @@ bool OsisXml::ProcessOsisElement(QDomNode& n)
          Competition->AddSegmentStart(new OsisSegmentStart(e));
          break;
       case Official:
-//         return event.ProcessOfficial(e);
+         Competition->AddOfficial(new OsisOfficial(e));
+         break;
       case Participant:
          Competition->AddParticipant(new OsisParticipant(e));
          break;
@@ -90,7 +93,8 @@ bool OsisXml::ProcessOsisElement(QDomNode& n)
          Competition->AddDeduction(new OsisDeduction(e));
          break;
       case Majority_Deduction:
-//         return ProcessMajorityDeduction(e);
+         Competition->AddMajorityDeduction(new OsisMajorityDeduction(e));
+         break;
       case Performance:
 //         return ProcessPerformance(e);
       case Element:

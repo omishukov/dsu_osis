@@ -19,8 +19,7 @@ class OsisCriteria : public QObject, public OsisData
 public:
    explicit OsisCriteria(QDomElement& osisElement, QObject *parent = 0);
 
-   void SetSegmentId(int segmentId) { SegmentId = segmentId; }
-   int GetSegmentId() { return SegmentId; }
+   inline int GetIndex() { return Ind; }
 
 public:
    enum OsisElementAttributes
@@ -34,7 +33,7 @@ public:
    Q_ENUM(OsisElementAttributes)
 
 private:
-   int SegmentId;
+   int Ind;
 
 };
 

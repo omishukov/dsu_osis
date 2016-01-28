@@ -5,6 +5,7 @@
  * Contributor(s):
  *   Oleksander Mishukov <dsu@mishukov.dk> */
 
+#include <QDebug>
 #include <QMetaEnum>
 #include "segment.h"
 
@@ -14,4 +15,17 @@ OsisSegment::OsisSegment(QDomElement& osisElement, QObject *parent)
    , Category_ID(-1)
 {
    ProcessAttributes(osisElement);
+
+   bool ok;
+   Id = GetAttribute(OsisSegment::ID).toInt(&ok);
+   if (!ok)
+   {
+      Id = -1;
+      qCritical() << "Invalid segment ID: " << GetAttribute(OsisSegment::ID) << ", Name:" << GetAttribute(OsisSegment::Name) << endl;
+   }
+}
+
+void OsisSegment::AddCriteria(OsisCriteria* newCriteria)
+{
+   Criteries.insert(newCriteria->GetIndex(), newCriteria);
 }

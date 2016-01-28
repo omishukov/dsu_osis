@@ -5,6 +5,7 @@
  * Contributor(s):
  *   Oleksander Mishukov <dsu@mishukov.dk> */
 
+#include <QDebug>
 #include <QMetaEnum>
 #include "criteria.h"
 
@@ -13,4 +14,12 @@ OsisCriteria::OsisCriteria(QDomElement& osisElement, QObject *parent)
    , OsisData(OsisCriteria::staticMetaObject, "Criteria")
 {
    ProcessAttributes(osisElement);
+
+   bool ok;
+   Ind = GetAttribute(OsisCriteria::Index).toInt(&ok);
+   if (!ok)
+   {
+      Ind = -1;
+      qCritical() << "Invalid Criteria Index: " << GetAttribute(OsisCriteria::Index) << ", Name:" << GetAttribute(OsisCriteria::Cri_Name) << endl;
+   }
 }

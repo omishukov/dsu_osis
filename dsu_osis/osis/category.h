@@ -11,12 +11,18 @@
 #include <QObject>
 #include <QMap>
 #include "osisdata.h"
+#include "segment.h"
+#include "participant.h"
 
 class OsisCategory: public QObject, public OsisData
 {
    Q_OBJECT
 public:
    OsisCategory(QDomElement& categoryElement);
+
+   inline int GetId() { return Id; }
+   void AddSegment(OsisSegment* newSegment);
+   void AddParticipant(OsisParticipant* newParticipant);
 
 public:
    enum OsisElementAttributes
@@ -34,6 +40,11 @@ public:
    };
 
    Q_ENUM(OsisElementAttributes)
+
+private:
+   int Id;
+   OsisSegmentMap Segments;
+   OsisParticipantMap Participants;
 
 };
 

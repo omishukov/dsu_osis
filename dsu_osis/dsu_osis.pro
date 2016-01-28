@@ -26,7 +26,9 @@ SOURCES += main.cpp\
     osis/deduction.cpp \
     osis/participant.cpp \
     osis/osisdata.cpp \
-    isucompetition.cpp
+    isucompetition.cpp \
+    osis/majoritydeduction.cpp \
+    osis/official.cpp
 
 HEADERS  += mainwindow.h \
     calcconnectionthread.h \
@@ -42,7 +44,9 @@ HEADERS  += mainwindow.h \
     trace.h \
     isucompetition.h \
     osis/dataif.h \
-    osis/competitionif.h
+    osis/competitionif.h \
+    osis/majoritydeduction.h \
+    osis/official.h
 
 FORMS    += mainwindow.ui
 

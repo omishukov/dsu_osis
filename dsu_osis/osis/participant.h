@@ -18,6 +18,9 @@ class OsisParticipant : public QObject, public OsisData
 public:
    explicit OsisParticipant(QDomElement& osisElement, QObject *parent = 0);
 
+   inline int GetId() { return Id; }
+
+public:
    enum OsisElementAttributes
    {
       ID, // Identifier
@@ -115,11 +118,8 @@ public:
    Q_ENUM(OsisParticipantType)
    Q_ENUM(OsisPerformanceStatus)
 
-signals:
-
-public slots:
-
 private:
+   int Id;
 };
 
 typedef QMap <int, OsisParticipant*> OsisParticipantMap;

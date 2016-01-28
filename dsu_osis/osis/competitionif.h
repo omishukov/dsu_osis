@@ -13,6 +13,8 @@ public:
    virtual void AddSegment(class OsisSegment* newSegment) = 0;
    virtual void AddCriteria(class OsisCriteria* newCriteria) = 0;
    virtual void AddDeduction(class OsisDeduction* newDeduction) = 0;
+   virtual void AddMajorityDeduction(class OsisMajorityDeduction* newDeduction) = 0;
+   virtual void AddOfficial(class OsisOfficial* newOfficial) = 0;
 
    virtual void ProcessingDone() = 0;
 };

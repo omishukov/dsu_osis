@@ -1,3 +1,10 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+ * Contributor(s):
+ *   Oleksander Mishukov <dsu@mishukov.dk> */
+
 #include <QDebug>
 #include "isucompetition.h"
 
@@ -14,12 +21,6 @@ IsuCompetition::IsuCompetition()
 IsuCompetition::~IsuCompetition()
 {
    delete Event;
-
-}
-
-void IsuCompetition::AddEvent(OsisEvent* newEvent)
-{
-   Event = newEvent;
    foreach (OsisCategory* category, Categories)
    {
       delete category;
@@ -33,20 +34,27 @@ void IsuCompetition::AddEvent(OsisEvent* newEvent)
    {
       delete segment;
    }
-   foreach (OsisCriteria* criteria, Criteries)
+   foreach (OsisDeduction* deduction, Deductions)
    {
-      delete criteria;
+      delete deduction;
    }
+   foreach (OsisMajorityDeduction* mdeduction, MajorityDeductions)
+   {
+      delete mdeduction;
+   }
+}
+
+void IsuCompetition::AddEvent(OsisEvent* newEvent)
+{
+   Event = newEvent;
 }
 
 void IsuCompetition::AddCategory(OsisCategory* newCategory)
 {
-   bool ok;
-   Current_Category = newCategory->GetAttribute(OsisCategory::ID).toInt(&ok);
-   if (!ok)
+   Current_Category = newCategory->GetId();
+   if (Current_Category == -1)
    {
-      qCritical() << "Invalid category: " << newCategory->GetAttribute(OsisCategory::ID) << endl;
-      return; // Report Warning: Invalid Category
+      return;
    }
 
    if (Categories.contains(Current_Category))
@@ -81,15 +89,45 @@ void IsuCompetition::AddSegmentStart(OsisSegmentStart* newSegmentStart)
    }
 }
 
-void IsuCompetition::AddParticipant(OsisParticipant* newParticipant)
+void IsuCompetition::AddSegment(OsisSegment* newSegment)
 {
-   bool ok;
-   int PID = newParticipant->GetAttribute(OsisParticipant::ID).toInt(&ok);
-   if (!ok)
+   int SID = newSegment->GetId();
+   if (SID == -1)
    {
-      qCritical() << "Wrong Participant ID: " << newParticipant->GetAttribute(OsisParticipant::ID) << endl;
       return;
    }
+   if (Current_Category == -1)
+   {
+      qCritical() << "Undefined Category when processing Segment ID: " << newSegment->GetAttribute(OsisSegment::ID) << endl;
+      return;
+   }
+
+   newSegment->SetCategoryId(Current_Category);
+
+   if (Segments.contains(SID))
+   {
+      Segments.value(SID)->Update(*newSegment);
+      delete newSegment;
+   }
+   else
+   {
+      Segments[SID] = newSegment;
+   }
+
+   if (Categories.contains(Current_Category))
+   {
+      Categories[Current_Category]->AddSegment(Segments[SID]);
+   }
+}
+
+void IsuCompetition::AddParticipant(OsisParticipant* newParticipant)
+{
+   int PID = newParticipant->GetId();
+   if (PID == -1)
+   {
+      return;
+   }
+
    if (Participants.contains(PID))
    {
       Participants.value(PID)->Update(*newParticipant);
@@ -99,31 +137,10 @@ void IsuCompetition::AddParticipant(OsisParticipant* newParticipant)
    {
       Participants[PID] = newParticipant;
    }
-}
 
-void IsuCompetition::AddSegment(OsisSegment* newSegment)
-{
-   bool ok;
-   int SID = newSegment->GetAttribute(OsisSegment::ID).toInt(&ok);
-   if (!ok)
+   if  (Categories.contains(Current_Category))
    {
-      qCritical() << "Wrong Segment ID: " << newSegment->GetAttribute(OsisSegment::ID) << endl;
-      return;
-   }
-   if (Current_Category == -1)
-   {
-      qCritical() << "Undefined Category when processing Segment ID: " << newSegment->GetAttribute(OsisSegment::ID) << endl;
-      return;
-   }
-   newSegment->SetCategoryId(Current_Category);
-   if (Segments.contains(SID))
-   {
-      Segments.value(SID)->Update(*newSegment);
-      delete newSegment;
-   }
-   else
-   {
-      Segments[SID] = newSegment;
+      Categories[Current_Category]->AddParticipant(Participants[PID]);
    }
 }
 
@@ -134,32 +151,10 @@ void IsuCompetition::AddCriteria(OsisCriteria* newCriteria)
       qCritical() << "Undefined Segment ID when processing a Criteria : " << newCriteria->GetAttribute(OsisCriteria::Index) << " :" << newCriteria->GetAttribute(OsisCriteria::Cri_Name) << endl;
       return;
    }
-   newCriteria->SetSegmentId(Current_Segment);
 
-   bool ok;
-   int index = newCriteria->GetAttribute(OsisCriteria::Index).toInt(&ok);
-   if (!ok)
+   if (Segments.contains(Current_Segment))
    {
-      qCritical() << "Wrong Criteria Index: " << newCriteria->GetAttribute(OsisCriteria::Index) << " in Segment ID: " << Current_Segment << endl;
-      return;
-   }
-   bool found = false;
-   foreach (OsisCriteria* criteria, Criteries)
-   {
-      if (criteria->GetSegmentId() == Current_Segment)
-      {
-         if (criteria->GetAttribute(OsisCriteria::Index).toInt(&ok) == index && ok)
-         {
-            criteria->Update(*newCriteria);
-            found = true;
-            delete newCriteria;
-            break;
-         }
-      }
-   }
-   if (!found)
-   {
-      Criteries.insert(Current_Segment, newCriteria);
+      Segments[Current_Segment]->AddCriteria(newCriteria);
    }
 }
 
@@ -173,7 +168,7 @@ void IsuCompetition::AddDeduction(OsisDeduction* newDeduction)
    newDeduction->SetSegmentId(Current_Segment);
 
    bool ok;
-   int index = newDeduction->GetAttribute(OsisCriteria::Index).toInt(&ok);
+   int index = newDeduction->GetAttribute(OsisDeduction::Index).toInt(&ok);
    if (!ok)
    {
       qCritical() << "Wrong Deduction Index: " << newDeduction->GetAttribute(OsisDeduction::Index) << " in Segment ID: " << Current_Segment << endl;
@@ -196,5 +191,77 @@ void IsuCompetition::AddDeduction(OsisDeduction* newDeduction)
    if (!found)
    {
       Deductions.insert(Current_Segment, newDeduction);
+   }
+}
+
+void IsuCompetition::AddMajorityDeduction(OsisMajorityDeduction* newMajorityDeduction)
+{
+   if (Current_Segment == -1)
+   {
+      qCritical() << "Undefined Segment ID when processing a MajorityDeduction : " << newMajorityDeduction->GetAttribute(OsisMajorityDeduction::Index) << endl;
+      return;
+   }
+   newMajorityDeduction->SetSegmentId(Current_Segment);
+
+   bool ok;
+   int index = newMajorityDeduction->GetAttribute(OsisMajorityDeduction::Index).toInt(&ok);
+   if (!ok)
+   {
+      qCritical() << "Wrong Deduction Index: " << newMajorityDeduction->GetAttribute(OsisMajorityDeduction::Index) << " in Segment ID: " << Current_Segment << endl;
+      return;
+   }
+   bool found = false;
+   foreach (OsisMajorityDeduction* mdeduction, MajorityDeductions)
+   {
+      if (mdeduction->GetSegmentId() == Current_Segment)
+      {
+         if (mdeduction->GetAttribute(OsisMajorityDeduction::Index).toInt(&ok) == index && ok)
+         {
+            mdeduction->Update(*newMajorityDeduction);
+            found = true;
+            delete newMajorityDeduction;
+            break;
+         }
+      }
+   }
+   if (!found)
+   {
+      MajorityDeductions.insert(Current_Segment, newMajorityDeduction);
+   }
+}
+
+void IsuCompetition::AddOfficial(OsisOfficial* newOfficial)
+{
+   if (Current_Segment == -1)
+   {
+      qCritical() << "Undefined Segment ID when processing an Official: " << newOfficial->GetAttribute(OsisOfficial::Index) << " Full_Name=" << newOfficial->GetAttribute(OsisOfficial::Full_Name) <<endl;
+      return;
+   }
+   newOfficial->SetSegmentId(Current_Segment);
+
+   bool ok;
+   int index = newOfficial->GetAttribute(OsisOfficial::Index).toInt(&ok);
+   if (!ok)
+   {
+      qCritical() << "Wrong Official Index: " << newOfficial->GetAttribute(OsisOfficial::Index) << " in Segment ID: " << Current_Segment << endl;
+      return;
+   }
+   bool found = false;
+   foreach (OsisOfficial* official, Officials)
+   {
+      if (official->GetSegmentId() == Current_Segment)
+      {
+         if (official->GetAttribute(OsisOfficial::Index).toInt(&ok) == index && ok)
+         {
+            official->Update(*newOfficial);
+            found = true;
+            delete newOfficial;
+            break;
+         }
+      }
+   }
+   if (!found)
+   {
+      Officials.insert(Current_Segment, newOfficial);
    }
 }

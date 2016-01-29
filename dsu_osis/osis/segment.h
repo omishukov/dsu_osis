@@ -12,17 +12,23 @@
 #include "osisdata.h"
 #include "criteria.h"
 #include "deduction.h"
+#include "majoritydeduction.h"
+#include "official.h"
 
 class OsisSegment : public QObject, public OsisData
 {
    Q_OBJECT
 public:
    explicit OsisSegment(QDomElement& osisElement, QObject *parent = 0);
+   ~OsisSegment();
 
    inline int GetId() { return Id; }
    void SetCategoryId(int categoryID) { Category_ID = categoryID; }
    inline int GetCategoryId() { return Category_ID; }
    void AddCriteria(OsisCriteria* newCriteria);
+   void AddDeduction(OsisDeduction* newDeduction);
+   void AddMajorityDeduction(OsisMajorityDeduction* newMajorityDeduction);
+   void AddOfficial(OsisOfficial* newOfficial);
 
 public:
    enum OsisElementAttributes
@@ -52,6 +58,8 @@ private:
    int Category_ID;
    OsisCriteriaMap Criteries;
    OsisDeductionMap Deductions;
+   OsisMajorityDeductionMap MajorityDeductions;
+   OsisOfficialMap Officials;
 };
 
 typedef QMap <int, OsisSegment*> OsisSegmentMap;

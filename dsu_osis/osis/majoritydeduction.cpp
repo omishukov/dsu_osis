@@ -5,13 +5,21 @@
  * Contributor(s):
  *   Oleksander Mishukov <dsu@mishukov.dk> */
 
+#include <QDebug>
 #include <QMetaEnum>
 #include "majoritydeduction.h"
 
 OsisMajorityDeduction::OsisMajorityDeduction(QDomElement& osisElement, QObject *parent)
    : QObject(parent)
    , OsisData(OsisMajorityDeduction::staticMetaObject, "MajorityDeduction")
-   , Segment_ID(-1)
 {
    ProcessAttributes(osisElement);
+
+   bool ok;
+   Ind = GetAttribute(OsisMajorityDeduction::Index).toInt(&ok);
+   if (!ok)
+   {
+      Ind = -1;
+      qCritical() << "Invalid Majority Deduction Index: " << GetAttribute(OsisMajorityDeduction::Index) << ", Name:" << GetAttribute(OsisMajorityDeduction::Ded_Index) << endl;
+   }
 }

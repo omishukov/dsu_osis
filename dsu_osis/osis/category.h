@@ -19,6 +19,7 @@ class OsisCategory: public QObject, public OsisData
    Q_OBJECT
 public:
    OsisCategory(QDomElement& categoryElement);
+   ~OsisCategory();
 
    inline int GetId() { return Id; }
    void AddSegment(OsisSegment* newSegment);

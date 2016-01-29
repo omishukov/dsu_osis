@@ -5,6 +5,7 @@
  * Contributor(s):
  *   Oleksander Mishukov <dsu@mishukov.dk> */
 
+#include <QDebug>
 #include <QMetaEnum>
 #include "official.h"
 
@@ -13,4 +14,12 @@ OsisOfficial::OsisOfficial(QDomElement& osisElement, QObject *parent)
    , OsisData(OsisOfficial::staticMetaObject, "Official")
 {
    ProcessAttributes(osisElement);
+
+   bool ok;
+   Ind = GetAttribute(OsisOfficial::Index).toInt(&ok);
+   if (!ok)
+   {
+      Ind = -1;
+      qCritical() << "Invalid Official Index: " << GetAttribute(OsisOfficial::Index) << ", Name:" << GetAttribute(OsisOfficial::Full_Name) << endl;
+   }
 }

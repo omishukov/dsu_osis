@@ -49,8 +49,6 @@ private:
    int Current_Segment;
    OsisParticipantMap Participants;
    OsisSegmentMap Segments;
-   OsisDeductionMap Deductions;
-   OsisMajorityDeductionMap MajorityDeductions;
    OsisOfficialMap Officials;
 };
 

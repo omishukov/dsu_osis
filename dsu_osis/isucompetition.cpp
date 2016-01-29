@@ -21,11 +21,6 @@ IsuCompetition::IsuCompetition()
 IsuCompetition::~IsuCompetition()
 {
    delete Event;
-   foreach (OsisCategory* category, Categories)
-   {
-      delete category;
-   }
-   delete Segment_Start;
    foreach (OsisParticipant* participant, Participants)
    {
       delete participant;
@@ -34,14 +29,11 @@ IsuCompetition::~IsuCompetition()
    {
       delete segment;
    }
-   foreach (OsisDeduction* deduction, Deductions)
+   foreach (OsisCategory* category, Categories)
    {
-      delete deduction;
+      delete category;
    }
-   foreach (OsisMajorityDeduction* mdeduction, MajorityDeductions)
-   {
-      delete mdeduction;
-   }
+   delete Segment_Start;
 }
 
 void IsuCompetition::AddEvent(OsisEvent* newEvent)
@@ -165,32 +157,14 @@ void IsuCompetition::AddDeduction(OsisDeduction* newDeduction)
       qCritical() << "Undefined Segment ID when processing a Deduction : " << newDeduction->GetAttribute(OsisDeduction::Index) << " :" << newDeduction->GetAttribute(OsisDeduction::Ded_Name) << endl;
       return;
    }
-   newDeduction->SetSegmentId(Current_Segment);
-
-   bool ok;
-   int index = newDeduction->GetAttribute(OsisDeduction::Index).toInt(&ok);
-   if (!ok)
+   int index = newDeduction->GetIndex();
+   if (index == -1)
    {
-      qCritical() << "Wrong Deduction Index: " << newDeduction->GetAttribute(OsisDeduction::Index) << " in Segment ID: " << Current_Segment << endl;
       return;
    }
-   bool found = false;
-   foreach (OsisDeduction* deduction, Deductions)
+   if (Segments.contains(Current_Segment))
    {
-      if (deduction->GetSegmentId() == Current_Segment)
-      {
-         if (deduction->GetAttribute(OsisDeduction::Index).toInt(&ok) == index && ok)
-         {
-            deduction->Update(*newDeduction);
-            found = true;
-            delete newDeduction;
-            break;
-         }
-      }
-   }
-   if (!found)
-   {
-      Deductions.insert(Current_Segment, newDeduction);
+      Segments[Current_Segment]->AddDeduction(newDeduction);
    }
 }
 
@@ -201,32 +175,15 @@ void IsuCompetition::AddMajorityDeduction(OsisMajorityDeduction* newMajorityDedu
       qCritical() << "Undefined Segment ID when processing a MajorityDeduction : " << newMajorityDeduction->GetAttribute(OsisMajorityDeduction::Index) << endl;
       return;
    }
-   newMajorityDeduction->SetSegmentId(Current_Segment);
 
-   bool ok;
-   int index = newMajorityDeduction->GetAttribute(OsisMajorityDeduction::Index).toInt(&ok);
-   if (!ok)
+   int index = newMajorityDeduction->GetIndex();
+   if (index == -1)
    {
-      qCritical() << "Wrong Deduction Index: " << newMajorityDeduction->GetAttribute(OsisMajorityDeduction::Index) << " in Segment ID: " << Current_Segment << endl;
       return;
    }
-   bool found = false;
-   foreach (OsisMajorityDeduction* mdeduction, MajorityDeductions)
+   if (Segments.contains(Current_Segment))
    {
-      if (mdeduction->GetSegmentId() == Current_Segment)
-      {
-         if (mdeduction->GetAttribute(OsisMajorityDeduction::Index).toInt(&ok) == index && ok)
-         {
-            mdeduction->Update(*newMajorityDeduction);
-            found = true;
-            delete newMajorityDeduction;
-            break;
-         }
-      }
-   }
-   if (!found)
-   {
-      MajorityDeductions.insert(Current_Segment, newMajorityDeduction);
+      Segments[Current_Segment]->AddMajorityDeduction(newMajorityDeduction);
    }
 }
 
@@ -237,31 +194,13 @@ void IsuCompetition::AddOfficial(OsisOfficial* newOfficial)
       qCritical() << "Undefined Segment ID when processing an Official: " << newOfficial->GetAttribute(OsisOfficial::Index) << " Full_Name=" << newOfficial->GetAttribute(OsisOfficial::Full_Name) <<endl;
       return;
    }
-   newOfficial->SetSegmentId(Current_Segment);
-
-   bool ok;
-   int index = newOfficial->GetAttribute(OsisOfficial::Index).toInt(&ok);
-   if (!ok)
+   int index = newOfficial->GetIndex();
+   if (index == -1)
    {
-      qCritical() << "Wrong Official Index: " << newOfficial->GetAttribute(OsisOfficial::Index) << " in Segment ID: " << Current_Segment << endl;
       return;
    }
-   bool found = false;
-   foreach (OsisOfficial* official, Officials)
+   if (Segments.contains(Current_Segment))
    {
-      if (official->GetSegmentId() == Current_Segment)
-      {
-         if (official->GetAttribute(OsisOfficial::Index).toInt(&ok) == index && ok)
-         {
-            official->Update(*newOfficial);
-            found = true;
-            delete newOfficial;
-            break;
-         }
-      }
-   }
-   if (!found)
-   {
-      Officials.insert(Current_Segment, newOfficial);
+      Segments[Current_Segment]->AddOfficial(newOfficial);
    }
 }

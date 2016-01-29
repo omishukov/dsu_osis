@@ -61,7 +61,7 @@ bool OsisData::ProcessAttributes(QDomElement& criteriaElement)
       }
       else
       {
-         qCritical() << "<" << ElementName << ">:  Unknown attribute (" << value << ")" << endl;
+         qCritical() << "<" << ElementName << ">:  Unknown attribute: " << at.name() << "=" << value << endl;
       }
    }
 

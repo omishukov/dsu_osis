@@ -19,8 +19,7 @@ class OsisDeduction : public QObject, public OsisData
 public:
    explicit OsisDeduction(QDomElement& osisElement, QObject *parent = 0);
 
-   void SetSegmentId(int segmentId) { Segment_ID = segmentId; }
-   int GetSegmentId() { return Segment_ID; }
+   int GetIndex() { return Ind; }
 
 public:
    enum OsisElementAttributes
@@ -34,7 +33,7 @@ public:
 
 
 private:
-   int Segment_ID;
+   int Ind;
 };
 
 typedef QMap <int, OsisDeduction*> OsisDeductionMap;

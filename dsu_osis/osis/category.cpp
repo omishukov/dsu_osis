@@ -24,6 +24,11 @@ OsisCategory::OsisCategory(QDomElement& categoryElement)
    }
 }
 
+OsisCategory::~OsisCategory()
+{
+   // Segment and Participants are deleted from ISUCompetition object
+}
+
 void OsisCategory::AddSegment(OsisSegment* newSegment)
 {
    Segments.insert(newSegment->GetId(), newSegment);

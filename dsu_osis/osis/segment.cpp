@@ -25,7 +25,38 @@ OsisSegment::OsisSegment(QDomElement& osisElement, QObject *parent)
    }
 }
 
+OsisSegment::~OsisSegment()
+{
+   foreach (OsisCriteria* criteria, Criteries)
+   {
+      delete criteria;
+   }
+   foreach (OsisDeduction* deduction, Deductions)
+   {
+      delete deduction;
+   }
+   foreach (OsisMajorityDeduction* mdeduction, MajorityDeductions)
+   {
+      delete mdeduction;
+   }
+}
+
 void OsisSegment::AddCriteria(OsisCriteria* newCriteria)
 {
    Criteries.insert(newCriteria->GetIndex(), newCriteria);
+}
+
+void OsisSegment::AddDeduction(OsisDeduction* newDeduction)
+{
+   Deductions.insert(newDeduction->GetIndex(), newDeduction);
+}
+
+void OsisSegment::AddMajorityDeduction(OsisMajorityDeduction* newMajorityDeduction)
+{
+   MajorityDeductions.insert(newMajorityDeduction->GetIndex(), newMajorityDeduction);
+}
+
+void OsisSegment::AddOfficial(OsisOfficial* newOfficial)
+{
+   Officials.insert(newOfficial->GetIndex(), newOfficial);
 }

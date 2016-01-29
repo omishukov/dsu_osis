@@ -11,8 +11,7 @@ class OsisOfficial : public QObject, public OsisData
 public:
    explicit OsisOfficial(QDomElement& categoryElement, QObject *parent = 0);
 
-   void SetSegmentId(int segmentId) { SegmentId = segmentId; }
-   int GetSegmentId() { return SegmentId; }
+   int GetIndex() { return Ind; }
 
 public:
    enum OsisElementAttributes
@@ -49,7 +48,7 @@ public:
    Q_ENUM(OsisOfficialFunctionAttribute)
 
 private:
-   int SegmentId;
+   int Ind;
 };
 
 typedef QMap <int, OsisOfficial*> OsisOfficialMap;

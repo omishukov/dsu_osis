@@ -6,12 +6,20 @@
  *   Oleksander Mishukov <dsu@mishukov.dk> */
 
 #include <QMetaEnum>
+#include <QDebug>
 #include "deduction.h"
 
 OsisDeduction::OsisDeduction(QDomElement& osisElement, QObject *parent)
    : QObject(parent)
    , OsisData(OsisDeduction::staticMetaObject, "Deduction")
-   , Segment_ID(-1)
 {
    ProcessAttributes(osisElement);
+
+   bool ok;
+   Ind = GetAttribute(OsisDeduction::Index).toInt(&ok);
+   if (!ok)
+   {
+      Ind = -1;
+      qCritical() << "Invalid Deduction Index: " << GetAttribute(OsisDeduction::Index) << ", Name:" <<GetAttribute(OsisDeduction::Ded_Name) << endl;
+   }
 }

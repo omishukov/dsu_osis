@@ -23,3 +23,19 @@ OsisParticipant::OsisParticipant(QDomElement& osisElement, QObject *parent)
       qCritical() << "Wrong Participant ID: " << GetAttribute(OsisParticipant::ID) << ", Name:" << GetAttribute(OsisParticipant::Full_Name) << endl;
    }
 }
+
+OsisParticipant::~OsisParticipant()
+{
+   foreach(OsisAthlete* athlete, Athletes)
+   {
+      delete athlete;
+   }
+}
+
+void OsisParticipant::AddAthlete(OsisAthlete* newAthlete)
+{
+   if (newAthlete->GetId() != -1)
+   {
+      Athletes.insert(newAthlete->GetId(), newAthlete);
+   }
+}

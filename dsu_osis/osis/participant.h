@@ -11,14 +11,17 @@
 #include <QObject>
 #include <QMap>
 #include "osisdata.h"
+#include "athlete.h"
 
 class OsisParticipant : public QObject, public OsisData
 {
    Q_OBJECT
 public:
    explicit OsisParticipant(QDomElement& osisElement, QObject *parent = 0);
+   ~OsisParticipant();
 
    inline int GetId() { return Id; }
+   void AddAthlete(OsisAthlete* newAthlete);
 
 public:
    enum OsisElementAttributes
@@ -120,6 +123,7 @@ public:
 
 private:
    int Id;
+   OsisAthleteMap Athletes;
 };
 
 typedef QMap <int, OsisParticipant*> OsisParticipantMap;

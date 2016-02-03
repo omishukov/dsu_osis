@@ -28,7 +28,9 @@ SOURCES += main.cpp\
     osis/osisdata.cpp \
     isucompetition.cpp \
     osis/majoritydeduction.cpp \
-    osis/official.cpp
+    osis/official.cpp \
+    osis/athlete.cpp \
+    osis/element/performance.cpp
 
 HEADERS  += mainwindow.h \
     calcconnectionthread.h \
@@ -46,7 +48,9 @@ HEADERS  += mainwindow.h \
     osis/dataif.h \
     osis/competitionif.h \
     osis/majoritydeduction.h \
-    osis/official.h
+    osis/official.h \
+    osis/athlete.h \
+    osis/element/performance.h
 
 FORMS    += mainwindow.ui
 
@@ -55,5 +59,7 @@ DISTFILES += \
     LICENSE.txt
 
 LIBS += -lws2_32
+
+INCLUDEPATH += $$PWD/osis
 
 CONFIG += static

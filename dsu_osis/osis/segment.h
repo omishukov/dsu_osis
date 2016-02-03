@@ -14,6 +14,7 @@
 #include "deduction.h"
 #include "majoritydeduction.h"
 #include "official.h"
+#include "element/performance.h"
 
 class OsisSegment : public QObject, public OsisData
 {
@@ -29,6 +30,7 @@ public:
    void AddDeduction(OsisDeduction* newDeduction);
    void AddMajorityDeduction(OsisMajorityDeduction* newMajorityDeduction);
    void AddOfficial(OsisOfficial* newOfficial);
+   void AddPerformance(OsisPerformance* newPerformance);
 
 public:
    enum OsisElementAttributes
@@ -60,6 +62,8 @@ private:
    OsisDeductionMap Deductions;
    OsisMajorityDeductionMap MajorityDeductions;
    OsisOfficialMap Officials;
+   OsisPerformanceMap Performances;
+   OsisPerformance* Current_Performance;
 };
 
 typedef QMap <int, OsisSegment*> OsisSegmentMap;

@@ -19,6 +19,8 @@
 #include "osis/deduction.h"
 #include "osis/majoritydeduction.h"
 #include "osis/official.h"
+#include "athlete.h"
+#include "element/performance.h"
 
 class IsuCompetition: public OsisCompetitionIf
 {
@@ -36,7 +38,9 @@ public:
    void AddCriteria(OsisCriteria* newCriteria);
    void AddDeduction(OsisDeduction* newDeduction);
    void AddMajorityDeduction(OsisMajorityDeduction* newMajorityDeduction);
-   void AddOfficial(class OsisOfficial* newOfficial);
+   void AddOfficial(OsisOfficial* newOfficial);
+   void AddAthlete(OsisAthlete* newAthlete);
+   void AddPerformance(OsisPerformance* newPerformance);
 
    void ProcessingDone() {}
 
@@ -50,6 +54,7 @@ private:
    OsisParticipantMap Participants;
    OsisSegmentMap Segments;
    OsisOfficialMap Officials;
+   OsisParticipant* Current_Participant;
 };
 
 #endif // ISUCOMPETITION_H

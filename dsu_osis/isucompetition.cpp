@@ -14,6 +14,7 @@ IsuCompetition::IsuCompetition()
    , Current_Category(-1)
    , Segment_Start(0)
    , Current_Segment(-1)
+   , Current_Participant(0)
 {
 
 }
@@ -117,6 +118,7 @@ void IsuCompetition::AddParticipant(OsisParticipant* newParticipant)
    int PID = newParticipant->GetId();
    if (PID == -1)
    {
+      Current_Participant = 0;
       return;
    }
 
@@ -134,6 +136,7 @@ void IsuCompetition::AddParticipant(OsisParticipant* newParticipant)
    {
       Categories[Current_Category]->AddParticipant(Participants[PID]);
    }
+   Current_Participant = Participants[PID];
 }
 
 void IsuCompetition::AddCriteria(OsisCriteria* newCriteria)
@@ -202,5 +205,28 @@ void IsuCompetition::AddOfficial(OsisOfficial* newOfficial)
    if (Segments.contains(Current_Segment))
    {
       Segments[Current_Segment]->AddOfficial(newOfficial);
+   }
+}
+
+void IsuCompetition::AddAthlete(OsisAthlete* newAthlete)
+{
+   if (!Current_Participant)
+   {
+      qCritical() << "Cannot process Athlete: Missing Participant info" << endl;
+      return;
+   }
+   Current_Participant->AddAthlete(newAthlete);
+}
+
+void IsuCompetition::AddPerformance(OsisPerformance* newPerformance)
+{
+   if (Current_Segment == -1)
+   {
+      qCritical() << "Undefined Segment ID when processing Performance: " << newPerformance->GetAttribute(OsisPerformance::ID) << endl;
+      return;
+   }
+   if (Segments.contains(Current_Segment))
+   {
+      Segments[Current_Segment]->AddPerformance(newPerformance);
    }
 }

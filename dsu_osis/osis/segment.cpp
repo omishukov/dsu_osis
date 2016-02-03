@@ -13,6 +13,7 @@ OsisSegment::OsisSegment(QDomElement& osisElement, QObject *parent)
    : QObject(parent)
    , OsisData(OsisSegment::staticMetaObject, "Segment")
    , Category_ID(-1)
+   , Current_Performance(0)
 {
    ProcessAttributes(osisElement);
 
@@ -43,20 +44,50 @@ OsisSegment::~OsisSegment()
 
 void OsisSegment::AddCriteria(OsisCriteria* newCriteria)
 {
-   Criteries.insert(newCriteria->GetIndex(), newCriteria);
+   if (newCriteria && newCriteria->GetIndex() != -1)
+   {
+      Criteries.insert(newCriteria->GetIndex(), newCriteria);
+   }
 }
 
 void OsisSegment::AddDeduction(OsisDeduction* newDeduction)
 {
-   Deductions.insert(newDeduction->GetIndex(), newDeduction);
+   if (newDeduction && newDeduction->GetIndex() != -1)
+   {
+      Deductions.insert(newDeduction->GetIndex(), newDeduction);
+   }
 }
 
 void OsisSegment::AddMajorityDeduction(OsisMajorityDeduction* newMajorityDeduction)
 {
-   MajorityDeductions.insert(newMajorityDeduction->GetIndex(), newMajorityDeduction);
+   if (newMajorityDeduction && newMajorityDeduction->GetIndex() != -1)
+   {
+      MajorityDeductions.insert(newMajorityDeduction->GetIndex(), newMajorityDeduction);
+   }
 }
 
 void OsisSegment::AddOfficial(OsisOfficial* newOfficial)
 {
-   Officials.insert(newOfficial->GetIndex(), newOfficial);
+   if (newOfficial && newOfficial->GetIndex() != -1)
+   {
+      Officials.insert(newOfficial->GetIndex(), newOfficial);
+   }
+}
+
+void OsisSegment::AddPerformance(OsisPerformance* newPerformance)
+{
+   if (newPerformance && newPerformance->GetId() != -1)
+   {
+      int Id = newPerformance->GetId();
+      if (Performances.contains(Id))
+      {
+         Performances.value(Id)->Update(*newPerformance);
+         delete newPerformance;
+      }
+      else
+      {
+         Performances.insert(Id, newPerformance);
+      }
+      Current_Performance = Performances[Id];
+   }
 }

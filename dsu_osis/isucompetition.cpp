@@ -230,3 +230,16 @@ void IsuCompetition::AddPerformance(OsisPerformance* newPerformance)
       Segments[Current_Segment]->AddPerformance(newPerformance);
    }
 }
+
+void IsuCompetition::AddElement(OsisElement* newElement)
+{
+   if (Current_Segment == -1)
+   {
+      qCritical() << "Undefined Segment ID when processing Element: " << newElement->GetAttribute(OsisElement::Index) << endl;
+      return;
+   }
+   if (Segments.contains(Current_Segment))
+   {
+      Segments[Current_Segment]->AddElement(newElement);
+   }
+}

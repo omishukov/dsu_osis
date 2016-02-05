@@ -17,3 +17,20 @@ OsisPerformance::OsisPerformance(QDomElement& osisElement, QObject *parent)
    }
 
 }
+
+void OsisPerformance::AddElement(OsisElement* newElement)
+{
+   if (newElement && newElement->GetIndex() != -1)
+   {
+      int Ind = newElement->GetIndex();
+      if (Elements.contains(Ind))
+      {
+         Elements.value(Ind)->Update(*newElement);
+         delete newElement;
+      }
+      else
+      {
+         Elements.insert(Ind, newElement);
+      }
+   }
+}

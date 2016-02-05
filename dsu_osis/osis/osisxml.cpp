@@ -19,6 +19,7 @@
 #include "official.h"
 #include "athlete.h"
 #include "element/performance.h"
+#include "element/element.h"
 
 OsisXml::OsisXml(OsisCompetitionIf* competition, QObject* parent)
    : QObject(parent)
@@ -63,7 +64,7 @@ bool OsisXml::ProcessOsisElement(QDomNode& n)
    }
 
    const QMetaObject &mo = OsisXml::staticMetaObject;
-   int index = mo.indexOfEnumerator("OsisElements");
+   int index = mo.indexOfEnumerator("OsisXmlElements");
    QMetaEnum metaEnum = mo.enumerator(index);
 
    switch(metaEnum.keyToValue(e.tagName().toLocal8Bit().constData()))
@@ -101,7 +102,7 @@ bool OsisXml::ProcessOsisElement(QDomNode& n)
       case Performance:
          Competition->AddPerformance(new OsisPerformance(e));
       case Element:
-//         return ProcessElement(e);
+         Competition->AddElement(new OsisElement(e));
       case Segment_Running:
 //         return ProcessSegmentRunning(e);
       case Action:

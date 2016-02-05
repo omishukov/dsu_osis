@@ -17,7 +17,7 @@ class OsisXml: public QObject, public OsisDataIf
 {
    Q_OBJECT
 public:
-   enum OsisElements
+   enum OsisXmlElements
    {
       ISU_OSIS,
       // <Event_Overview>
@@ -59,7 +59,7 @@ public:
       // <Segment_Statistic>
       Segment_Statistic,
    };
-   Q_ENUM(OsisElements)
+   Q_ENUM(OsisXmlElements)
 
 public:
    explicit OsisXml(OsisCompetitionIf *competition, QObject *parent = 0);

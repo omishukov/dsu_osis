@@ -17,6 +17,7 @@ public:
    virtual void AddOfficial(class OsisOfficial* newOfficial) = 0;
    virtual void AddAthlete(class OsisAthlete* newAthlete) = 0;
    virtual void AddPerformance(class OsisPerformance* newPerformance) = 0;
+   virtual void AddElement(class OsisElement* newElement) = 0;
 
    virtual void ProcessingDone() = 0;
 };

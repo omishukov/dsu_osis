@@ -15,6 +15,7 @@
 #include "majoritydeduction.h"
 #include "official.h"
 #include "element/performance.h"
+#include "element/element.h"
 
 class OsisSegment : public QObject, public OsisData
 {
@@ -31,6 +32,7 @@ public:
    void AddMajorityDeduction(OsisMajorityDeduction* newMajorityDeduction);
    void AddOfficial(OsisOfficial* newOfficial);
    void AddPerformance(OsisPerformance* newPerformance);
+   void AddElement(OsisElement* newElement);
 
 public:
    enum OsisElementAttributes

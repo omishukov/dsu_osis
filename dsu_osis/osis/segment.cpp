@@ -91,3 +91,11 @@ void OsisSegment::AddPerformance(OsisPerformance* newPerformance)
       Current_Performance = Performances[Id];
    }
 }
+
+void OsisSegment::AddElement(OsisElement* newElement)
+{
+   if (Current_Performance && Current_Performance->GetId() != -1)
+   {
+      Current_Performance->AddElement(newElement);
+   }
+}

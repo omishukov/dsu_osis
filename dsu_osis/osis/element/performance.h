@@ -4,8 +4,8 @@
 #include <QObject>
 #include <QDomDocument>
 #include <QMap>
-#include <QMap>
 #include <osisdata.h>
+#include <element/element.h>
 
 class OsisPerformance : public QObject, public OsisData
 {
@@ -14,6 +14,7 @@ public:
    explicit OsisPerformance(QDomElement& osisElement, QObject *parent = 0);
 
    inline int GetId() { return Id; }
+   void AddElement(OsisElement* newElement);
 
 public:
    enum OsisElementAttributes
@@ -56,6 +57,7 @@ public:
 
 private:
    int Id;
+   OsisElementMap Elements;
 };
 
 typedef QMap <int, OsisPerformance*> OsisPerformanceMap;

@@ -30,7 +30,8 @@ SOURCES += main.cpp\
     osis/majoritydeduction.cpp \
     osis/official.cpp \
     osis/athlete.cpp \
-    osis/element/performance.cpp
+    osis/element/performance.cpp \
+    osis/element/element.cpp
 
 HEADERS  += mainwindow.h \
     calcconnectionthread.h \
@@ -50,7 +51,8 @@ HEADERS  += mainwindow.h \
     osis/majoritydeduction.h \
     osis/official.h \
     osis/athlete.h \
-    osis/element/performance.h
+    osis/element/performance.h \
+    osis/element/element.h
 
 FORMS    += mainwindow.ui
 

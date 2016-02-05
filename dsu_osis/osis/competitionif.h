@@ -18,6 +18,8 @@ public:
    virtual void AddAthlete(class OsisAthlete* newAthlete) = 0;
    virtual void AddPerformance(class OsisPerformance* newPerformance) = 0;
    virtual void AddElement(class OsisElement* newElement) = 0;
+   virtual void AddWarmupGroup(class OsisWarmupGroup* newWarmupGroup) = 0;
+   virtual void AddPrfRanking(class OsisPrfRanking* newPrfRanking) = 0;
 
    virtual void ProcessingDone() = 0;
 };

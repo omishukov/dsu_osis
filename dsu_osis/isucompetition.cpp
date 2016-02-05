@@ -243,3 +243,29 @@ void IsuCompetition::AddElement(OsisElement* newElement)
       Segments[Current_Segment]->AddElement(newElement);
    }
 }
+
+void IsuCompetition::AddWarmupGroup(OsisWarmupGroup* newWarmupGroup)
+{
+   if (Current_Segment == -1)
+   {
+      qCritical() << "Undefined Segment ID when processing Warmup_Group: " << newWarmupGroup->GetAttribute(OsisWarmupGroup::Index) << endl;
+      return;
+   }
+   if (Segments.contains(Current_Segment))
+   {
+      Segments[Current_Segment]->AddWarmupGroup(newWarmupGroup);
+   }
+}
+
+void IsuCompetition::AddPrfRanking(OsisPrfRanking* newPrfRanking)
+{
+   if (Current_Segment == -1)
+   {
+      qCritical() << "Undefined Segment ID when processing Prf_Ranking: " << newPrfRanking->GetAttribute(OsisPrfRanking::TypeName) << endl;
+      return;
+   }
+   if (Segments.contains(Current_Segment))
+   {
+      Segments[Current_Segment]->AddPrfRanking(newPrfRanking);
+   }
+}

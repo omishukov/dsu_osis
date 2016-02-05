@@ -48,6 +48,7 @@ public:
       Performance,
       Planned_Element_List,
       Element,
+      Warmup_Group,
       // <Segment_Running>
       Segment_Running,
       Action,

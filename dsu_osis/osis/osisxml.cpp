@@ -20,6 +20,8 @@
 #include "athlete.h"
 #include "element/performance.h"
 #include "element/element.h"
+#include "element/warmupgroup.h"
+#include "element/prfranking.h"
 
 OsisXml::OsisXml(OsisCompetitionIf* competition, QObject* parent)
    : QObject(parent)
@@ -101,8 +103,13 @@ bool OsisXml::ProcessOsisElement(QDomNode& n)
          break;
       case Performance:
          Competition->AddPerformance(new OsisPerformance(e));
+         break;
       case Element:
          Competition->AddElement(new OsisElement(e));
+         break;
+      case Warmup_Group:
+         Competition->AddWarmupGroup(new OsisWarmupGroup(e));
+         break;
       case Segment_Running:
 //         return ProcessSegmentRunning(e);
       case Action:
@@ -110,7 +117,8 @@ bool OsisXml::ProcessOsisElement(QDomNode& n)
       case Prf_Details:
 //         return ProcessPrfDetails(e);
       case Prf_Ranking:
-//         return ProcessPrfRanking(e);
+         Competition->AddPrfRanking(new OsisPrfRanking(e));
+         break;
       case Element_List:
 //         return ProcessElementList(e);
       case Prf:

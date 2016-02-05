@@ -14,6 +14,7 @@ OsisSegment::OsisSegment(QDomElement& osisElement, QObject *parent)
    , OsisData(OsisSegment::staticMetaObject, "Segment")
    , Category_ID(-1)
    , Current_Performance(0)
+   , Prf_Ranking(0)
 {
    ProcessAttributes(osisElement);
 
@@ -97,5 +98,25 @@ void OsisSegment::AddElement(OsisElement* newElement)
    if (Current_Performance && Current_Performance->GetId() != -1)
    {
       Current_Performance->AddElement(newElement);
+   }
+}
+
+void OsisSegment::AddWarmupGroup(OsisWarmupGroup* newWarmupGroup)
+{
+   if (newWarmupGroup && newWarmupGroup->GetIndex() != -1)
+   {
+      WarmupGroups.insert(newWarmupGroup->GetIndex(), newWarmupGroup);
+   }
+}
+
+void OsisSegment::AddPrfRanking(OsisPrfRanking* newPrfRanking)
+{
+   if (newPrfRanking)
+   {
+      if (Prf_Ranking)
+      {
+         delete Prf_Ranking;
+      }
+      Prf_Ranking = newPrfRanking;
    }
 }

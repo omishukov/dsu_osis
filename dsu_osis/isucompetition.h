@@ -22,6 +22,8 @@
 #include "athlete.h"
 #include "element/performance.h"
 #include "element/element.h"
+#include "element/warmupgroup.h"
+#include "element/prfranking.h"
 
 class IsuCompetition: public OsisCompetitionIf
 {
@@ -43,6 +45,8 @@ public:
    void AddAthlete(OsisAthlete* newAthlete);
    void AddPerformance(OsisPerformance* newPerformance);
    void AddElement(OsisElement* newElement);
+   void AddWarmupGroup(OsisWarmupGroup* newWarmupGroup);
+   void AddPrfRanking(OsisPrfRanking* newPrfRanking);
 
    void ProcessingDone() {}
 

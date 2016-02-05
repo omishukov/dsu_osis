@@ -31,7 +31,9 @@ SOURCES += main.cpp\
     osis/official.cpp \
     osis/athlete.cpp \
     osis/element/performance.cpp \
-    osis/element/element.cpp
+    osis/element/element.cpp \
+    osis/element/warmupgroup.cpp \
+    osis/element/prfranking.cpp
 
 HEADERS  += mainwindow.h \
     calcconnectionthread.h \
@@ -52,7 +54,9 @@ HEADERS  += mainwindow.h \
     osis/official.h \
     osis/athlete.h \
     osis/element/performance.h \
-    osis/element/element.h
+    osis/element/element.h \
+    osis/element/warmupgroup.h \
+    osis/element/prfranking.h
 
 FORMS    += mainwindow.ui
 

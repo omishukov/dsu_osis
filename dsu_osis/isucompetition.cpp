@@ -269,3 +269,16 @@ void IsuCompetition::AddPrfRanking(OsisPrfRanking* newPrfRanking)
       Segments[Current_Segment]->AddPrfRanking(newPrfRanking);
    }
 }
+
+void IsuCompetition::AddSegmentRunning(OsisSegmentRunning* newSegmentRunning)
+{
+   if (newSegmentRunning)
+   {
+      bool ok;
+      int SegId = newSegmentRunning->GetAttribute(OsisSegmentRunning::Segment_ID).toInt(&ok);
+      if (ok && Segments.contains(SegId))
+      {
+         Current_Segment = SegId;
+      }
+   }
+}

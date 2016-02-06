@@ -33,7 +33,8 @@ SOURCES += main.cpp\
     osis/element/performance.cpp \
     osis/element/element.cpp \
     osis/element/warmupgroup.cpp \
-    osis/element/prfranking.cpp
+    osis/element/prfranking.cpp \
+    osis/element/segmentrunning.cpp
 
 HEADERS  += mainwindow.h \
     calcconnectionthread.h \
@@ -56,7 +57,8 @@ HEADERS  += mainwindow.h \
     osis/element/performance.h \
     osis/element/element.h \
     osis/element/warmupgroup.h \
-    osis/element/prfranking.h
+    osis/element/prfranking.h \
+    osis/element/segmentrunning.h
 
 FORMS    += mainwindow.ui
 

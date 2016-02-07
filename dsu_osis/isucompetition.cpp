@@ -280,5 +280,9 @@ void IsuCompetition::AddSegmentRunning(OsisSegmentRunning* newSegmentRunning)
       {
          Current_Segment = SegId;
       }
+      else
+      {
+         Current_Segment = -1;
+      }
    }
 }

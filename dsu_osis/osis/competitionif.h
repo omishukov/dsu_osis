@@ -21,6 +21,7 @@ public:
    virtual void AddWarmupGroup(class OsisWarmupGroup* newWarmupGroup) = 0;
    virtual void AddPrfRanking(class OsisPrfRanking* newPrfRanking) = 0;
    virtual void AddSegmentRunning(class OsisSegmentRunning* newSegmentRunning) = 0;
+   virtual void ProcessAction(class OsisAction* newAction) = 0;
 
    virtual void ProcessingDone() = 0;
 };

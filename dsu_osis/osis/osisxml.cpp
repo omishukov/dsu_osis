@@ -23,6 +23,7 @@
 #include "element/warmupgroup.h"
 #include "element/prfranking.h"
 #include "element/segmentrunning.h"
+#include "element/action.h"
 
 OsisXml::OsisXml(OsisCompetitionIf* competition, QObject* parent)
    : QObject(parent)
@@ -72,6 +73,9 @@ bool OsisXml::ProcessOsisElement(QDomNode& n)
 
    switch(metaEnum.keyToValue(e.tagName().toLocal8Bit().constData()))
    {
+      case Isu_Osis:
+//         Competition->ProcessIsuOsis(new IsuOsis(e));
+         break;
       case Event:
          Competition->AddEvent(new OsisEvent(e));
          break;
@@ -115,7 +119,8 @@ bool OsisXml::ProcessOsisElement(QDomNode& n)
          Competition->AddSegmentRunning(new OsisSegmentRunning(e));
          break;
       case Action:
-//         return ProcessAction(e);
+         Competition->ProcessAction(new OsisAction(e));
+         break;
       case Prf_Details:
 //         return ProcessPrfDetails(e);
       case Prf_Ranking:

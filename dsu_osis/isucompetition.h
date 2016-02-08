@@ -25,6 +25,7 @@
 #include "element/warmupgroup.h"
 #include "element/prfranking.h"
 #include "element/segmentrunning.h"
+#include "element/action.h"
 
 class IsuCompetition: public OsisCompetitionIf
 {
@@ -49,6 +50,7 @@ public:
    void AddWarmupGroup(OsisWarmupGroup* newWarmupGroup);
    void AddPrfRanking(OsisPrfRanking* newPrfRanking);
    void AddSegmentRunning(OsisSegmentRunning* newSegmentRunning);
+   void ProcessAction(OsisAction* newAction);
 
    void ProcessingDone() {}
 
@@ -63,6 +65,7 @@ private:
    OsisSegmentMap Segments;
    OsisOfficialMap Officials;
    OsisParticipant* Current_Participant;
+   OsisAction* Current_Action;
 };
 
 #endif // ISUCOMPETITION_H

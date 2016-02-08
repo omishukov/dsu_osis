@@ -15,6 +15,7 @@ IsuCompetition::IsuCompetition()
    , Segment_Start(0)
    , Current_Segment(-1)
    , Current_Participant(0)
+   , Current_Action(0)
 {
 
 }
@@ -35,6 +36,7 @@ IsuCompetition::~IsuCompetition()
       delete category;
    }
    delete Segment_Start;
+   delete Current_Action;
 }
 
 void IsuCompetition::AddEvent(OsisEvent* newEvent)
@@ -272,17 +274,31 @@ void IsuCompetition::AddPrfRanking(OsisPrfRanking* newPrfRanking)
 
 void IsuCompetition::AddSegmentRunning(OsisSegmentRunning* newSegmentRunning)
 {
-   if (newSegmentRunning)
+   if (!newSegmentRunning)
    {
-      bool ok;
-      int SegId = newSegmentRunning->GetAttribute(OsisSegmentRunning::Segment_ID).toInt(&ok);
-      if (ok && Segments.contains(SegId))
-      {
-         Current_Segment = SegId;
-      }
-      else
-      {
-         Current_Segment = -1;
-      }
+      return;
    }
+   bool ok;
+   int SegId = newSegmentRunning->GetAttribute(OsisSegmentRunning::Segment_ID).toInt(&ok);
+   if (ok && Segments.contains(SegId))
+   {
+      Current_Segment = SegId;
+   }
+   else
+   {
+      Current_Segment = -1;
+   }
+}
+
+void IsuCompetition::ProcessAction(OsisAction* newAction)
+{
+   if (!newAction)
+   {
+      return;
+   }
+   if (Current_Action)
+   {
+      delete Current_Action;
+   }
+   Current_Action = newAction;
 }

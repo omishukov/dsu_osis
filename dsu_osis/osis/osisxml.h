@@ -19,7 +19,7 @@ class OsisXml: public QObject, public OsisDataIf
 public:
    enum OsisXmlElements
    {
-      ISU_OSIS,
+      Isu_Osis,
       // <Event_Overview>
       Event_Overview,
       Event,

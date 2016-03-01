@@ -24,6 +24,7 @@
 #include "element/prfranking.h"
 #include "element/segmentrunning.h"
 #include "element/action.h"
+#include "element/prfdetails.h"
 
 OsisXml::OsisXml(OsisCompetitionIf* competition, QObject* parent)
    : QObject(parent)
@@ -122,7 +123,8 @@ bool OsisXml::ProcessOsisElement(QDomNode& n)
          Competition->ProcessAction(new OsisAction(e));
          break;
       case Prf_Details:
-//         return ProcessPrfDetails(e);
+         Competition->AddPrfDetails(new OsisPrfDetails(e));
+         break;
       case Prf_Ranking:
          Competition->AddPrfRanking(new OsisPrfRanking(e));
          break;

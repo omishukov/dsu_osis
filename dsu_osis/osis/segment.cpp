@@ -15,6 +15,7 @@ OsisSegment::OsisSegment(QDomElement& osisElement, QObject *parent)
    , Category_ID(-1)
    , Current_Performance(0)
    , Prf_Ranking(0)
+   , Prf_Details(0)
 {
    ProcessAttributes(osisElement);
 
@@ -41,6 +42,12 @@ OsisSegment::~OsisSegment()
    {
       delete mdeduction;
    }
+   foreach (OsisPerformance* performance, Performances)
+   {
+      delete performance;
+   }
+   delete Prf_Ranking;
+   delete Prf_Details;
 }
 
 void OsisSegment::AddCriteria(OsisCriteria* newCriteria)
@@ -118,5 +125,17 @@ void OsisSegment::AddPrfRanking(OsisPrfRanking* newPrfRanking)
          delete Prf_Ranking;
       }
       Prf_Ranking = newPrfRanking;
+   }
+}
+
+void OsisSegment::AddPrfDetails(OsisPrfDetails* newPrfDetails)
+{
+   if (newPrfDetails)
+   {
+      if (Prf_Details)
+      {
+         delete Prf_Details;
+      }
+      Prf_Details = newPrfDetails;
    }
 }

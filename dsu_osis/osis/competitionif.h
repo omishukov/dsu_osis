@@ -22,6 +22,7 @@ public:
    virtual void AddPrfRanking(class OsisPrfRanking* newPrfRanking) = 0;
    virtual void AddSegmentRunning(class OsisSegmentRunning* newSegmentRunning) = 0;
    virtual void ProcessAction(class OsisAction* newAction) = 0;
+   virtual void AddPrfDetails(class OsisPrfDetails* newPrfDetails) = 0;
 
    virtual void ProcessingDone() = 0;
 };

@@ -302,3 +302,22 @@ void IsuCompetition::ProcessAction(OsisAction* newAction)
    }
    Current_Action = newAction;
 }
+
+void IsuCompetition::AddPrfDetails(OsisPrfDetails* newPrfDetails)
+{
+   if (!newPrfDetails)
+   {
+      return;
+   }
+
+   if (Current_Segment == -1)
+   {
+      qCritical() << "Undefined Segment ID when processing Prf_Details" << endl;
+      return;
+   }
+   if (Segments.contains(Current_Segment))
+   {
+      Segments[Current_Segment]->AddPrfDetails(newPrfDetails);
+   }
+
+}

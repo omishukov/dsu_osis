@@ -22,6 +22,7 @@ public:
       Ded_Sum, // Sum of all deductions
       Rec // 2. “PB” – personal best
    };
+   Q_ENUM(OsisElementAttributes)
 };
 
 #endif // OSISPRFDETAILS_H

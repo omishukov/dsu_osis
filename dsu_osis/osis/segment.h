@@ -18,6 +18,7 @@
 #include "element/element.h"
 #include "element/warmupgroup.h"
 #include "element/prfranking.h"
+#include "element/prfdetails.h"
 
 class OsisSegment : public QObject, public OsisData
 {
@@ -37,6 +38,7 @@ public:
    void AddElement(OsisElement* newElement);
    void AddWarmupGroup(OsisWarmupGroup* newWarmupGroup);
    void AddPrfRanking(OsisPrfRanking* newPrfRanking);
+   void AddPrfDetails(OsisPrfDetails* newPrfDetails);
 
 public:
    enum OsisElementAttributes
@@ -72,6 +74,7 @@ private:
    OsisPerformance* Current_Performance;
    OsisWarmupGroupMap WarmupGroups;
    OsisPrfRanking* Prf_Ranking;
+   OsisPrfDetails* Prf_Details;
 };
 
 typedef QMap <int, OsisSegment*> OsisSegmentMap;

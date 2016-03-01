@@ -26,6 +26,7 @@
 #include "element/prfranking.h"
 #include "element/segmentrunning.h"
 #include "element/action.h"
+#include "element/prfdetails.h"
 
 class IsuCompetition: public OsisCompetitionIf
 {
@@ -51,6 +52,7 @@ public:
    void AddPrfRanking(OsisPrfRanking* newPrfRanking);
    void AddSegmentRunning(OsisSegmentRunning* newSegmentRunning);
    void ProcessAction(OsisAction* newAction);
+   void AddPrfDetails(OsisPrfDetails* newPrfDetails);
 
    void ProcessingDone() {}
 

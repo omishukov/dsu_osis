@@ -6,11 +6,11 @@
  *   Oleksander Mishukov <dsu@mishukov.dk> */
 
 #include <QMetaEnum>
-#include "segmentstart.h"
+#include "deduction.h"
 
-OsisSegmentStart::OsisSegmentStart(QDomElement& segmentStartElement, QObject *parent)
+OsisDeduction::OsisDeduction(QDomElement& osisElement, const char* elementName, QObject *parent)
    : QObject(parent)
-   , OsisData(OsisSegmentStart::staticMetaObject, "SegmentStart")
+   , OsisData(OsisDeduction::staticMetaObject, osisElement, elementName)
+   , Ind(GetAttributeInt(Index))
 {
-   ProcessAttributes(segmentStartElement);
 }

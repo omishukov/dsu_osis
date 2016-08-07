@@ -11,20 +11,14 @@
 #include <QObject>
 #include <QMap>
 #include "osisdata.h"
-#include "segment.h"
-#include "participant.h"
+
+/*
+ * <Category ID="14" Name="Novice Piger M" Level="NAD" Gender="F" Type="SGL" tec_id="0" ExtDt="" TypeName="Ladies">
+ */
 
 class OsisCategory: public QObject, public OsisData
 {
    Q_OBJECT
-public:
-   OsisCategory(QDomElement& categoryElement);
-   ~OsisCategory();
-
-   inline int GetId() { return Id; }
-   void AddSegment(OsisSegment* newSegment);
-   void AddParticipant(OsisParticipant* newParticipant);
-
 public:
    enum OsisElementAttributes
    {
@@ -39,14 +33,12 @@ public:
       ExtDt, // RSC Code
       LAST_ATTRIBUTE
    };
-
    Q_ENUM(OsisElementAttributes)
 
-private:
-   int Id;
-   OsisSegmentMap Segments;
-   OsisParticipantMap Participants;
+public:
+   explicit OsisCategory(QDomElement& categoryElement, const char* elementName, QObject *parent = 0);
 
+   int Id;
 };
 
 typedef QMap <int, OsisCategory*> OsisCategoryMap;

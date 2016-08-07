@@ -1,19 +1,26 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
+ * Contributor(s):
+ *   Oleksander Mishukov <dsu@mishukov.dk> */
+
 #ifndef OSISELEMENT_H
 #define OSISELEMENT_H
 
 #include <QObject>
 #include <QDomDocument>
 #include <QMap>
-#include <osisdata.h>
+#include "osisdata.h"
+
+/*
+ * <Element Index="1" PName="2Lz+2T" PBVal="3.40"/>
+ * <Element Index="1" Elm_Name="1Lz*+1T*" Points="0.00" Elm_XBV="0.00" Elm_XGOE="0.00" Elm_Info="*" Elm_Half="1"/>
+ */
 
 class OsisElement : public QObject, public OsisData
 {
    Q_OBJECT
-public:
-   explicit OsisElement(QDomElement& osisElement, QObject *parent = 0);
-
-   inline int GetIndex() { return Ind; }
-
 public:
    enum OsisElementAttributes
    {
@@ -31,7 +38,9 @@ public:
    };
    Q_ENUM(OsisElementAttributes)
 
-private:
+public:
+   explicit OsisElement(QDomElement& osisElement, const char* elementName, QObject *parent = 0);
+
    int Ind;
 };
 

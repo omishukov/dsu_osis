@@ -11,18 +11,14 @@
 #include <QObject>
 #include <QMap>
 #include "osisdata.h"
-#include "athlete.h"
+
+/*
+ * <Participant ID="255" Index="1" TIndex="1" TRank="0" TPoint="0.00" Status="ACT" Segment1_Status="L" Segment1_Rank="" Segment1_Index="" Segment1_Points="" Segment1_IIndex="" Segment1_IRank="" Rec="" Status_Changed="0"/>
+ */
 
 class OsisParticipant : public QObject, public OsisData
 {
    Q_OBJECT
-public:
-   explicit OsisParticipant(QDomElement& osisElement, QObject *parent = 0);
-   ~OsisParticipant();
-
-   inline int GetId() { return Id; }
-   void AddAthlete(OsisAthlete* newAthlete);
-
 public:
    enum OsisElementAttributes
    {
@@ -86,44 +82,41 @@ public:
       Segment5_IRank,
       Segment6_IRank,
    };
-
-   enum OsisParticipantStatus
-   {
-      ACT, // Active
-      WDR, // Withdrawn
-      EWD, // Entry withdrawn
-      NQD, // Not qualified
-      FNR, // Final not reached
-      DSQ, // Disqualified
-      SEN, // Substitute entry
-   };
-
-   enum OsisParticipantType
-   {
-      PER, // Person
-      COU, // Couple
-      PTS, // Team
-      MIX,
-      Type_MAX
-   };
-
-   enum OsisPerformanceStatus
-   {
-      L, // Remaining
-      M, // Not in segment
-      O, // Ok
-      I, // Invalid result
-      PerfStatus_MAX
-   };
-
    Q_ENUM(OsisElementAttributes)
-   Q_ENUM(OsisParticipantStatus)
-   Q_ENUM(OsisParticipantType)
-   Q_ENUM(OsisPerformanceStatus)
 
-private:
+   QString OsisParticipantStatus[7]
+   {
+      "ACT", // Active
+      "WDR", // Withdrawn
+      "EWD", // Entry withdrawn
+      "NQD", // Not qualified
+      "FNR", // Final not reached
+      "DSQ", // Disqualified
+      "SEN", // Substitute entry
+   };
+
+   QString OsisParticipantType[5]
+   {
+      "PER", // Person
+      "COU", // Couple
+      "PTS", // Team
+      "MIX",
+      "Type_MAX"
+   };
+
+   QString OsisPerformanceStatus[5]
+   {
+      "L", // Remaining
+      "M", // Not in segment
+      "O", // Ok
+      "I", // Invalid result
+      "PerfStatus_MAX"
+   };
+
+public:
+   explicit OsisParticipant(QDomElement& categoryElement, const char* elementName, QObject *parent = 0);
+
    int Id;
-   OsisAthleteMap Athletes;
 };
 
 typedef QMap <int, OsisParticipant*> OsisParticipantMap;

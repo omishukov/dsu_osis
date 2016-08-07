@@ -6,11 +6,11 @@
  *   Oleksander Mishukov <dsu@mishukov.dk> */
 
 #include <QMetaEnum>
-#include "element.h"
+#include "majoritydeduction.h"
 
-OsisElement::OsisElement(QDomElement& osisElement, const char* elementName, QObject *parent)
+OsisMajorityDeduction::OsisMajorityDeduction(QDomElement& osisElement, const char* elementName, QObject *parent)
    : QObject(parent)
-   , OsisData(OsisElement::staticMetaObject, osisElement, elementName)
+   , OsisData(OsisMajorityDeduction::staticMetaObject, osisElement, elementName)
    , Ind(GetAttributeInt(Index))
 {
 }

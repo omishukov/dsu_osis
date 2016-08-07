@@ -6,11 +6,11 @@
  *   Oleksander Mishukov <dsu@mishukov.dk> */
 
 #include <QMetaEnum>
-#include "element.h"
+#include "participant.h"
 
-OsisElement::OsisElement(QDomElement& osisElement, const char* elementName, QObject *parent)
+OsisParticipant::OsisParticipant(QDomElement& categoryElement, const char* elementName, QObject *parent)
    : QObject(parent)
-   , OsisData(OsisElement::staticMetaObject, osisElement, elementName)
-   , Ind(GetAttributeInt(Index))
+   , OsisData(OsisParticipant::staticMetaObject, categoryElement, elementName)
+   , Id(GetAttributeInt(ID))
 {
 }

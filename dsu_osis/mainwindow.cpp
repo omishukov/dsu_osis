@@ -17,6 +17,7 @@
 #include <QTextStream>
 #include "trace.h"
 #include "isucompetition.h"
+#include "obs/actions.h"
 
 const QString inifile = "osisc.ini";
 extern bool logopt[];
@@ -39,7 +40,7 @@ MainWindow::MainWindow(QString logName, QWidget *parent) :
    logText.append(fi.fileName());
    ui->Logging->setTitle(logText);
 
-   Competition = new IsuCompetition();
+   Competition = new IsuCompetition(new Actions());
 
    OsisLink.setDataIf(Competition->GetDataIf());
 

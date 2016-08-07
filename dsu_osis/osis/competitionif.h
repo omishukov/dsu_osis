@@ -6,6 +6,7 @@ class OsisCompetitionIf
 public:
    virtual ~OsisCompetitionIf() {}
 
+   virtual void AddIsuOsis(class IsuOsis *newIsuOsis) = 0;
    virtual void AddEvent(class OsisEvent* newEvent) = 0;
    virtual void AddCategory(class OsisCategory* newCategory) = 0;
    virtual void AddSegmentStart(class OsisSegmentStart* newSegmentStart) = 0;
@@ -23,6 +24,7 @@ public:
    virtual void AddSegmentRunning(class OsisSegmentRunning* newSegmentRunning) = 0;
    virtual void ProcessAction(class OsisAction* newAction) = 0;
    virtual void AddPrfDetails(class OsisPrfDetails* newPrfDetails) = 0;
+   virtual void AddElementList(class OsisElementList* newElementList) = 0;
 
    virtual void ProcessingDone() = 0;
 };

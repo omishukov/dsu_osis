@@ -8,16 +8,15 @@
 #include <QMetaEnum>
 #include <QDebug>
 #include "osisxml.h"
-#include "event.h"
-#include "category.h"
-#include "segmentstart.h"
-#include "participant.h"
-#include "segment.h"
-#include "criteria.h"
-#include "deduction.h"
-#include "majoritydeduction.h"
-#include "official.h"
-#include "athlete.h"
+#include "element/category.h"
+#include "element/segmentstart.h"
+#include "element/participant.h"
+#include "element/segment.h"
+#include "element/criteria.h"
+#include "element/deduction.h"
+#include "element/majoritydeduction.h"
+#include "element/official.h"
+#include "element/athlete.h"
 #include "element/performance.h"
 #include "element/element.h"
 #include "element/warmupgroup.h"
@@ -25,6 +24,9 @@
 #include "element/segmentrunning.h"
 #include "element/action.h"
 #include "element/prfdetails.h"
+#include "element/event.h"
+#include "element/isuosis.h"
+#include "element/elementlist.h"
 
 OsisXml::OsisXml(OsisCompetitionIf* competition, QObject* parent)
    : QObject(parent)
@@ -72,68 +74,73 @@ bool OsisXml::ProcessOsisElement(QDomNode& n)
    int index = mo.indexOfEnumerator("OsisXmlElements");
    QMetaEnum metaEnum = mo.enumerator(index);
 
-   switch(metaEnum.keyToValue(e.tagName().toLocal8Bit().constData()))
+   const char* elementName = e.tagName().toLocal8Bit().constData();
+   int xmlElementTag = metaEnum.keyToValue(e.tagName().toLocal8Bit().constData());
+   switch(xmlElementTag)
    {
       case Isu_Osis:
-//         Competition->ProcessIsuOsis(new IsuOsis(e));
+         Competition->AddIsuOsis(new IsuOsis(e, elementName));
          break;
       case Event:
-         Competition->AddEvent(new OsisEvent(e));
+         Competition->AddEvent(new OsisEvent(e, elementName));
          break;
       case Category:
-         Competition->AddCategory(new OsisCategory(e));
+         Competition->AddCategory(new OsisCategory(e, elementName));
          break;
       case Segment_Start:
-         Competition->AddSegmentStart(new OsisSegmentStart(e));
+         Competition->AddSegmentStart(new OsisSegmentStart(e, elementName));
+
+         // Build Segment Participant list
+         // Build WarmUps groups
          break;
       case Official:
-         Competition->AddOfficial(new OsisOfficial(e));
+         Competition->AddOfficial(new OsisOfficial(e, elementName));
          break;
       case Participant:
-         Competition->AddParticipant(new OsisParticipant(e));
+         Competition->AddParticipant(new OsisParticipant(e, elementName));
          break;
       case Segment:
-         Competition->AddSegment(new OsisSegment(e));
+         Competition->AddSegment(new OsisSegment(e, elementName));
          break;
       case Athlete:
-         Competition->AddAthlete(new OsisAthlete(e));
+         Competition->AddAthlete(new OsisAthlete(e, elementName));
          break;
       case Criteria:
-         Competition->AddCriteria(new OsisCriteria(e));
+         Competition->AddCriteria(new OsisCriteria(e, elementName));
          break;
       case Deduction:
-         Competition->AddDeduction(new OsisDeduction(e));
+         Competition->AddDeduction(new OsisDeduction(e, elementName));
          break;
       case Majority_Deduction:
-         Competition->AddMajorityDeduction(new OsisMajorityDeduction(e));
+         Competition->AddMajorityDeduction(new OsisMajorityDeduction(e, elementName));
          break;
       case Performance:
-         Competition->AddPerformance(new OsisPerformance(e));
+         Competition->AddPerformance(new OsisPerformance(e, elementName));
          break;
       case Element:
-         Competition->AddElement(new OsisElement(e));
+         Competition->AddElement(new OsisElement(e, elementName));
          break;
       case Warmup_Group:
-         Competition->AddWarmupGroup(new OsisWarmupGroup(e));
+         Competition->AddWarmupGroup(new OsisWarmupGroup(e, elementName));
          break;
       case Segment_Running:
-         Competition->AddSegmentRunning(new OsisSegmentRunning(e));
+         Competition->AddSegmentRunning(new OsisSegmentRunning(e, elementName));
          break;
       case Action:
-         Competition->ProcessAction(new OsisAction(e));
+         Competition->ProcessAction(new OsisAction(e, elementName));
          break;
       case Prf_Details:
-         Competition->AddPrfDetails(new OsisPrfDetails(e));
+         Competition->AddPrfDetails(new OsisPrfDetails(e, elementName));
          break;
       case Prf_Ranking:
-         Competition->AddPrfRanking(new OsisPrfRanking(e));
+         Competition->AddPrfRanking(new OsisPrfRanking(e, elementName));
          break;
       case Element_List:
-//         return ProcessElementList(e);
+         Competition->AddElementList(new OsisElementList(e, elementName));
       case Prf:
-//         return ProcessPrf(e);
-
       case Event_Overview:
+         //
+         // Create competition schedule
       case Participant_List:
       case Category_List:
       case Event_Officials_List:

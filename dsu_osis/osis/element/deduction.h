@@ -13,14 +13,13 @@
 #include <QMap>
 #include "osisdata.h"
 
+/*
+ * <Deduction Index="1" Ded_Name="Costume/Prop violation" Ded_Edit="D"/>
+ */
+
 class OsisDeduction : public QObject, public OsisData
 {
    Q_OBJECT
-public:
-   explicit OsisDeduction(QDomElement& osisElement, QObject *parent = 0);
-
-   int GetIndex() { return Ind; }
-
 public:
    enum OsisElementAttributes
    {
@@ -32,7 +31,9 @@ public:
    Q_ENUM(OsisElementAttributes)
 
 
-private:
+public:
+   explicit OsisDeduction(QDomElement& osisElement, const char* elementName, QObject *parent = 0);
+
    int Ind;
 };
 

@@ -6,11 +6,11 @@
  *   Oleksander Mishukov <dsu@mishukov.dk> */
 
 #include <QMetaEnum>
-#include "element.h"
+#include "criteria.h"
 
-OsisElement::OsisElement(QDomElement& osisElement, const char* elementName, QObject *parent)
+OsisCriteria::OsisCriteria(QDomElement& osisElement, const char* elementName, QObject *parent)
    : QObject(parent)
-   , OsisData(OsisElement::staticMetaObject, osisElement, elementName)
-   , Ind(GetAttributeInt(Index))
+   , OsisData(OsisCriteria::staticMetaObject, osisElement, elementName)
+   , Id(GetAttributeInt(Index))
 {
 }

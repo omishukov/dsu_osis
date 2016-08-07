@@ -12,12 +12,13 @@
 #include <QDomDocument>
 #include "osisdata.h"
 
+/*
+ * <Segment_Start Category_ID="14" Segment_ID="17" Segment_Index="1" Starting_Participant="1" Next_Participant="2" LastFinished_Participant="0">
+ */
+
 class OsisSegmentStart : public QObject, public OsisData
 {
    Q_OBJECT
-public:
-   explicit OsisSegmentStart(QDomElement& segmentStartElement, QObject *parent = 0);
-
 public:
    enum OsisSegmentStartAttributes
    {
@@ -30,10 +31,11 @@ public:
    };
    Q_ENUM(OsisSegmentStartAttributes)
 
+public:
+   explicit OsisSegmentStart(QDomElement& osisElement, const char* elementName, QObject *parent = 0);
 
-signals:
-
-public slots:
+   int SegmentId;
+   int CategoryId;
 };
 
 #endif // OSISSEGMENTSTART_H

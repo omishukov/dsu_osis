@@ -5,36 +5,30 @@
  * Contributor(s):
  *   Oleksander Mishukov <dsu@mishukov.dk> */
 
-#ifndef OSISWARMUPGROUP_H
-#define OSISWARMUPGROUP_H
+#ifndef OSISELEMENTLIST_H
+#define OSISELEMENTLIST_H
 
 #include <QObject>
 #include <QDomDocument>
-#include <QMap>
 #include "osisdata.h"
 
 /*
- * <Warmup_Group Index="0" Number="5"/>
+ * <Element_List Confirmed="1" NoOfCountingElements="6">
  */
 
-class OsisWarmupGroup : public QObject, public OsisData
+class OsisElementList : public QObject, public OsisData
 {
    Q_OBJECT
 public:
    enum OsisElementAttributes
    {
-      Index,
-      Number // Number of participants in Warmup-Group
+      Confirmed,
+      NoOfCountingElements
    };
    Q_ENUM(OsisElementAttributes)
 
 public:
-   explicit OsisWarmupGroup(QDomElement& osisElement, const char* elementName, QObject *parent = 0);
-
-   int Ind;
-   int Num;
+   explicit OsisElementList(QDomElement& osisElement, const char* elementName, QObject *parent = 0);
 };
 
-typedef QMap <int, OsisWarmupGroup*> OsisWarmupGroupMap;
-
-#endif // OSISWARMUPGROUP_H
+#endif // OSISELEMENTLIST_H

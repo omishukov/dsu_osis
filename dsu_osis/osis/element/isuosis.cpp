@@ -6,11 +6,11 @@
  *   Oleksander Mishukov <dsu@mishukov.dk> */
 
 #include <QMetaEnum>
-#include "segmentrunning.h"
+#include "isuosis.h"
 
-OsisSegmentRunning::OsisSegmentRunning(QDomElement& osisElement, const char* elementName, QObject *parent)
+IsuOsis::IsuOsis(QDomElement& osisElement, const char* elementName, QObject *parent)
    : QObject(parent)
-   , OsisData(OsisSegmentRunning::staticMetaObject, osisElement, elementName)
-   , SegmentID(GetAttributeInt(Segment_ID))
+   , OsisData(IsuOsis::staticMetaObject, osisElement, elementName)
+   , DatabaseId(GetAttributeInt(Database))
 {
 }

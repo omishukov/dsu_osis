@@ -13,14 +13,13 @@
 #include <QMap>
 #include "osisdata.h"
 
+/*
+ * <Majority_Deduction Index="1" Ded_Index="1"/>
+ */
+
 class OsisMajorityDeduction : public QObject, public OsisData
 {
    Q_OBJECT
-public:
-   explicit OsisMajorityDeduction(QDomElement& osisElement, QObject *parent = 0);
-
-   int GetIndex() { return Ind; }
-
 public:
    enum OsisElementAttributes
    {
@@ -31,7 +30,9 @@ public:
    Q_ENUM(OsisElementAttributes)
 
 
-private:
+public:
+   explicit OsisMajorityDeduction(QDomElement& osisElement, const char* elementName, QObject *parent = 0);
+
    int Ind;
 };
 

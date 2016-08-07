@@ -14,12 +14,13 @@
 class OsisData
 {
 public:
-   OsisData(const QMetaObject &_mo, QString elementName);
+   OsisData(const QMetaObject &_mo, QDomElement& categoryElement, const char* elementName);
 
-   virtual bool ProcessAttributes(QDomElement& osisElement);
+   virtual bool ProcessAttributes(QDomElement& xmlElement);
    int getEnumKey(const char* enumTypeName, const char* enumName);
-   void Update(OsisData& newData);
+   void Update(OsisData* newData);
    QString GetAttribute(int key);
+   int GetAttributeInt(int key);
 
 private:
    const QMetaObject &mo;

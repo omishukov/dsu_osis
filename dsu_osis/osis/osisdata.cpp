@@ -9,10 +9,11 @@
 #include <QMetaEnum>
 #include <QDebug>
 
-OsisData::OsisData(const QMetaObject& _mo, QString elementName)
+OsisData::OsisData(const QMetaObject& _mo, QDomElement& categoryElement, const char* elementName)
    : mo(_mo)
    , ElementName(elementName)
 {
+   ProcessAttributes(categoryElement);
 }
 
 int OsisData::getEnumKey(const char* enumTypeName, const char* enumName)
@@ -21,11 +22,11 @@ int OsisData::getEnumKey(const char* enumTypeName, const char* enumName)
    return metaEnum.keyToValue(enumName);
 }
 
-void OsisData::Update(OsisData& newData)
+void OsisData::Update(OsisData* newData)
 {
-   Attribute.swap(newData.Attribute);
+   Attribute.swap(newData->Attribute);
 
-   Attribute = newData.Attribute;
+   Attribute = newData->Attribute;
 
 }
 
@@ -35,10 +36,21 @@ QString OsisData::GetAttribute(int key)
    return Attribute.find(key) != Attribute.end() ? Attribute[key] : empty;
 }
 
-bool OsisData::ProcessAttributes(QDomElement& criteriaElement)
+int OsisData::GetAttributeInt(int key)
 {
-   // Parse and save <Criteria> attributes
-   QDomNamedNodeMap attr = criteriaElement.attributes();
+   bool ok = false;
+   int Value = GetAttribute(key).toInt(&ok);
+   if (ok == false)
+   {
+      Value = -1;
+   }
+   return Value;
+}
+
+bool OsisData::ProcessAttributes(QDomElement& xmlElement)
+{
+   // Parse and save attributes
+   QDomNamedNodeMap attr = xmlElement.attributes();
    int size = attr.size();
    if (!size)
    {

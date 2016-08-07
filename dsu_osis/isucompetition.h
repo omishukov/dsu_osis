@@ -10,16 +10,15 @@
 
 #include "osis/osisxml.h"
 #include "osis/competitionif.h"
-#include "osis/event.h"
-#include "osis/category.h"
-#include "osis/segmentstart.h"
-#include "osis/participant.h"
-#include "osis/segment.h"
-#include "osis/criteria.h"
-#include "osis/deduction.h"
-#include "osis/majoritydeduction.h"
-#include "osis/official.h"
-#include "athlete.h"
+#include "element/category.h"
+#include "element/segmentstart.h"
+#include "element/participant.h"
+#include "element/segment.h"
+#include "element/criteria.h"
+#include "element/deduction.h"
+#include "element/majoritydeduction.h"
+#include "element/official.h"
+#include "element/athlete.h"
 #include "element/performance.h"
 #include "element/element.h"
 #include "element/warmupgroup.h"
@@ -27,15 +26,19 @@
 #include "element/segmentrunning.h"
 #include "element/action.h"
 #include "element/prfdetails.h"
+#include "element/event.h"
+#include "element/isuosis.h"
+#include "obs/actions.h"
 
 class IsuCompetition: public OsisCompetitionIf
 {
 public:
-   IsuCompetition();
+   IsuCompetition(Actions* actions);
    ~IsuCompetition();
 
    OsisDataIf* GetDataIf() { return osisInfo; }
 
+   void AddIsuOsis(IsuOsis *newIsuOsis);
    void AddEvent(OsisEvent *newEvent);
    void AddCategory(OsisCategory *newCategory);
    void AddSegmentStart(OsisSegmentStart* newSegmentStart);
@@ -53,6 +56,7 @@ public:
    void AddSegmentRunning(OsisSegmentRunning* newSegmentRunning);
    void ProcessAction(OsisAction* newAction);
    void AddPrfDetails(OsisPrfDetails* newPrfDetails);
+   void AddElementList(OsisElementList* newElementList);
 
    void ProcessingDone() {}
 
@@ -60,7 +64,9 @@ private:
    OsisXml *osisInfo;
    OsisEvent* Event;
    int Current_Category;
+
    OsisCategoryMap Categories;
+
    OsisSegmentStart *Segment_Start;
    int Current_Segment;
    OsisParticipantMap Participants;
@@ -68,6 +74,9 @@ private:
    OsisOfficialMap Officials;
    OsisParticipant* Current_Participant;
    OsisAction* Current_Action;
+   Actions* actionHandler;
+
+   OsisCriteriaMap Criteries;
 };
 
 #endif // ISUCOMPETITION_H

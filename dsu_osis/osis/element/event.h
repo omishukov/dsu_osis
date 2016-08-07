@@ -12,14 +12,13 @@
 #include <QDomDocument>
 #include "osisdata.h"
 
+/*
+ * <Event ID="1" Name="Efterårskonkurrencen 2015" Abbreviation="EK15" Type="T" CmpType="P" ExtDt="">
+ */
+
 class OsisEvent: public QObject, public OsisData
 {
    Q_OBJECT
-
-public:
-   OsisEvent(QDomElement& eventElement, QObject *parent = 0);
-   ~OsisEvent();
-
 public:
    enum OsisElementAttributes
    {
@@ -34,25 +33,7 @@ public:
    Q_ENUM(OsisElementAttributes)
 
 public:
-   bool ProcessDeduction(QDomElement& deductionElement);
-   bool ProcessCriteriaList(QDomElement& criteriaListElement, int SegmentId);
-   bool ProcessOfficial(QDomElement& officialElement);
-   bool ProcessAthlete(QDomElement& athleteElement);
-
-
-   void ProcessingDone();
-
-private:
-   int event_ID;
-   QString event_Name;
-   QString event_Abbreviation;
-   QString event_Type;
-   QString event_CmpType;
-   QString event_ExtDt;
-   int event_ODF;
-
-   int Current_Category;
-   int Current_Segment;
+   explicit OsisEvent(QDomElement& osisElement, const char* elementName, QObject *parent = 0);
 };
 
 #endif // EVENT_H

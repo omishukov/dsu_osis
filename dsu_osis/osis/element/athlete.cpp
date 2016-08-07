@@ -6,11 +6,11 @@
  *   Oleksander Mishukov <dsu@mishukov.dk> */
 
 #include <QMetaEnum>
-#include "segmentrunning.h"
+#include "athlete.h"
 
-OsisSegmentRunning::OsisSegmentRunning(QDomElement& osisElement, const char* elementName, QObject *parent)
+OsisAthlete::OsisAthlete(QDomElement& osisElement, const char* elementName, QObject *parent)
    : QObject(parent)
-   , OsisData(OsisSegmentRunning::staticMetaObject, osisElement, elementName)
-   , SegmentID(GetAttributeInt(Segment_ID))
+   , OsisData(OsisAthlete::staticMetaObject, osisElement, elementName)
+   , Id(GetAttributeInt(ID))
 {
 }

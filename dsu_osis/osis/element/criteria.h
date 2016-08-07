@@ -10,17 +10,16 @@
 
 #include <QObject>
 #include <QDomDocument>
-#include <QMap>
+#include <QMultiMap>
 #include "osisdata.h"
+
+/*
+ *  <Criteria Index="1" Cri_Name="Skating Skills" Cri_Abbrev="SS" Cri_Factor="0.80"/>
+ */
 
 class OsisCriteria : public QObject, public OsisData
 {
    Q_OBJECT
-public:
-   explicit OsisCriteria(QDomElement& osisElement, QObject *parent = 0);
-
-   inline int GetIndex() { return Ind; }
-
 public:
    enum OsisElementAttributes
    {
@@ -32,11 +31,12 @@ public:
    };
    Q_ENUM(OsisElementAttributes)
 
-private:
-   int Ind;
+public:
+   explicit OsisCriteria(QDomElement& osisElement, const char* elementName, QObject *parent = 0);
 
+   int Id;
 };
 
-typedef QMap <int, OsisCriteria*> OsisCriteriaMap;
+typedef QMultiMap <int, OsisCriteria*> OsisCriteriaMap;
 
 #endif // OSISCRITERIA_H

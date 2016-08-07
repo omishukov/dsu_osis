@@ -6,11 +6,10 @@
  *   Oleksander Mishukov <dsu@mishukov.dk> */
 
 #include <QMetaEnum>
-#include "segmentrunning.h"
+#include "elementlist.h"
 
-OsisSegmentRunning::OsisSegmentRunning(QDomElement& osisElement, const char* elementName, QObject *parent)
+OsisElementList::OsisElementList(QDomElement& osisElement, const char* elementName, QObject* parent)
    : QObject(parent)
-   , OsisData(OsisSegmentRunning::staticMetaObject, osisElement, elementName)
-   , SegmentID(GetAttributeInt(Segment_ID))
+   , OsisData(OsisElementList::staticMetaObject, osisElement, elementName)
 {
 }

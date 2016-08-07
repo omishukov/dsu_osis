@@ -17,52 +17,58 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     calcconnectionthread.cpp \
-    osis/criteria.cpp \
-    osis/category.cpp \
-    osis/event.cpp \
     osis/osisxml.cpp \
-    osis/segment.cpp \
-    osis/segmentstart.cpp \
-    osis/deduction.cpp \
-    osis/participant.cpp \
     osis/osisdata.cpp \
     isucompetition.cpp \
-    osis/majoritydeduction.cpp \
-    osis/official.cpp \
-    osis/athlete.cpp \
     osis/element/performance.cpp \
     osis/element/element.cpp \
     osis/element/warmupgroup.cpp \
     osis/element/prfranking.cpp \
     osis/element/segmentrunning.cpp \
     osis/element/action.cpp \
-    osis/element/prfdetails.cpp
+    osis/element/prfdetails.cpp \
+    osis/element/event.cpp \
+    osis/element/category.cpp \
+    osis/element/criteria.cpp \
+    osis/element/segmentstart.cpp \
+    osis/element/athlete.cpp \
+    osis/element/deduction.cpp \
+    osis/element/majoritydeduction.cpp \
+    osis/element/official.cpp \
+    osis/element/participant.cpp \
+    osis/element/segment.cpp \
+    osis/element/isuosis.cpp \
+    osis/element/elementlist.cpp \
+    obs/actions.cpp
 
 HEADERS  += mainwindow.h \
     calcconnectionthread.h \
-    osis/criteria.h \
-    osis/category.h \
-    osis/segment.h \
     osis/osisxml.h \
-    osis/event.h \
-    osis/segmentstart.h \
-    osis/deduction.h \
-    osis/participant.h \
     osis/osisdata.h \
     trace.h \
     isucompetition.h \
     osis/dataif.h \
     osis/competitionif.h \
-    osis/majoritydeduction.h \
-    osis/official.h \
-    osis/athlete.h \
     osis/element/performance.h \
     osis/element/element.h \
     osis/element/warmupgroup.h \
     osis/element/prfranking.h \
     osis/element/segmentrunning.h \
     osis/element/action.h \
-    osis/element/prfdetails.h
+    osis/element/prfdetails.h \
+    osis/element/event.h \
+    osis/element/category.h \
+    osis/element/criteria.h \
+    osis/element/segmentstart.h \
+    osis/element/athlete.h \
+    osis/element/deduction.h \
+    osis/element/majoritydeduction.h \
+    osis/element/official.h \
+    osis/element/participant.h \
+    osis/element/segment.h \
+    osis/element/isuosis.h \
+    osis/element/elementlist.h \
+    obs/actions.h
 
 FORMS    += mainwindow.ui
 
@@ -71,6 +77,8 @@ DISTFILES += \
     LICENSE.txt
 
 LIBS += -lws2_32
+
+CONFIG += c++11
 
 INCLUDEPATH += $$PWD/osis
 

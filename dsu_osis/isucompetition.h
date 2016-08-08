@@ -61,18 +61,22 @@ public:
    void ProcessAction(int action);
    void ProcessingDone();
 
+   void Uninit();
+
 private:
    int Current_DB_ID;
+   OsisEvent* Current_Event;
+   int Last_Category_Id; // Used to process Category and Segment XML elements
+   int Last_Participant_Id;
 
 private:
    OsisXml *osisInfo;
-   OsisEvent* Event;
-   int Current_Category;
+   int Current_Category_Id;
 
    OsisCategoryMap Categories;
 
    OsisSegmentStart *Segment_Start;
-   int Current_Segment;
+   int Current_Segment_Id;
    OsisParticipantMap Participants;
    OsisSegmentMap Segments;
    OsisOfficialMap Officials;

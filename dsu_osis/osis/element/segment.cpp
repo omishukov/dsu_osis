@@ -12,5 +12,6 @@ OsisSegment::OsisSegment(QDomElement& osisElement, const char* elementName, QObj
    : QObject(parent)
    , OsisData(OsisSegment::staticMetaObject, osisElement, elementName)
    , Id(GetAttributeInt(ID))
+   , CategoryId(-1)
 {
 }

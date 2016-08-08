@@ -46,6 +46,7 @@ public:
    explicit OsisSegment(QDomElement& osisElement, const char* elementName, QObject *parent = 0);
 
    int Id;
+   int CategoryId;
 };
 
 typedef QMap <int, OsisSegment*> OsisSegmentMap;

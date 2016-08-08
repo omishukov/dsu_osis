@@ -117,6 +117,7 @@ public:
    explicit OsisParticipant(QDomElement& categoryElement, const char* elementName, QObject *parent = 0);
 
    int Id;
+   int CategoryId;
 };
 
 typedef QMap <int, OsisParticipant*> OsisParticipantMap;

@@ -85,23 +85,20 @@ bool OsisXml::ProcessOsisElement(QDomNode& n)
       case Event:
          Competition->AddEvent(new OsisEvent(e, elementName));
          break;
+      case Segment_Start:
+         Competition->AddSegmentStart(new OsisSegmentStart(e, elementName));
+         break;
       case Category:
          Competition->AddCategory(new OsisCategory(e, elementName));
          break;
-      case Segment_Start:
-         Competition->AddSegmentStart(new OsisSegmentStart(e, elementName));
-
-         // Build Segment Participant list
-         // Build WarmUps groups
+      case Segment:
+         Competition->AddSegment(new OsisSegment(e, elementName));
          break;
       case Official:
          Competition->AddOfficial(new OsisOfficial(e, elementName));
          break;
       case Participant:
          Competition->AddParticipant(new OsisParticipant(e, elementName));
-         break;
-      case Segment:
-         Competition->AddSegment(new OsisSegment(e, elementName));
          break;
       case Athlete:
          Competition->AddAthlete(new OsisAthlete(e, elementName));

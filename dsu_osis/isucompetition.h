@@ -54,10 +54,11 @@ public:
    void AddWarmupGroup(OsisWarmupGroup* newWarmupGroup);
    void AddPrfRanking(OsisPrfRanking* newPrfRanking);
    void AddSegmentRunning(OsisSegmentRunning* newSegmentRunning);
-   void ProcessAction(OsisAction* newAction);
+   void AddAction(OsisAction* newAction);
    void AddPrfDetails(OsisPrfDetails* newPrfDetails);
    void AddElementList(OsisElementList* newElementList);
 
+   void ProcessAction(int action);
    void ProcessingDone() {}
 
 private:

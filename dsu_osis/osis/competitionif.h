@@ -22,9 +22,11 @@ public:
    virtual void AddWarmupGroup(class OsisWarmupGroup* newWarmupGroup) = 0;
    virtual void AddPrfRanking(class OsisPrfRanking* newPrfRanking) = 0;
    virtual void AddSegmentRunning(class OsisSegmentRunning* newSegmentRunning) = 0;
-   virtual void ProcessAction(class OsisAction* newAction) = 0;
+   virtual void AddAction(class OsisAction* newAction) = 0;
    virtual void AddPrfDetails(class OsisPrfDetails* newPrfDetails) = 0;
    virtual void AddElementList(class OsisElementList* newElementList) = 0;
+
+   virtual void ProcessAction(int action) = 0;
 
    virtual void ProcessingDone() = 0;
 };

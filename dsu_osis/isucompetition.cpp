@@ -6,6 +6,7 @@
  *   Oleksander Mishukov <dsu@mishukov.dk> */
 
 #include <QDebug>
+#include <QMetaEnum>
 #include "isucompetition.h"
 
 IsuCompetition::IsuCompetition(Actions* actions)
@@ -39,6 +40,7 @@ IsuCompetition::~IsuCompetition()
    delete Segment_Start;
    delete Current_Action;
    delete osisInfo;
+   delete actionHandler;
 }
 
 void IsuCompetition::AddIsuOsis(IsuOsis* newIsuOsis)
@@ -332,7 +334,7 @@ void IsuCompetition::AddSegmentRunning(OsisSegmentRunning* newSegmentRunning)
    }
 }
 
-void IsuCompetition::ProcessAction(OsisAction* newAction)
+void IsuCompetition::AddAction(OsisAction* newAction)
 {
    if (!newAction)
    {
@@ -344,7 +346,15 @@ void IsuCompetition::ProcessAction(OsisAction* newAction)
    }
    Current_Action = newAction;
 
-   // AddAction();
+   const QMetaObject &mo = Actions::staticMetaObject;
+   int index = mo.indexOfEnumerator("ObsAction");
+   QMetaEnum metaEnum = mo.enumerator(index);
+
+   QString elementName = newAction->GetAttribute(OsisAction::Command);
+   elementName = elementName.toUpper();
+   elementName.prepend("ACTION_");
+   int xmlElementTag = metaEnum.keyToValue(&elementName.toStdString()[0]);
+   ProcessAction(xmlElementTag);
 }
 
 void IsuCompetition::AddPrfDetails(OsisPrfDetails* newPrfDetails)
@@ -367,6 +377,11 @@ void IsuCompetition::AddPrfDetails(OsisPrfDetails* newPrfDetails)
 }
 
 void IsuCompetition::AddElementList(OsisElementList* newElementList)
+{
+
+}
+
+void IsuCompetition::ProcessAction(int action)
 {
 
 }

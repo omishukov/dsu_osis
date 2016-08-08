@@ -27,6 +27,7 @@
 #include "element/event.h"
 #include "element/isuosis.h"
 #include "element/elementlist.h"
+#include "obs/actions.h"
 
 OsisXml::OsisXml(OsisCompetitionIf* competition, QObject* parent)
    : QObject(parent)
@@ -127,7 +128,7 @@ bool OsisXml::ProcessOsisElement(QDomNode& n)
          Competition->AddSegmentRunning(new OsisSegmentRunning(e, elementName));
          break;
       case Action:
-         Competition->ProcessAction(new OsisAction(e, elementName));
+         Competition->AddAction(new OsisAction(e, elementName));
          break;
       case Prf_Details:
          Competition->AddPrfDetails(new OsisPrfDetails(e, elementName));
@@ -137,10 +138,11 @@ bool OsisXml::ProcessOsisElement(QDomNode& n)
          break;
       case Element_List:
          Competition->AddElementList(new OsisElementList(e, elementName));
-      case Prf:
+         break;
       case Event_Overview:
-         //
-         // Create competition schedule
+         Competition->ProcessAction(Actions::EVENT_OVERVIEW);
+         break;
+      case Prf:
       case Participant_List:
       case Category_List:
       case Event_Officials_List:
@@ -189,5 +191,4 @@ void OsisXml::DataInd(QByteArray& qba)
    QDomNode n = docElem.firstChild();
    ProcessOsisData(n);
 }
-
 

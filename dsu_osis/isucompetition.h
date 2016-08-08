@@ -59,7 +59,10 @@ public:
    void AddElementList(OsisElementList* newElementList);
 
    void ProcessAction(int action);
-   void ProcessingDone() {}
+   void ProcessingDone();
+
+private:
+   int Current_DB_ID;
 
 private:
    OsisXml *osisInfo;

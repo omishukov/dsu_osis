@@ -10,7 +10,8 @@
 #include "isucompetition.h"
 
 IsuCompetition::IsuCompetition(Actions* actions)
-   : osisInfo(new OsisXml(this))
+   : Current_DB_ID(-1)
+   , osisInfo(new OsisXml(this))
    , Event(0)
    , Current_Category(-1)
    , Segment_Start(0)
@@ -45,6 +46,9 @@ IsuCompetition::~IsuCompetition()
 
 void IsuCompetition::AddIsuOsis(IsuOsis* newIsuOsis)
 {
+   // Use Database ID to validate current Event
+   Current_DB_ID = newIsuOsis->DatabaseId;
+   delete newIsuOsis;
 
 }
 
@@ -129,6 +133,8 @@ void IsuCompetition::AddSegmentStart(OsisSegmentStart* newSegmentStart)
       qCritical() << "Wrong Segment_ID in <Segment_Start>: " << Segment_Start->GetAttribute(OsisSegmentStart::Segment_ID) << endl;
       return;
    }
+
+   actionHandler->AddAction(Actions::SEGMENT_START);
 }
 
 void IsuCompetition::AddSegment(OsisSegment* newSegment)
@@ -314,6 +320,8 @@ void IsuCompetition::AddPrfRanking(OsisPrfRanking* newPrfRanking)
 //   {
 //      Segments[Current_Segment]->AddPrfRanking(newPrfRanking);
 //   }
+
+   actionHandler->AddAction(Actions::PRF_RANKING);
 }
 
 void IsuCompetition::AddSegmentRunning(OsisSegmentRunning* newSegmentRunning)
@@ -383,5 +391,10 @@ void IsuCompetition::AddElementList(OsisElementList* newElementList)
 
 void IsuCompetition::ProcessAction(int action)
 {
+   actionHandler->AddAction(action);
+}
 
+void IsuCompetition::ProcessingDone()
+{
+   actionHandler->DoActions();
 }

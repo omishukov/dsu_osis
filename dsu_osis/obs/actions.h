@@ -65,6 +65,7 @@ public:
 public:
    Actions();
 
+   void DoActions();
    void AddAction(int action);
 
 private:

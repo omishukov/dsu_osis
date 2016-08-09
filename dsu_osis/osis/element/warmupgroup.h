@@ -33,6 +33,7 @@ public:
 
    int Ind;
    int Num;
+   int SegmentId;
 };
 
 typedef QMap <int, OsisWarmupGroup*> OsisWarmupGroupMap;

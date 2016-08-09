@@ -68,7 +68,8 @@ HEADERS  += mainwindow.h \
     osis/element/segment.h \
     osis/element/isuosis.h \
     osis/element/elementlist.h \
-    obs/actions.h
+    obs/actions.h \
+    obsosisif.h
 
 FORMS    += mainwindow.ui
 

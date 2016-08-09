@@ -11,5 +11,6 @@
 OsisEvent::OsisEvent(QDomElement& osisElement, const char* elementName, QObject *parent)
    : QObject(parent)
    , OsisData(OsisEvent::staticMetaObject, osisElement, elementName)
+   , Id(GetAttributeInt(ID))
 {
 }

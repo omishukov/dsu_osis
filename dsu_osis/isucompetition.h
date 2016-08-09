@@ -21,6 +21,7 @@
 #include "element/athlete.h"
 #include "element/performance.h"
 #include "element/element.h"
+#include "element/elementlist.h"
 #include "element/warmupgroup.h"
 #include "element/prfranking.h"
 #include "element/segmentrunning.h"
@@ -29,8 +30,10 @@
 #include "element/event.h"
 #include "element/isuosis.h"
 #include "obs/actions.h"
+#include "obsosisif.h"
 
-class IsuCompetition: public OsisCompetitionIf
+
+class IsuCompetition: public OsisCompetitionIf, public ObsOsisIf
 {
 public:
    IsuCompetition(Actions* actions);
@@ -63,28 +66,28 @@ public:
 
    void Uninit();
 
+   QString& GetCurrentParticipantName(class IsuOsis *newIsuOsis);
+
 private:
    int Current_DB_ID;
    OsisEvent* Current_Event;
    int Last_Category_Id; // Used to process Category and Segment XML elements
    int Last_Participant_Id;
-
+   OsisPerformanceMap Performances;
+   OsisWarmupGroupMap WarmupGroups;
+   OsisPrfDetails* Current_Performance_Result;
 private:
    OsisXml *osisInfo;
    int Current_Category_Id;
 
    OsisCategoryMap Categories;
 
-   OsisSegmentStart *Segment_Start;
    int Current_Segment_Id;
    OsisParticipantMap Participants;
    OsisSegmentMap Segments;
    OsisOfficialMap Officials;
-   OsisParticipant* Current_Participant;
    OsisAction* Current_Action;
    Actions* actionHandler;
-
-   OsisCriteriaMap Criteries;
 };
 
 #endif // ISUCOMPETITION_H

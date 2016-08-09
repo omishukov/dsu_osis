@@ -15,8 +15,9 @@ class OsisData
 {
 public:
    OsisData(const QMetaObject &_mo, QDomElement& categoryElement, const char* elementName);
+   ~OsisData() {}
 
-   virtual bool ProcessAttributes(QDomElement& xmlElement);
+   bool ProcessAttributes(QDomElement& xmlElement);
    int getEnumKey(const char* enumTypeName, const char* enumName);
    void Update(OsisData* newData);
    QString GetAttribute(int key);

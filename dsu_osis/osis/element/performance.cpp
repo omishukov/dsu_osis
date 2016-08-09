@@ -12,22 +12,6 @@ OsisPerformance::OsisPerformance(QDomElement& categoryElement, const char* eleme
    : QObject(parent)
    , OsisData(OsisPerformance::staticMetaObject, categoryElement, elementName)
    , Id(GetAttributeInt(ID))
+   , SegmentId(-1)
 {
 }
-
-//void OsisPerformance::AddElement(OsisElement* newElement)
-//{
-//   if (newElement && newElement->GetIndex() != -1)
-//   {
-//      int Ind = newElement->GetIndex();
-//      if (Elements.contains(Ind))
-//      {
-//         Elements.value(Ind)->Update(newElement);
-//         delete newElement;
-//      }
-//      else
-//      {
-//         Elements.insert(Ind, newElement);
-//      }
-//   }
-//}

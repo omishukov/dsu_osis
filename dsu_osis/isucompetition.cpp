@@ -14,14 +14,14 @@ IsuCompetition::IsuCompetition(Actions* actions)
    , Current_Event(0)
    , Last_Category_Id(-1)
    , Last_Participant_Id(-1)
+   , Current_Performance_Result(0)
    , osisInfo(new OsisXml(this))
    , Current_Category_Id(-1)
-   , Segment_Start(0)
    , Current_Segment_Id(-1)
-   , Current_Participant(0)
    , Current_Action(0)
    , actionHandler(actions)
 {
+   actionHandler->SetOsisInfoIf(this);
 }
 
 IsuCompetition::~IsuCompetition()
@@ -40,7 +40,6 @@ IsuCompetition::~IsuCompetition()
       delete category;
    }
    Categories.clear();
-   delete Segment_Start;
    delete Current_Action;
    delete osisInfo;
    delete actionHandler;
@@ -71,6 +70,26 @@ void IsuCompetition::Uninit()
       delete participant;
    }
    Last_Participant_Id = -1;
+
+   foreach (OsisPerformance* performance, Performances)
+   {
+      delete performance;
+   }
+   foreach (OsisWarmupGroup* warmup, WarmupGroups)
+   {
+      delete warmup;
+   }
+
+   delete Current_Action;
+   Current_Action = 0;
+
+   delete Current_Performance_Result;
+   Current_Performance_Result = 0;
+}
+
+QString& IsuCompetition::GetCurrentParticipantName(IsuOsis* newIsuOsis)
+{
+   return QString::EmptyString;;
 }
 
 void IsuCompetition::AddIsuOsis(IsuOsis* newIsuOsis)
@@ -87,17 +106,23 @@ void IsuCompetition::AddIsuOsis(IsuOsis* newIsuOsis)
 
 void IsuCompetition::AddEvent(OsisEvent* newEvent)
 {
-   if (!newEvent || newEvent->ID == -1)
+   if (!newEvent)
    {
       return;
    }
+   if (newEvent->Id == -1)
+   {
+      delete newEvent;
+      return;
+   }
+
    if (!Current_Event)
    {
       Current_Event = newEvent;
       return;
    }
 
-   if (Current_Event->ID != newEvent->ID)
+   if (Current_Event->Id != newEvent->Id)
    {
       Uninit();
       Current_Event = newEvent;
@@ -110,12 +135,19 @@ void IsuCompetition::AddEvent(OsisEvent* newEvent)
 
 void IsuCompetition::AddSegmentStart(OsisSegmentStart* newSegmentStart)
 {
-   Current_Category_Id = Segment_Start->CategoryId;
+   if (!newSegmentStart)
+   {
+      return;
+   }
+   if (newSegmentStart->CategoryId == -1 || newSegmentStart->SegmentId == -1)
+   {
+      delete newSegmentStart;
+      return;
+   }
 
-   Current_Segment_Id = Segment_Start->SegmentId;
-
+   Current_Category_Id = newSegmentStart->CategoryId;
+   Current_Segment_Id = newSegmentStart->SegmentId;
    actionHandler->AddAction(Actions::SEGMENT_START);
-
    delete newSegmentStart;
 }
 
@@ -224,15 +256,27 @@ void IsuCompetition::AddAthlete(OsisAthlete* newAthlete)
 
 void IsuCompetition::AddPerformance(OsisPerformance* newPerformance)
 {
-   if (Current_Segment_Id == -1)
+   if (!newPerformance)
    {
-      qCritical() << "Undefined Segment ID when processing Performance: " << newPerformance->GetAttribute(OsisPerformance::ID) << endl;
       return;
    }
-//   if (Segments.contains(Current_Segment))
-//   {
-//      Segments[Current_Segment]->AddPerformance(newPerformance);
-//   }
+   if (newPerformance->Id == -1 || Current_Segment_Id == -1)
+   {
+      qCritical() << "Undefined Segment ID when processing Performance: " << newPerformance->GetAttribute(OsisPerformance::ID) << endl;
+      delete newPerformance;
+      return;
+   }
+   if (Performances.contains(newPerformance->Id))
+   {
+      Performances.value(newPerformance->Id)->Update(newPerformance);
+      delete newPerformance;
+   }
+   else
+   {
+      Performances[newPerformance->Id] = newPerformance;
+   }
+
+   Performances.value(newPerformance->Id)->SegmentId = Current_Segment_Id;
 }
 
 void IsuCompetition::AddElement(OsisElement* newElement)
@@ -242,29 +286,36 @@ void IsuCompetition::AddElement(OsisElement* newElement)
 
 void IsuCompetition::AddWarmupGroup(OsisWarmupGroup* newWarmupGroup)
 {
+   if (!newWarmupGroup)
+   {
+      return;
+   }
+   if (newWarmupGroup->Ind == -1 || newWarmupGroup->Num == 0)
+   {
+      delete newWarmupGroup;
+      return;
+   }
    if (Current_Segment_Id == -1)
    {
       qCritical() << "Undefined Segment ID when processing Warmup_Group: " << newWarmupGroup->GetAttribute(OsisWarmupGroup::Index) << endl;
       return;
    }
-//   if (Segments.contains(Current_Segment))
-//   {
-//      Segments[Current_Segment]->AddWarmupGroup(newWarmupGroup);
-//   }
+   if (WarmupGroups.contains(newWarmupGroup->Ind))
+   {
+      WarmupGroups.value(newWarmupGroup->Ind)->Update(newWarmupGroup);
+      delete newWarmupGroup;
+   }
+   else
+   {
+      WarmupGroups[newWarmupGroup->Ind] = newWarmupGroup;
+   }
+
+   WarmupGroups.value(newWarmupGroup->Ind)->SegmentId = Current_Segment_Id;
 }
 
 void IsuCompetition::AddPrfRanking(OsisPrfRanking* newPrfRanking)
 {
-   if (Current_Segment_Id == -1)
-   {
-      qCritical() << "Undefined Segment ID when processing Prf_Ranking: " << newPrfRanking->GetAttribute(OsisPrfRanking::TypeName) << endl;
-      return;
-   }
-//   if (Segments.contains(Current_Segment))
-//   {
-//      Segments[Current_Segment]->AddPrfRanking(newPrfRanking);
-//   }
-
+   delete newPrfRanking;
    actionHandler->AddAction(Actions::PRF_RANKING);
 }
 
@@ -274,16 +325,9 @@ void IsuCompetition::AddSegmentRunning(OsisSegmentRunning* newSegmentRunning)
    {
       return;
    }
-   bool ok;
-   int SegId = newSegmentRunning->GetAttribute(OsisSegmentRunning::Segment_ID).toInt(&ok);
-   if (ok && Segments.contains(SegId))
-   {
-      Current_Segment_Id = SegId;
-   }
-   else
-   {
-      Current_Segment_Id = -1;
-   }
+   Current_Segment_Id = newSegmentRunning->SegmentID;
+
+   delete newSegmentRunning;
 }
 
 void IsuCompetition::AddAction(OsisAction* newAction)
@@ -319,18 +363,16 @@ void IsuCompetition::AddPrfDetails(OsisPrfDetails* newPrfDetails)
    if (Current_Segment_Id == -1)
    {
       qCritical() << "Undefined Segment ID when processing Prf_Details" << endl;
+      delete newPrfDetails;
       return;
    }
-//   if (Segments.contains(Current_Segment))
-//   {
-//      Segments[Current_Segment]->AddPrfDetails(newPrfDetails);
-//   }
-
+   delete Current_Performance_Result;
+   Current_Performance_Result = newPrfDetails;
 }
 
 void IsuCompetition::AddElementList(OsisElementList* newElementList)
 {
-
+   delete newElementList;
 }
 
 void IsuCompetition::ProcessAction(int action)

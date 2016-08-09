@@ -34,6 +34,8 @@ public:
 
 public:
    explicit OsisEvent(QDomElement& osisElement, const char* elementName, QObject *parent = 0);
+
+   int Id;
 };
 
 #endif // EVENT_H

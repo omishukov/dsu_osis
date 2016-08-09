@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QList>
+#include <QMetaEnum>
+#include "obsosisif.h"
 
 class Actions : public QObject
 {
@@ -59,6 +61,8 @@ public:
                          // * Warmup groups
                          // * Officials
       PRF_RANKING, // <Prf_Ranking>
+      SEGMENT_RESULT_LIST,
+      CATEGORY_RESULT_LIST
    };
    Q_ENUM(ObsAction)
 
@@ -68,8 +72,14 @@ public:
    void DoActions();
    void AddAction(int action);
 
+   void SetOsisInfoIf(ObsOsisIf* obsOsisIf);
+
+private:
+   void SaveToFile(const QString& file, const QString& text);
+
 private:
    QList<int> ActionList;
+   QMetaEnum MetaActionsEnum;
 };
 
 #endif // ACTIONS_H

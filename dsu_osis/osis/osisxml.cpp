@@ -139,6 +139,9 @@ bool OsisXml::ProcessOsisElement(QDomNode& n)
       case Event_Overview:
          Competition->ProcessAction(Actions::EVENT_OVERVIEW);
          break;
+      case Segment_Result_List:
+         Competition->ProcessAction(Actions::SEGMENT_RESULT_LIST);
+         break;
       case Prf:
       case Participant_List:
       case Category_List:
@@ -153,7 +156,6 @@ bool OsisXml::ProcessOsisElement(QDomNode& n)
       case Segment_Official_List:
       case Segment_Start_List:
       case Planned_Element_List:
-      case Segment_Result_List:
       case Segment_Statistic:
          break;
       default:

@@ -13,5 +13,6 @@ OsisWarmupGroup::OsisWarmupGroup(QDomElement& osisElement, const char* elementNa
    , OsisData(OsisWarmupGroup::staticMetaObject, osisElement, elementName)
    , Ind(GetAttributeInt(Index))
    , Num(GetAttributeInt(Number))
+   , SegmentId(-1)
 {
 }

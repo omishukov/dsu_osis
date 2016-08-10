@@ -72,7 +72,7 @@ public:
    void DoActions();
    void AddAction(int action);
 
-   void SetOsisInfoIf(ObsOsisIf* obsOsisIf);
+   void SetOsisInfoIf(ObsOsisIf* obsOsisIf) { OsisIf = obsOsisIf; }
 
 private:
    void SaveToFile(const QString& file, const QString& text);
@@ -80,6 +80,7 @@ private:
 private:
    QList<int> ActionList;
    QMetaEnum MetaActionsEnum;
+   ObsOsisIf* OsisIf;
 };
 
 #endif // ACTIONS_H

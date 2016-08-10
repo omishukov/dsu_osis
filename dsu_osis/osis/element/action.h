@@ -78,6 +78,8 @@ public:
 
 public:
    explicit OsisAction(QDomElement& osisElement, const char* elementName, QObject *parent = 0);
+
+   int Current_Participant_Id;
 };
 
 #endif // OSISACTION_H

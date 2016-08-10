@@ -66,7 +66,8 @@ public:
 
    void Uninit();
 
-   QString& GetCurrentParticipantName(class IsuOsis *newIsuOsis);
+   QString GetCurrentSkaterName();
+   bool GetSegmentStartList(QMap<int, QList<QString> >& segmentStartList);
 
 private:
    int Current_DB_ID;
@@ -76,6 +77,7 @@ private:
    OsisPerformanceMap Performances;
    OsisWarmupGroupMap WarmupGroups;
    OsisPrfDetails* Current_Performance_Result;
+   int Current_Participant_Id;
 private:
    OsisXml *osisInfo;
    int Current_Category_Id;

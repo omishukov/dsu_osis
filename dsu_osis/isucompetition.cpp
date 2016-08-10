@@ -15,6 +15,7 @@ IsuCompetition::IsuCompetition(Actions* actions)
    , Last_Category_Id(-1)
    , Last_Participant_Id(-1)
    , Current_Performance_Result(0)
+   , Current_Participant_Id(-1)
    , osisInfo(new OsisXml(this))
    , Current_Category_Id(-1)
    , Current_Segment_Id(-1)
@@ -87,9 +88,31 @@ void IsuCompetition::Uninit()
    Current_Performance_Result = 0;
 }
 
-QString& IsuCompetition::GetCurrentParticipantName(IsuOsis* newIsuOsis)
+QString IsuCompetition::GetCurrentSkaterName()
 {
-   return QString::EmptyString;;
+   int id = Current_Action->Current_Participant_Id;
+   if (id == -1)
+   {
+      return QString();
+   }
+   return Participants[id]->GetAttribute(OsisParticipant::Short_Name);
+}
+
+bool IsuCompetition::GetSegmentStartList(QMap<int, QList<QString> >& segmentStartList)
+{
+   for( auto performance : Performances)
+   {
+      int StartNum = performance->GetAttributeInt(OsisPerformance::Start_Number);
+      if (StartNum == -1 || performance->Id == -1)
+      {
+         continue;
+      }
+      QList<QString> NameAndClub;
+      NameAndClub[0] = Participants[performance->Id]->GetAttribute(OsisParticipant::Short_Name);
+      NameAndClub[1] = Participants[performance->Id]->GetAttribute(OsisParticipant::Nation);
+      segmentStartList[StartNum] = NameAndClub;
+   }
+   return true;
 }
 
 void IsuCompetition::AddIsuOsis(IsuOsis* newIsuOsis)

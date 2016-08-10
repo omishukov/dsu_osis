@@ -1,15 +1,22 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QTextStream>
+#include <QMap>
 #include "actions.h"
 
 Actions::Actions()
    : MetaActionsEnum(QMetaEnum::fromType<ObsAction>())
+   , OsisIf(0)
 {
 }
 
 void Actions::DoActions()
 {
+   if (!OsisIf)
+   {
+      return;
+   }
+
    foreach(int action, ActionList)
    {
       QString actionName = MetaActionsEnum.valueToKey(action);
@@ -18,8 +25,6 @@ void Actions::DoActions()
       switch (action)
       {
          case ACTION_1SC:
-            // save next participant
-            // * next_skater.txt
             break;
          case ACTION_1S1:
             // Save results from OsisPrfDetails
@@ -55,8 +60,17 @@ void Actions::DoActions()
             // Do nothing yet
             break;
          case ACTION_INI:
-            // Generate Starting order from Performances (list) and Participants.
-            // starting_list.csv
+            {
+               // Generate Starting order from Performances (list) and Participants.
+               // starting_list.csv
+
+               QString CurrentSkater = OsisIf->GetCurrentSkaterName();
+               SaveToFile("obs/current_skater.txt", CurrentSkater);
+
+               QMap<int, QList<QString>> SegmentStartList;
+               OsisIf->GetSegmentStartList(SegmentStartList);
+
+            }
             break;
          case ACTION_IDT:
             // Do nothing yet
@@ -89,8 +103,12 @@ void Actions::DoActions()
             // Do nothing yet
             break;
          case ACTION_NXT:
-            // Save current skater
-            // * current_skater.txt
+            {
+               // Save current skater
+               // * current_skater.txt
+               QString CurrentSkater = OsisIf->GetCurrentSkaterName();
+               SaveToFile("obs/current_skater.txt", CurrentSkater);
+            }
             break;
          case ACTION_PRV:
             // Do nothing yet

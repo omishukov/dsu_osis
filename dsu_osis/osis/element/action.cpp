@@ -11,5 +11,6 @@
 OsisAction::OsisAction(QDomElement& osisElement, const char* elementName, QObject *parent)
    : QObject(parent)
    , OsisData(OsisAction::staticMetaObject, osisElement, elementName)
+   , Current_Participant_Id(GetAttributeInt(Current_Participant_ID))
 {
 }

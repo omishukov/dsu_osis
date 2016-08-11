@@ -76,6 +76,7 @@ public:
 
 private:
    void SaveToFile(const QString& file, const QString& text);
+   void GenerateHtml(QMap<int, QList<QString>>& segmentStartList);
 
 private:
    QList<int> ActionList;

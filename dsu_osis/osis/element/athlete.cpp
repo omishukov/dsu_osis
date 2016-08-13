@@ -8,7 +8,7 @@
 #include <QMetaEnum>
 #include "athlete.h"
 
-OsisAthlete::OsisAthlete(QDomElement& osisElement, const char* elementName, QObject *parent)
+OsisAthlete::OsisAthlete(QDomElement& osisElement, QString& elementName, QObject *parent)
    : QObject(parent)
    , OsisData(OsisAthlete::staticMetaObject, osisElement, elementName)
    , Id(GetAttributeInt(ID))

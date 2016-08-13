@@ -43,7 +43,7 @@ public:
    Q_ENUM(OsisElementAttributes)
 
 public:
-   explicit OsisSegment(QDomElement& osisElement, const char* elementName, QObject *parent = 0);
+   explicit OsisSegment(QDomElement& osisElement, QString& elementName, QObject *parent = 0);
 
    int Id;
    int CategoryId;

@@ -77,7 +77,7 @@ public:
    };
 
 public:
-   explicit OsisAction(QDomElement& osisElement, const char* elementName, QObject *parent = 0);
+   explicit OsisAction(QDomElement& osisElement, QString& elementName, QObject *parent = 0);
 
    int Current_Participant_Id;
 };

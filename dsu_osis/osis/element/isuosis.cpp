@@ -8,7 +8,7 @@
 #include <QMetaEnum>
 #include "isuosis.h"
 
-IsuOsis::IsuOsis(QDomElement& osisElement, const char* elementName, QObject *parent)
+IsuOsis::IsuOsis(QDomElement& osisElement, QString& elementName, QObject *parent)
    : QObject(parent)
    , OsisData(IsuOsis::staticMetaObject, osisElement, elementName)
    , DatabaseId(GetAttributeInt(Database))

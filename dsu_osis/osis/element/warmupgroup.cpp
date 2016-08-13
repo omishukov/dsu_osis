@@ -8,7 +8,7 @@
 #include <QMetaEnum>
 #include "warmupgroup.h"
 
-OsisWarmupGroup::OsisWarmupGroup(QDomElement& osisElement, const char* elementName, QObject *parent)
+OsisWarmupGroup::OsisWarmupGroup(QDomElement& osisElement, QString& elementName, QObject *parent)
    : QObject(parent)
    , OsisData(OsisWarmupGroup::staticMetaObject, osisElement, elementName)
    , Ind(GetAttributeInt(Index))

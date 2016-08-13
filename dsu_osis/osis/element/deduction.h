@@ -32,7 +32,7 @@ public:
 
 
 public:
-   explicit OsisDeduction(QDomElement& osisElement, const char* elementName, QObject *parent = 0);
+   explicit OsisDeduction(QDomElement& osisElement, QString& elementName, QObject *parent = 0);
 
    int Ind;
 };

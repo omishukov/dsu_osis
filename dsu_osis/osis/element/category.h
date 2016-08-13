@@ -36,7 +36,7 @@ public:
    Q_ENUM(OsisElementAttributes)
 
 public:
-   explicit OsisCategory(QDomElement& categoryElement, const char* elementName, QObject *parent = 0);
+   explicit OsisCategory(QDomElement& categoryElement, QString& elementName, QObject *parent = 0);
 
    int Id;
 };

@@ -29,7 +29,7 @@ public:
    Q_ENUM(OsisElementAttributes)
 
 public:
-   explicit OsisSegmentRunning(QDomElement& osisElement, const char* elementName, QObject *parent = 0);
+   explicit OsisSegmentRunning(QDomElement& osisElement, QString& elementName, QObject *parent = 0);
 
    int SegmentID;
 };

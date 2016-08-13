@@ -59,7 +59,7 @@ public:
 
 
 public:
-   explicit OsisAthlete(QDomElement& osisElement, const char* elementName, QObject *parent = 0);
+   explicit OsisAthlete(QDomElement& osisElement, QString& elementName, QObject *parent = 0);
 
    int Id;
 };

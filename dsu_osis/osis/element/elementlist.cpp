@@ -8,7 +8,7 @@
 #include <QMetaEnum>
 #include "elementlist.h"
 
-OsisElementList::OsisElementList(QDomElement& osisElement, const char* elementName, QObject* parent)
+OsisElementList::OsisElementList(QDomElement& osisElement, QString& elementName, QObject* parent)
    : QObject(parent)
    , OsisData(OsisElementList::staticMetaObject, osisElement, elementName)
 {

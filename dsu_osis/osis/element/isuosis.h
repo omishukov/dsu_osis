@@ -31,7 +31,7 @@ public:
    Q_ENUM(OsisElementAttributes)
 
 public:
-   explicit IsuOsis(QDomElement& osisElement, const char* elementName, QObject *parent = 0);
+   explicit IsuOsis(QDomElement& osisElement, QString& elementName, QObject *parent = 0);
 
    int DatabaseId;
 };

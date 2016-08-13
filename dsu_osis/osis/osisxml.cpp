@@ -75,7 +75,7 @@ bool OsisXml::ProcessOsisElement(QDomNode& n)
    int index = mo.indexOfEnumerator("OsisXmlElements");
    QMetaEnum metaEnum = mo.enumerator(index);
 
-   const char* elementName = e.tagName().toLocal8Bit().constData();
+   QString elementName = e.tagName();
    int xmlElementTag = metaEnum.keyToValue(e.tagName().toLocal8Bit().constData());
    switch(xmlElementTag)
    {

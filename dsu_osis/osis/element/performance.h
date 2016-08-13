@@ -60,7 +60,7 @@ public:
    };
 
 public:
-   explicit OsisPerformance(QDomElement& categoryElement, const char* elementName, QObject *parent = 0);
+   explicit OsisPerformance(QDomElement& categoryElement, QString& elementName, QObject *parent = 0);
 
    int Id;
    int SegmentId;

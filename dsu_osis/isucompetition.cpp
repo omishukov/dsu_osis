@@ -212,17 +212,18 @@ void IsuCompetition::AddSegment(OsisSegment* newSegment)
       return;
    }
 
-   if (Segments.contains(newSegment->Id))
+   int key = newSegment->Id;
+   if (Segments.contains(key))
    {
-      Segments.value(newSegment->Id)->Update(newSegment);
+      Segments.value(key)->Update(newSegment);
       delete newSegment;
    }
    else
    {
-      Segments[newSegment->Id] = newSegment;
+      Segments[key] = newSegment;
    }
 
-   Segments.value(newSegment->Id)->CategoryId = Last_Category_Id;
+   Segments.value(key)->CategoryId = Last_Category_Id;
 }
 
 void IsuCompetition::AddParticipant(OsisParticipant* newParticipant)

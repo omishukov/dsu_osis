@@ -195,5 +195,5 @@ void Actions::GenerateHtml(QMap<int, QList<QString> >& segmentStartList)
    html +="<head> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\"> ";
    html += "<script type=\"text/JavaScript\"> function timedRefresh(timeoutPeriod) { setTimeout(\"location.reload(true);\",timeoutPeriod);}</script>";
    html += "<link rel=\"stylesheet\" href=\"fs_info.css\"> </head>";
-   html
+   html += "<body class=\"PageBody\"  onload=\"JavaScript:timedRefresh(3000);\">";
 }

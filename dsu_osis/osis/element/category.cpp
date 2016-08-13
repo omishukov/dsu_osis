@@ -8,7 +8,7 @@
 #include <QMetaEnum>
 #include "category.h"
 
-OsisCategory::OsisCategory(QDomElement& categoryElement, const char* elementName, QObject *parent)
+OsisCategory::OsisCategory(QDomElement& categoryElement, QString& elementName, QObject *parent)
    : QObject(parent)
    , OsisData(OsisCategory::staticMetaObject, categoryElement, elementName)
    , Id(GetAttributeInt(ID))

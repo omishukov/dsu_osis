@@ -8,7 +8,7 @@
 #include <QMetaEnum>
 #include "prfdetails.h"
 
-OsisPrfDetails::OsisPrfDetails(QDomElement& categoryElement, const char* elementName, QObject *parent)
+OsisPrfDetails::OsisPrfDetails(QDomElement& categoryElement, QString& elementName, QObject *parent)
    : QObject(parent)
    , OsisData(OsisPrfDetails::staticMetaObject, categoryElement, elementName)
 {

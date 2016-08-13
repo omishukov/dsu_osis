@@ -8,7 +8,7 @@
 #include <QMetaEnum>
 #include "event.h"
 
-OsisEvent::OsisEvent(QDomElement& osisElement, const char* elementName, QObject *parent)
+OsisEvent::OsisEvent(QDomElement& osisElement, QString& elementName, QObject *parent)
    : QObject(parent)
    , OsisData(OsisEvent::staticMetaObject, osisElement, elementName)
    , Id(GetAttributeInt(ID))

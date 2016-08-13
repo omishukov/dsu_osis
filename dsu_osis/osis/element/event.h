@@ -33,7 +33,7 @@ public:
    Q_ENUM(OsisElementAttributes)
 
 public:
-   explicit OsisEvent(QDomElement& osisElement, const char* elementName, QObject *parent = 0);
+   explicit OsisEvent(QDomElement& osisElement, QString& elementName, QObject *parent = 0);
 
    int Id;
 };

@@ -8,7 +8,7 @@
 #include <QMetaEnum>
 #include "segmentrunning.h"
 
-OsisSegmentRunning::OsisSegmentRunning(QDomElement& osisElement, const char* elementName, QObject *parent)
+OsisSegmentRunning::OsisSegmentRunning(QDomElement& osisElement, QString& elementName, QObject *parent)
    : QObject(parent)
    , OsisData(OsisSegmentRunning::staticMetaObject, osisElement, elementName)
    , SegmentID(GetAttributeInt(Segment_ID))

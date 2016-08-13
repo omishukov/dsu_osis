@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QList>
 #include <QMetaEnum>
-#include "obsosisif.h"
+#include <obsosisif.h>
 
 class Actions : public QObject
 {

@@ -8,7 +8,7 @@
 #include <QMetaEnum>
 #include "criteria.h"
 
-OsisCriteria::OsisCriteria(QDomElement& osisElement, const char* elementName, QObject *parent)
+OsisCriteria::OsisCriteria(QDomElement& osisElement, QString& elementName, QObject *parent)
    : QObject(parent)
    , OsisData(OsisCriteria::staticMetaObject, osisElement, elementName)
    , Id(GetAttributeInt(Index))

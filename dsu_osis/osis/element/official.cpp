@@ -8,7 +8,7 @@
 #include <QMetaEnum>
 #include "official.h"
 
-OsisOfficial::OsisOfficial(QDomElement& osisElement, const char* elementName, QObject *parent)
+OsisOfficial::OsisOfficial(QDomElement& osisElement, QString& elementName, QObject *parent)
    : QObject(parent)
    , OsisData(OsisOfficial::staticMetaObject, osisElement, elementName)
    , Ind(GetAttributeInt(Index))

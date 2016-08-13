@@ -8,7 +8,7 @@
 #include <QMetaEnum>
 #include "segmentstart.h"
 
-OsisSegmentStart::OsisSegmentStart(QDomElement& osisElement, const char* elementName, QObject *parent)
+OsisSegmentStart::OsisSegmentStart(QDomElement& osisElement, QString& elementName, QObject *parent)
    : QObject(parent)
    , OsisData(OsisSegmentStart::staticMetaObject, osisElement, elementName)
    , SegmentId(GetAttributeInt(Segment_ID))

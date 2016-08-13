@@ -28,7 +28,7 @@ public:
    Q_ENUM(OsisElementAttributes)
 
 public:
-   explicit OsisElementList(QDomElement& osisElement, const char* elementName, QObject *parent = 0);
+   explicit OsisElementList(QDomElement& osisElement, QString& elementName, QObject *parent = 0);
 };
 
 #endif // OSISELEMENTLIST_H

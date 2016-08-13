@@ -8,7 +8,7 @@
 #include <QMetaEnum>
 #include "performance.h"
 
-OsisPerformance::OsisPerformance(QDomElement& categoryElement, const char* elementName, QObject *parent)
+OsisPerformance::OsisPerformance(QDomElement& categoryElement, QString& elementName, QObject *parent)
    : QObject(parent)
    , OsisData(OsisPerformance::staticMetaObject, categoryElement, elementName)
    , Id(GetAttributeInt(ID))

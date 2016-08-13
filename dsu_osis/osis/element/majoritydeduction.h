@@ -31,7 +31,7 @@ public:
 
 
 public:
-   explicit OsisMajorityDeduction(QDomElement& osisElement, const char* elementName, QObject *parent = 0);
+   explicit OsisMajorityDeduction(QDomElement& osisElement, QString& elementName, QObject *parent = 0);
 
    int Ind;
 };

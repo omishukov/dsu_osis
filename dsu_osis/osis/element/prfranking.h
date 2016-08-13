@@ -30,7 +30,7 @@ public:
    Q_ENUM(OsisElementAttributes)
 
 public:
-   explicit OsisPrfRanking(QDomElement& categoryElement, const char* elementName, QObject *parent = 0);
+   explicit OsisPrfRanking(QDomElement& categoryElement, QString& elementName, QObject *parent = 0);
 };
 
 #endif // OSISPRFRANKING_H

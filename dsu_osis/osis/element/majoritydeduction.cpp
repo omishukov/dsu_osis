@@ -8,7 +8,7 @@
 #include <QMetaEnum>
 #include "majoritydeduction.h"
 
-OsisMajorityDeduction::OsisMajorityDeduction(QDomElement& osisElement, const char* elementName, QObject *parent)
+OsisMajorityDeduction::OsisMajorityDeduction(QDomElement& osisElement, QString& elementName, QObject *parent)
    : QObject(parent)
    , OsisData(OsisMajorityDeduction::staticMetaObject, osisElement, elementName)
    , Ind(GetAttributeInt(Index))

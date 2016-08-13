@@ -8,7 +8,7 @@
 #include <QMetaEnum>
 #include "prfranking.h"
 
-OsisPrfRanking::OsisPrfRanking(QDomElement& categoryElement, const char* elementName, QObject *parent)
+OsisPrfRanking::OsisPrfRanking(QDomElement& categoryElement, QString& elementName, QObject *parent)
    : QObject(parent)
    , OsisData(OsisPrfRanking::staticMetaObject, categoryElement, elementName)
 {

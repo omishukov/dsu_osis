@@ -114,7 +114,7 @@ public:
    };
 
 public:
-   explicit OsisParticipant(QDomElement& categoryElement, const char* elementName, QObject *parent = 0);
+   explicit OsisParticipant(QDomElement& categoryElement, QString& elementName, QObject *parent = 0);
 
    int Id;
    int CategoryId;

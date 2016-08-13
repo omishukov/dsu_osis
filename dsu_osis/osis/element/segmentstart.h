@@ -20,7 +20,7 @@ class OsisSegmentStart : public QObject, public OsisData
 {
    Q_OBJECT
 public:
-   enum OsisSegmentStartAttributes
+   enum OsisElementAttributes
    {
       Segment_ID, // ID of current segment
       Category_ID, // ID of current category
@@ -29,10 +29,10 @@ public:
       Next_Participant,
       LastFinished_Participant
    };
-   Q_ENUM(OsisSegmentStartAttributes)
+   Q_ENUM(OsisElementAttributes)
 
 public:
-   explicit OsisSegmentStart(QDomElement& osisElement, const char* elementName, QObject *parent = 0);
+   explicit OsisSegmentStart(QDomElement& osisElement, QString& elementName, QObject *parent = 0);
 
    int SegmentId;
    int CategoryId;

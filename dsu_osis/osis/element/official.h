@@ -53,7 +53,7 @@ public:
    Q_ENUM(OsisElementAttributes)
 
 public:
-   explicit OsisOfficial(QDomElement& categoryElement, const char* elementName, QObject *parent = 0);
+   explicit OsisOfficial(QDomElement& categoryElement, QString& elementName, QObject *parent = 0);
 
    int Ind;
 };

@@ -29,7 +29,7 @@ public:
    Q_ENUM(OsisElementAttributes)
 
 public:
-   explicit OsisWarmupGroup(QDomElement& osisElement, const char* elementName, QObject *parent = 0);
+   explicit OsisWarmupGroup(QDomElement& osisElement, QString& elementName, QObject *parent = 0);
 
    int Ind;
    int Num;

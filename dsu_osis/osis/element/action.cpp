@@ -8,7 +8,7 @@
 #include <QMetaEnum>
 #include "action.h"
 
-OsisAction::OsisAction(QDomElement& osisElement, const char* elementName, QObject *parent)
+OsisAction::OsisAction(QDomElement& osisElement, QString& elementName, QObject *parent)
    : QObject(parent)
    , OsisData(OsisAction::staticMetaObject, osisElement, elementName)
    , Current_Participant_Id(GetAttributeInt(Current_Participant_ID))

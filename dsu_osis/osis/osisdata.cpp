@@ -9,7 +9,7 @@
 #include <QMetaEnum>
 #include <QDebug>
 
-OsisData::OsisData(const QMetaObject& _mo, QDomElement& categoryElement, const char* elementName)
+OsisData::OsisData(const QMetaObject& _mo, QDomElement& categoryElement, QString& elementName)
    : mo(_mo)
    , ElementName(elementName)
 {
@@ -24,10 +24,15 @@ int OsisData::getEnumKey(const char* enumTypeName, const char* enumName)
 
 void OsisData::Update(OsisData* newData)
 {
+   for(auto a : Attribute.keys())
+   {
+     if (!newData->Attribute.contains(a))
+     {
+        newData->Attribute[a] = Attribute[a];
+     }
+   }
+
    Attribute.swap(newData->Attribute);
-
-   Attribute = newData->Attribute;
-
 }
 
 QString OsisData::GetAttribute(int key)

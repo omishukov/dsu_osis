@@ -14,7 +14,7 @@
 class OsisData
 {
 public:
-   OsisData(const QMetaObject &_mo, QDomElement& categoryElement, const char* elementName);
+   OsisData(const QMetaObject &_mo, QDomElement& categoryElement, QString& elementName);
    ~OsisData() {}
 
    bool ProcessAttributes(QDomElement& xmlElement);

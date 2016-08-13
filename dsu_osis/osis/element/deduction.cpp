@@ -8,7 +8,7 @@
 #include <QMetaEnum>
 #include "deduction.h"
 
-OsisDeduction::OsisDeduction(QDomElement& osisElement, const char* elementName, QObject *parent)
+OsisDeduction::OsisDeduction(QDomElement& osisElement, QString& elementName, QObject *parent)
    : QObject(parent)
    , OsisData(OsisDeduction::staticMetaObject, osisElement, elementName)
    , Ind(GetAttributeInt(Index))

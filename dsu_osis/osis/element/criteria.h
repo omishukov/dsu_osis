@@ -32,7 +32,7 @@ public:
    Q_ENUM(OsisElementAttributes)
 
 public:
-   explicit OsisCriteria(QDomElement& osisElement, const char* elementName, QObject *parent = 0);
+   explicit OsisCriteria(QDomElement& osisElement, QString& elementName, QObject *parent = 0);
 
    int Id;
 };

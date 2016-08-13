@@ -8,7 +8,7 @@
 #include <QMetaEnum>
 #include "participant.h"
 
-OsisParticipant::OsisParticipant(QDomElement& categoryElement, const char* elementName, QObject *parent)
+OsisParticipant::OsisParticipant(QDomElement& categoryElement, QString& elementName, QObject *parent)
    : QObject(parent)
    , OsisData(OsisParticipant::staticMetaObject, categoryElement, elementName)
    , Id(GetAttributeInt(ID))

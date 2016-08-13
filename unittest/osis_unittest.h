@@ -3,6 +3,7 @@
 #include <QtTest>
 #include "../dsu_osis/osis/osisxml.h"
 #include "../dsu_osis/calcconnectionthread.h"
+#include "../dsu_osis/isucompetition.h"
 
 class OsisDataIfStub: public OsisDataIf
 {
@@ -47,6 +48,7 @@ private:
 
    CalcConnectionThread* osisLink;
    OsisXml* osisDataIf;
+   IsuCompetition* competition;
 };
 
 #endif // OSIS_UNITTEST_H

@@ -29,6 +29,8 @@ public:
    virtual void ProcessAction(int action) = 0;
 
    virtual void ProcessingDone() = 0;
+
+   virtual void Uninit() = 0;
 };
 
 #endif // COMPETITIONIF_H

@@ -9,6 +9,8 @@
 #include <QMetaEnum>
 #include "isucompetition.h"
 
+#include <windows.h>
+
 IsuCompetition::IsuCompetition(Actions* actions)
    : Current_DB_ID(-1)
    , Current_Event(0)
@@ -70,16 +72,28 @@ void IsuCompetition::Uninit()
    {
       delete participant;
    }
+   Participants.clear();
    Last_Participant_Id = -1;
+   Current_Participant_Id = -1;
 
    foreach (OsisPerformance* performance, Performances)
    {
       delete performance;
    }
+   Performances.clear();
+
    foreach (OsisWarmupGroup* warmup, WarmupGroups)
    {
       delete warmup;
    }
+   WarmupGroups.clear();
+
+   for (auto official : Officials)
+   {
+      delete official;
+   }
+
+   WarmupGroups.clear();
 
    delete Current_Action;
    Current_Action = 0;
@@ -108,8 +122,8 @@ bool IsuCompetition::GetSegmentStartList(QMap<int, QList<QString> >& segmentStar
          continue;
       }
       QList<QString> NameAndClub;
-      NameAndClub[0] = Participants[performance->Id]->GetAttribute(OsisParticipant::Short_Name);
-      NameAndClub[1] = Participants[performance->Id]->GetAttribute(OsisParticipant::Nation);
+      NameAndClub << Participants[performance->Id]->GetAttribute(OsisParticipant::Short_Name) <<
+                     Participants[performance->Id]->GetAttribute(OsisParticipant::Nation);
       segmentStartList[StartNum] = NameAndClub;
    }
    return true;
@@ -290,17 +304,18 @@ void IsuCompetition::AddPerformance(OsisPerformance* newPerformance)
       delete newPerformance;
       return;
    }
-   if (Performances.contains(newPerformance->Id))
+   int key = newPerformance->Id;
+   if (Performances.contains(key))
    {
-      Performances.value(newPerformance->Id)->Update(newPerformance);
+      Performances.value(key)->Update(newPerformance);
       delete newPerformance;
    }
    else
    {
-      Performances[newPerformance->Id] = newPerformance;
+      Performances[key] = newPerformance;
    }
 
-   Performances.value(newPerformance->Id)->SegmentId = Current_Segment_Id;
+   Performances.value(key)->SegmentId = Current_Segment_Id;
 }
 
 void IsuCompetition::AddElement(OsisElement* newElement)
@@ -324,17 +339,19 @@ void IsuCompetition::AddWarmupGroup(OsisWarmupGroup* newWarmupGroup)
       qCritical() << "Undefined Segment ID when processing Warmup_Group: " << newWarmupGroup->GetAttribute(OsisWarmupGroup::Index) << endl;
       return;
    }
-   if (WarmupGroups.contains(newWarmupGroup->Ind))
+
+   int key = newWarmupGroup->Ind;
+      if (WarmupGroups.contains(key))
    {
-      WarmupGroups.value(newWarmupGroup->Ind)->Update(newWarmupGroup);
+      WarmupGroups.value(key)->Update(newWarmupGroup);
       delete newWarmupGroup;
    }
    else
    {
-      WarmupGroups[newWarmupGroup->Ind] = newWarmupGroup;
+      WarmupGroups[key] = newWarmupGroup;
    }
 
-   WarmupGroups.value(newWarmupGroup->Ind)->SegmentId = Current_Segment_Id;
+   WarmupGroups.value(key)->SegmentId = Current_Segment_Id;
 }
 
 void IsuCompetition::AddPrfRanking(OsisPrfRanking* newPrfRanking)
@@ -407,4 +424,5 @@ void IsuCompetition::ProcessAction(int action)
 void IsuCompetition::ProcessingDone()
 {
    actionHandler->DoActions();
+   Sleep(100);
 }

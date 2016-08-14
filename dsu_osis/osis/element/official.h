@@ -33,7 +33,8 @@ public:
       Gender, // F | M
       Nation,
       Club,
-      Function //OsisOfficialFunctionAttribute
+      Function, //OsisOfficialFunctionAttribute
+      ScbName4
    };
 
    QString OsisOfficialFunctionAttribute[10]

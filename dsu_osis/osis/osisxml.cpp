@@ -137,6 +137,7 @@ bool OsisXml::ProcessOsisElement(QDomNode& n)
          Competition->AddElementList(new OsisElementList(e, elementName));
          break;
       case Event_Overview:
+         Competition->Uninit();
          Competition->ProcessAction(Actions::EVENT_OVERVIEW);
          break;
       case Segment_Result_List:

@@ -50,3 +50,26 @@ void UnittestTest::ParseOsisSegmentStart()
    OsisXmlTestClean();
 }
 
+void UnittestTest::ParseOsisAction()
+{
+   OsisXmlTestInit();
+
+   QByteArray qba;
+   QString filename("../unittest/data/actions.xml");
+   QVERIFY(GetXmlData(qba, filename));
+   osisLink->processData(qba);
+
+   OsisXmlTestClean();
+}
+
+void UnittestTest::ParseOsisAll()
+{
+   OsisXmlTestInit();
+
+   QByteArray qba;
+   QString filename("../unittest/data/log_xml.xml");
+   QVERIFY(GetXmlData(qba, filename));
+   osisLink->processData(qba);
+
+   OsisXmlTestClean();
+}

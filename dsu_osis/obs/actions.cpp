@@ -29,8 +29,8 @@ void Actions::DoActions()
          case ACTION_1S1:
             // Save results from OsisPrfDetails
             // * points.txt
-            // * tes.txt
-            // * tcs.txt
+            // * tes.txt (technical element score)
+            // * tcs.txt (program component score)
             break;
          case ACTION_1S2:
             // Save rank from Performance (ID from Current Action, Current_Participant_ID)
@@ -196,4 +196,15 @@ void Actions::GenerateHtml(QMap<int, QList<QString> >& segmentStartList)
    html += "<script type=\"text/JavaScript\"> function timedRefresh(timeoutPeriod) { setTimeout(\"location.reload(true);\",timeoutPeriod);}</script>";
    html += "<link rel=\"stylesheet\" href=\"fs_info.css\"> </head>";
    html += "<body class=\"PageBody\"  onload=\"JavaScript:timedRefresh(3000);\">";
+   html += "<table width=\"100%\" align=\"center\" border=\"0\" cellspacing=\"1\">";
+   for (auto startNum : segmentStartList.keys())
+   {
+      QList<QString> info = segmentStartList[startNum];
+      html += "<tr class=\"Line1White\">";
+      html += "<td>" + QString::number(startNum) + "</td>";
+      html += "<td class=\"CellLeft\"><a>" + info[0] + "</a></td>";
+      html += "<td>" + info[1] + "</td></tr>";
+   }
+   html += "</table></body></html>";
+   SaveToFile("obs/starting_order.html", html);
 }

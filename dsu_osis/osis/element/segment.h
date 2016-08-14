@@ -15,6 +15,7 @@
 
 /*
  * <Segment ID="2" Name="Free Skating" Abbreviation="FS" Date="20151003" Start="09:05:00" Status="g" End="00:00:00" ExtDt=""/>
+ * <Segment ID="17" Name="Short Program" Abbreviation="SP" Name_Of_Dance="" Type="S" Number_Of_Judges="3" Number_Of_Decisive_Judges="3" Group="" QCrit="A" QNumber="0" ExtDt="" Medal="0">
  */
 
 class OsisSegment : public QObject, public OsisData
@@ -38,7 +39,8 @@ public:
       End, // End time
       ExtDt, // 10 RSC Code
       Medal, // 1 Is medal segment flag
-      qualified //
+      qualified, //
+      Group
    };
    Q_ENUM(OsisElementAttributes)
 

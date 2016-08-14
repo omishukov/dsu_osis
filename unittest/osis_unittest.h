@@ -34,6 +34,8 @@ private Q_SLOTS:
    //XmlParse
    void ParseOsisEventOverview();
    void ParseOsisSegmentStart();
+   void ParseOsisAction();
+   void ParseOsisAll();
 
 private:
    // OsisLink Helpers

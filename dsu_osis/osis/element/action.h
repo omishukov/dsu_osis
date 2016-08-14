@@ -31,7 +31,8 @@ public:
       LastScored_Participant_StNum, // Starting Number of the last scored participant. Empty, if no scored participant is available in segment
       Sub_Command, // Sub command of action
       Clock_State, // See clock status code
-      Running_Time
+      Running_Time,
+      Judge_ID
    };
    Q_ENUM(OsisElementAttributes)
 

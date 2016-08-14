@@ -37,8 +37,12 @@ void OsisData::Update(OsisData* newData)
 
 QString OsisData::GetAttribute(int key)
 {
-   QString empty;
-   return Attribute.find(key) != Attribute.end() ? Attribute[key] : empty;
+   QString result;
+   if (Attribute.contains(key))
+   {
+      result = Attribute[key];
+   }
+   return result;
 }
 
 int OsisData::GetAttributeInt(int key)

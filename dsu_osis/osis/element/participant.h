@@ -14,6 +14,7 @@
 
 /*
  * <Participant ID="255" Index="1" TIndex="1" TRank="0" TPoint="0.00" Status="ACT" Segment1_Status="L" Segment1_Rank="" Segment1_Index="" Segment1_Points="" Segment1_IIndex="" Segment1_IRank="" Rec="" Status_Changed="0"/>
+ * <Participant ID="96" Status="ACT" Type="PER" Full_Name="Katrine HANSEN" Short_Name="Katrine HANSEN" TV_Long_Name="Katrine HANSEN" TV_Short_Name="Katrine HANSEN" ScbName1="Katrine HANSEN" ScbName2="Katrine HANSEN" ScbName3="Katrine HANSEN" ScbName4="Katrine HANSEN" Gender="F" Nation="TSK" Club="" Music="" Coach="" ExtRef="" RegNum="" TeamName="" TeamNation="" Status_Changed="0" Organisation=""
  */
 
 class OsisParticipant : public QObject, public OsisData
@@ -81,6 +82,10 @@ public:
       Segment4_IRank,
       Segment5_IRank,
       Segment6_IRank,
+      Status_Changed,
+      Gender,
+      Organisation,
+      Rec
    };
    Q_ENUM(OsisElementAttributes)
 

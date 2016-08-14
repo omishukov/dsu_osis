@@ -46,6 +46,10 @@ public:
       Gender, // 1 M | F
       Date_Of_Birth, // 10 Format “YYYY-MM-DD”
       ExtRef, // 10  Reference ID to external database
+      RegNum,
+      Printed_Long_Name,
+      Printed_Short_Name,
+      Organisation
    };
    Q_ENUM(OsisElementAttributes)
 

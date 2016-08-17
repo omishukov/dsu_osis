@@ -9,7 +9,7 @@
 #include <QMetaEnum>
 #include "isucompetition.h"
 
-#include <windows.h>
+//#include <windows.h>
 
 IsuCompetition::IsuCompetition(Actions* actions)
    : Current_DB_ID(-1)
@@ -424,5 +424,5 @@ void IsuCompetition::ProcessAction(int action)
 void IsuCompetition::ProcessingDone()
 {
    actionHandler->DoActions();
-   Sleep(100);
+//   Sleep(100);
 }

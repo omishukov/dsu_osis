@@ -46,7 +46,8 @@ SOURCES += \
     ../dsu_osis/osis/element/prfranking.cpp \
     ../dsu_osis/osis/element/segmentrunning.cpp \
     ../dsu_osis/osis/element/warmupgroup.cpp \
-    ../dsu_osis/isucompetition.cpp
+    ../dsu_osis/isucompetition.cpp \
+    obs_settings.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
@@ -84,7 +85,8 @@ DISTFILES += \
     data/seg_run_clr.xml \
     data/event.xml \
     data/seg_start.xml \
-    data/event_clear.xml
+    data/event_clear.xml \
+    data/scenes.json
 
 INCLUDEPATH += \
     $$PWD/../dsu_osis/osis \

@@ -11,6 +11,7 @@
 #include "trace.h"
 
 QTextStream *out = 0;
+QFile *logfile = 0;
 
 bool logopt[4] = {false, false, false, false}; // data, error, warning, debug
 
@@ -57,6 +58,7 @@ void logOutput(QtMsgType type, const QMessageLogContext &/*context*/, const QStr
    if (enablePrint)
    {
       (*out) << debugdate << " " << msg << endl;
+      logfile->flush();
    }
 }
 
@@ -64,15 +66,15 @@ int main(int argc, char *argv[])
 {
    QString fileName = argv[0];
    fileName.replace(".exe", ".log");
-   QFile *log = new QFile(fileName);
-   if (log->open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Text))
+   logfile = new QFile(fileName);
+   if (logfile->open(QIODevice::Append | QIODevice::Text))
    {
-      out = new QTextStream(log);
+      out = new QTextStream(logfile);
    }
    qInstallMessageHandler(logOutput);
 
    QApplication a(argc, argv);
-   MainWindow w(log->fileName());
+   MainWindow w(logfile->fileName());
    w.show();
 
    bool res = a.exec();
@@ -82,8 +84,8 @@ int main(int argc, char *argv[])
    {
       delete out;
    }
-   log->close();
-   delete log;
+   logfile->close();
+   delete logfile;
 
    return res;
 }

@@ -1,0 +1,819 @@
+{
+    "AuxAudioDevice1": {
+        "deinterlace_field_order": 0,
+        "deinterlace_mode": 0,
+        "enabled": true,
+        "flags": 0,
+        "hotkeys": {
+            "libobs.mute": [],
+            "libobs.push-to-mute": [],
+            "libobs.push-to-talk": [],
+            "libobs.unmute": []
+        },
+        "id": "wasapi_input_capture",
+        "mixers": 15,
+        "muted": true,
+        "name": "Mic/Aux",
+        "push-to-mute": false,
+        "push-to-mute-delay": 0,
+        "push-to-talk": false,
+        "push-to-talk-delay": 0,
+        "settings": {
+            "device_id": "default"
+        },
+        "sync": 0,
+        "volume": 1.0
+    },
+    "DesktopAudioDevice1": {
+        "deinterlace_field_order": 0,
+        "deinterlace_mode": 0,
+        "enabled": true,
+        "flags": 0,
+        "hotkeys": {
+            "libobs.mute": [],
+            "libobs.push-to-mute": [],
+            "libobs.push-to-talk": [],
+            "libobs.unmute": []
+        },
+        "id": "wasapi_output_capture",
+        "mixers": 15,
+        "muted": true,
+        "name": "Desktop Audio",
+        "push-to-mute": false,
+        "push-to-mute-delay": 0,
+        "push-to-talk": false,
+        "push-to-talk-delay": 0,
+        "settings": {
+            "device_id": "default"
+        },
+        "sync": 0,
+        "volume": 1.0
+    },
+    "current_program_scene": "Program",
+    "current_scene": "Program",
+    "current_transition": "Fade",
+    "name": "Video Julia",
+    "preview_locked": false,
+    "quick_transitions": [
+        {
+            "duration": 300,
+            "hotkeys": [],
+            "id": 1,
+            "name": "Cut"
+        },
+        {
+            "duration": 900,
+            "hotkeys": [
+                {
+                    "control": true,
+                    "key": "OBS_KEY_Q"
+                }
+            ],
+            "id": 2,
+            "name": "Fade"
+        }
+    ],
+    "scene_order": [
+        {
+            "name": "Program"
+        },
+        {
+            "name": "Program med navn"
+        },
+        {
+            "name": "Program uden logo"
+        },
+        {
+            "name": "Scene 1"
+        }
+    ],
+    "sources": [
+        {
+            "deinterlace_field_order": 0,
+            "deinterlace_mode": 0,
+            "enabled": true,
+            "filters": [
+                {
+                    "deinterlace_field_order": 0,
+                    "deinterlace_mode": 0,
+                    "enabled": true,
+                    "flags": 0,
+                    "hotkeys": {},
+                    "id": "color_filter",
+                    "mixers": 0,
+                    "muted": false,
+                    "name": "Color Correction",
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "settings": {
+                        "color": 4293848814,
+                        "contrast": -0.02,
+                        "opacity": 100
+                    },
+                    "sync": 0,
+                    "volume": 1.0
+                }
+            ],
+            "flags": 0,
+            "hotkeys": {},
+            "id": "browser_source",
+            "mixers": 0,
+            "muted": false,
+            "name": "BrowserSource",
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "settings": {
+                "css": "",
+                "is_local_file": true,
+                "local_file": "C:/Users/Oleksander/Workspace/dsu_osis/build-unittest-Desktop_Qt_5_7_0_MinGW_32bit-Debug/obs/starting_order.html",
+                "width": 400
+            },
+            "sync": 0,
+            "volume": 1.0
+        },
+        {
+            "deinterlace_field_order": 0,
+            "deinterlace_mode": 0,
+            "enabled": true,
+            "flags": 0,
+            "hotkeys": {
+                "OBSBasic.SelectScene": [
+                    {
+                        "control": true,
+                        "key": "OBS_KEY_4"
+                    }
+                ],
+                "libobs.hide_scene_item.BrowserSource": [],
+                "libobs.hide_scene_item.Video": [],
+                "libobs.show_scene_item.BrowserSource": [],
+                "libobs.show_scene_item.Video": []
+            },
+            "id": "scene",
+            "mixers": 0,
+            "muted": false,
+            "name": "Scene 1",
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "settings": {
+                "items": [
+                    {
+                        "align": 5,
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "bounds_align": 0,
+                        "bounds_type": 0,
+                        "crop_bottom": 0,
+                        "crop_left": 0,
+                        "crop_right": 0,
+                        "crop_top": 0,
+                        "name": "Video",
+                        "pos": {
+                            "x": 194.0,
+                            "y": 0.0
+                        },
+                        "rot": 0.0,
+                        "scale": {
+                            "x": 0.66458332538604736,
+                            "y": 0.66481482982635498
+                        },
+                        "scale_filter": "disable",
+                        "visible": true
+                    },
+                    {
+                        "align": 5,
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "bounds_align": 0,
+                        "bounds_type": 0,
+                        "crop_bottom": 0,
+                        "crop_left": 0,
+                        "crop_right": 0,
+                        "crop_top": 0,
+                        "name": "BrowserSource",
+                        "pos": {
+                            "x": 241.0,
+                            "y": 43.0
+                        },
+                        "rot": 0.0,
+                        "scale": {
+                            "x": 1.1174999475479126,
+                            "y": 1.1183333396911621
+                        },
+                        "scale_filter": "disable",
+                        "visible": true
+                    }
+                ]
+            },
+            "sync": 0,
+            "volume": 1.0
+        },
+        {
+            "deinterlace_field_order": 0,
+            "deinterlace_mode": 0,
+            "enabled": true,
+            "flags": 0,
+            "hotkeys": {
+                "OBSBasic.SelectScene": [
+                    {
+                        "control": true,
+                        "key": "OBS_KEY_2"
+                    }
+                ],
+                "libobs.hide_scene_item.Infobar": [],
+                "libobs.hide_scene_item.Klub": [],
+                "libobs.hide_scene_item.Konkurrencenavn": [],
+                "libobs.hide_scene_item.Logo": [],
+                "libobs.hide_scene_item.Navn": [],
+                "libobs.hide_scene_item.Video": [],
+                "libobs.show_scene_item.Infobar": [],
+                "libobs.show_scene_item.Klub": [],
+                "libobs.show_scene_item.Konkurrencenavn": [],
+                "libobs.show_scene_item.Logo": [],
+                "libobs.show_scene_item.Navn": [],
+                "libobs.show_scene_item.Video": []
+            },
+            "id": "scene",
+            "mixers": 0,
+            "muted": false,
+            "name": "Program med navn",
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "settings": {
+                "items": [
+                    {
+                        "align": 5,
+                        "bounds": {
+                            "x": 1280.0,
+                            "y": 720.0
+                        },
+                        "bounds_align": 0,
+                        "bounds_type": 1,
+                        "crop_bottom": 0,
+                        "crop_left": 0,
+                        "crop_right": 0,
+                        "crop_top": 0,
+                        "name": "Video",
+                        "pos": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "rot": 0.0,
+                        "scale": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "scale_filter": "disable",
+                        "visible": true
+                    },
+                    {
+                        "align": 5,
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "bounds_align": 0,
+                        "bounds_type": 0,
+                        "crop_bottom": 0,
+                        "crop_left": 0,
+                        "crop_right": 0,
+                        "crop_top": 0,
+                        "name": "Logo",
+                        "pos": {
+                            "x": 1140.0,
+                            "y": 0.0
+                        },
+                        "rot": 0.0,
+                        "scale": {
+                            "x": 0.56000000238418579,
+                            "y": 0.56000000238418579
+                        },
+                        "scale_filter": "disable",
+                        "visible": true
+                    },
+                    {
+                        "align": 5,
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "bounds_align": 0,
+                        "bounds_type": 0,
+                        "crop_bottom": 0,
+                        "crop_left": 0,
+                        "crop_right": 0,
+                        "crop_top": 0,
+                        "name": "Infobar",
+                        "pos": {
+                            "x": 209.0,
+                            "y": 550.0
+                        },
+                        "rot": 0.0,
+                        "scale": {
+                            "x": 0.81571817398071289,
+                            "y": 0.81599998474121094
+                        },
+                        "scale_filter": "disable",
+                        "visible": true
+                    },
+                    {
+                        "align": 5,
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "bounds_align": 0,
+                        "bounds_type": 0,
+                        "crop_bottom": 0,
+                        "crop_left": 0,
+                        "crop_right": 0,
+                        "crop_top": 0,
+                        "name": "Navn",
+                        "pos": {
+                            "x": 529.0,
+                            "y": 611.0
+                        },
+                        "rot": 0.0,
+                        "scale": {
+                            "x": 1.0311111211776733,
+                            "y": 1.0333333015441895
+                        },
+                        "scale_filter": "disable",
+                        "visible": true
+                    },
+                    {
+                        "align": 5,
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "bounds_align": 0,
+                        "bounds_type": 0,
+                        "crop_bottom": 0,
+                        "crop_left": 0,
+                        "crop_right": 0,
+                        "crop_top": 0,
+                        "name": "Klub",
+                        "pos": {
+                            "x": 230.0,
+                            "y": 611.0
+                        },
+                        "rot": 0.0,
+                        "scale": {
+                            "x": 1.03125,
+                            "y": 1.0333333015441895
+                        },
+                        "scale_filter": "disable",
+                        "visible": true
+                    },
+                    {
+                        "align": 5,
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "bounds_align": 0,
+                        "bounds_type": 0,
+                        "crop_bottom": 0,
+                        "crop_left": 0,
+                        "crop_right": 0,
+                        "crop_top": 0,
+                        "name": "Konkurrencenavn",
+                        "pos": {
+                            "x": 353.0,
+                            "y": 557.0
+                        },
+                        "rot": 0.0,
+                        "scale": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "scale_filter": "disable",
+                        "visible": true
+                    }
+                ]
+            },
+            "sync": 0,
+            "volume": 1.0
+        },
+        {
+            "deinterlace_field_order": 0,
+            "deinterlace_mode": 0,
+            "enabled": true,
+            "flags": 0,
+            "hotkeys": {
+                "OBSBasic.SelectScene": [
+                    {
+                        "control": true,
+                        "key": "OBS_KEY_1"
+                    }
+                ],
+                "libobs.hide_scene_item.Logo": [],
+                "libobs.hide_scene_item.Video": [],
+                "libobs.show_scene_item.Logo": [],
+                "libobs.show_scene_item.Video": []
+            },
+            "id": "scene",
+            "mixers": 0,
+            "muted": false,
+            "name": "Program",
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "settings": {
+                "items": [
+                    {
+                        "align": 5,
+                        "bounds": {
+                            "x": 1280.0,
+                            "y": 720.0
+                        },
+                        "bounds_align": 0,
+                        "bounds_type": 1,
+                        "crop_bottom": 0,
+                        "crop_left": 0,
+                        "crop_right": 0,
+                        "crop_top": 0,
+                        "name": "Video",
+                        "pos": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "rot": 0.0,
+                        "scale": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "scale_filter": "disable",
+                        "visible": true
+                    },
+                    {
+                        "align": 5,
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "bounds_align": 0,
+                        "bounds_type": 0,
+                        "crop_bottom": 0,
+                        "crop_left": 0,
+                        "crop_right": 0,
+                        "crop_top": 0,
+                        "name": "Logo",
+                        "pos": {
+                            "x": 1140.0,
+                            "y": 0.0
+                        },
+                        "rot": 0.0,
+                        "scale": {
+                            "x": 0.56000000238418579,
+                            "y": 0.56000000238418579
+                        },
+                        "scale_filter": "disable",
+                        "visible": true
+                    }
+                ]
+            },
+            "sync": 0,
+            "volume": 1.0
+        },
+        {
+            "deinterlace_field_order": 0,
+            "deinterlace_mode": 0,
+            "enabled": true,
+            "filters": [
+                {
+                    "deinterlace_field_order": 0,
+                    "deinterlace_mode": 0,
+                    "enabled": true,
+                    "flags": 0,
+                    "hotkeys": {},
+                    "id": "async_delay_filter",
+                    "mixers": 0,
+                    "muted": false,
+                    "name": "Video Delay (Async)",
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "settings": {
+                        "delay_ms": 7
+                    },
+                    "sync": 0,
+                    "volume": 1.0
+                }
+            ],
+            "flags": 0,
+            "hotkeys": {
+                "libobs.mute": [],
+                "libobs.push-to-mute": [],
+                "libobs.push-to-talk": [],
+                "libobs.unmute": []
+            },
+            "id": "ffmpeg_source",
+            "mixers": 15,
+            "muted": false,
+            "name": "Video",
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "settings": {
+                "advanced": false,
+                "clear_on_media_end": false,
+                "local_file": "C:/Users/Oleksander/Videos/00030.MTS",
+                "looping": true,
+                "restart_on_activate": false
+            },
+            "sync": 0,
+            "volume": 1.0
+        },
+        {
+            "deinterlace_field_order": 0,
+            "deinterlace_mode": 0,
+            "enabled": true,
+            "filters": [
+                {
+                    "deinterlace_field_order": 0,
+                    "deinterlace_mode": 0,
+                    "enabled": true,
+                    "flags": 0,
+                    "hotkeys": {},
+                    "id": "color_filter",
+                    "mixers": 0,
+                    "muted": false,
+                    "name": "Color Correction",
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "settings": {
+                        "brightness": -0.20999999999999999,
+                        "contrast": 0.070000000000000007,
+                        "opacity": 40
+                    },
+                    "sync": 0,
+                    "volume": 1.0
+                }
+            ],
+            "flags": 0,
+            "hotkeys": {},
+            "id": "image_source",
+            "mixers": 0,
+            "muted": false,
+            "name": "Logo",
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "settings": {
+                "file": "D:/DSU/danskate.png"
+            },
+            "sync": 0,
+            "volume": 1.0
+        },
+        {
+            "deinterlace_field_order": 0,
+            "deinterlace_mode": 0,
+            "enabled": true,
+            "filters": [
+                {
+                    "deinterlace_field_order": 0,
+                    "deinterlace_mode": 0,
+                    "enabled": true,
+                    "flags": 0,
+                    "hotkeys": {},
+                    "id": "color_filter",
+                    "mixers": 0,
+                    "muted": false,
+                    "name": "Color Correction",
+                    "push-to-mute": false,
+                    "push-to-mute-delay": 0,
+                    "push-to-talk": false,
+                    "push-to-talk-delay": 0,
+                    "settings": {
+                        "opacity": 80
+                    },
+                    "sync": 0,
+                    "volume": 1.0
+                }
+            ],
+            "flags": 0,
+            "hotkeys": {},
+            "id": "image_source",
+            "mixers": 0,
+            "muted": false,
+            "name": "Infobar",
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "settings": {
+                "file": "D:/DSU/infobar.png"
+            },
+            "sync": 0,
+            "volume": 1.0
+        },
+        {
+            "deinterlace_field_order": 0,
+            "deinterlace_mode": 0,
+            "enabled": true,
+            "flags": 0,
+            "hotkeys": {},
+            "id": "text_ft2_source",
+            "mixers": 0,
+            "muted": false,
+            "name": "Navn",
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "settings": {
+                "drop_shadow": false,
+                "font": {
+                    "face": "Arial",
+                    "flags": 1,
+                    "size": 32,
+                    "style": ""
+                },
+                "from_file": true,
+                "outline": false,
+                "text_file": "D:/DSU/Scene/navn.txt"
+            },
+            "sync": 0,
+            "volume": 1.0
+        },
+        {
+            "deinterlace_field_order": 0,
+            "deinterlace_mode": 0,
+            "enabled": true,
+            "flags": 0,
+            "hotkeys": {},
+            "id": "text_ft2_source",
+            "mixers": 0,
+            "muted": false,
+            "name": "Klub",
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "settings": {
+                "color1": 4278190080,
+                "color2": 4278190080,
+                "font": {
+                    "face": "Arial",
+                    "flags": 1,
+                    "size": 32,
+                    "style": ""
+                },
+                "from_file": true,
+                "text_file": "D:/DSU/Scene/klub.txt"
+            },
+            "sync": 0,
+            "volume": 1.0
+        },
+        {
+            "deinterlace_field_order": 0,
+            "deinterlace_mode": 0,
+            "enabled": true,
+            "flags": 0,
+            "hotkeys": {},
+            "id": "text_ft2_source",
+            "mixers": 0,
+            "muted": false,
+            "name": "Konkurrencenavn",
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "settings": {
+                "color1": 4278190080,
+                "color2": 4278190080,
+                "font": {
+                    "face": "Arial",
+                    "flags": 1,
+                    "size": 32,
+                    "style": ""
+                },
+                "from_file": true,
+                "text_file": "D:/DSU/Scene/konkurrence.txt"
+            },
+            "sync": 0,
+            "volume": 1.0
+        },
+        {
+            "deinterlace_field_order": 0,
+            "deinterlace_mode": 0,
+            "enabled": true,
+            "flags": 0,
+            "hotkeys": {
+                "OBSBasic.SelectScene": [
+                    {
+                        "control": true,
+                        "key": "OBS_KEY_3"
+                    }
+                ],
+                "libobs.hide_scene_item.Image": [],
+                "libobs.hide_scene_item.Video": [],
+                "libobs.show_scene_item.Image": [],
+                "libobs.show_scene_item.Video": []
+            },
+            "id": "scene",
+            "mixers": 0,
+            "muted": false,
+            "name": "Program uden logo",
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "settings": {
+                "items": [
+                    {
+                        "align": 5,
+                        "bounds": {
+                            "x": 1280.0,
+                            "y": 720.0
+                        },
+                        "bounds_align": 0,
+                        "bounds_type": 1,
+                        "crop_bottom": 0,
+                        "crop_left": 0,
+                        "crop_right": 0,
+                        "crop_top": 0,
+                        "name": "Video",
+                        "pos": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "rot": 0.0,
+                        "scale": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "scale_filter": "disable",
+                        "visible": true
+                    },
+                    {
+                        "align": 5,
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "bounds_align": 0,
+                        "bounds_type": 0,
+                        "crop_bottom": 0,
+                        "crop_left": 0,
+                        "crop_right": 0,
+                        "crop_top": 0,
+                        "name": "Image",
+                        "pos": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "rot": 0.0,
+                        "scale": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "scale_filter": "disable",
+                        "visible": true
+                    }
+                ]
+            },
+            "sync": 0,
+            "volume": 1.0
+        },
+        {
+            "deinterlace_field_order": 0,
+            "deinterlace_mode": 0,
+            "enabled": true,
+            "flags": 0,
+            "hotkeys": {},
+            "id": "image_source",
+            "mixers": 0,
+            "muted": false,
+            "name": "Image",
+            "push-to-mute": false,
+            "push-to-mute-delay": 0,
+            "push-to-talk": false,
+            "push-to-talk-delay": 0,
+            "settings": {},
+            "sync": 0,
+            "volume": 1.0
+        }
+    ],
+    "transition_duration": 900,
+    "transitions": []
+}

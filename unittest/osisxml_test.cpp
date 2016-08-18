@@ -64,12 +64,12 @@ void UnittestTest::ParseOsisAction()
 
 void UnittestTest::ParseOsisAll()
 {
-   OsisXmlTestInit();
+//   OsisXmlTestInit();
 
-   QByteArray qba;
-   QString filename("../unittest/data/log_xml.xml");
-   QVERIFY(GetXmlData(qba, filename));
-   osisLink->processData(qba);
+//   QByteArray qba;
+//   QString filename("../unittest/data/log_xml.xml");
+//   QVERIFY(GetXmlData(qba, filename));
+//   osisLink->processData(qba);
 
-   OsisXmlTestClean();
+//   OsisXmlTestClean();
 }

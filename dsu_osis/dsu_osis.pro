@@ -75,7 +75,8 @@ FORMS    += mainwindow.ui
 
 DISTFILES += \
     ../README.md \
-    LICENSE.txt
+    LICENSE.txt \
+    SceneSwithDll_example.txt
 
 LIBS += -lws2_32
 

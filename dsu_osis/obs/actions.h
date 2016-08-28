@@ -74,9 +74,12 @@ public:
    void AddAction(int action);
 
    inline void SetOsisInfoIf(ObsOsisIf* obsOsisIf) { OsisIf = obsOsisIf; }
+   void SetObsIf(QObject* _obsIf);
 
    QString GetActionName(int action);
 
+signals:
+   void SendOsisEvent(int);
 private:
    void SaveToFile(const QString& file, const QString& text);
    void GenerateHtml(QMap<int, QList<QString>>& segmentStartList);
@@ -85,6 +88,7 @@ private:
    QList<int> ActionList;
    QMetaEnum MetaActionsEnum;
    ObsOsisIf* OsisIf;
+   QObject* ObsIf;
 };
 
 #endif // ACTIONS_H

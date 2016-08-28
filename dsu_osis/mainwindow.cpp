@@ -22,7 +22,7 @@
 #include "obs/sceneswitcher.h"
 #include "obs/actions.h"
 
-const QString inifile = "osisc.ini";
+QString inifile = "osisc.ini";
 extern bool logopt[];
 
 MainWindow::MainWindow(QString logName, QWidget *parent) :

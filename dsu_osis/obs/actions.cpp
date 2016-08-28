@@ -17,11 +17,13 @@ void Actions::DoActions()
       return;
    }
 
+   bool passToObs;
    foreach(int action, ActionList)
    {
       QString actionName = MetaActionsEnum.valueToKey(action);
       SaveToFile("obs/current_action.txt", actionName);
 
+      passToObs = true;
       switch (action)
       {
          case ACTION_1SC:
@@ -159,7 +161,12 @@ void Actions::DoActions()
          case CATEGORY_RESULT_LIST:
             break;
          default:
+            passToObs = false;
             break;
+      }
+      if (passToObs)
+      {
+         emit SendOsisEvent(action);
       }
    }
    ActionList.clear();
@@ -171,6 +178,12 @@ void Actions::AddAction(int action)
    {
       ActionList.push_back(action);
    }
+}
+
+void Actions::SetObsIf(QObject* _obsIf)
+{
+   ObsIf = _obsIf;
+   connect(this, SIGNAL(SendOsisEvent()), ObsIf, SLOT(HandleEvent()));
 }
 
 QString Actions::GetActionName(int action)

@@ -36,6 +36,8 @@ private slots:
 
    void on_LogDebugCB_stateChanged(int arg1);
 
+   void on_ChangeObsConfigPathPB_clicked();
+
 private:
    void loadSettings();
    void setIpValitation();
@@ -56,6 +58,9 @@ private:
    QString IpPort;
    CalcConnectionThread OsisLink;
    class IsuCompetition* Competition;
+   QThread *SceneSwitcherThread;
+   class ObsSceneSwitcher *SceneSwitcher;
+   QString OBS_Path;
 };
 
 #endif // MAINWINDOW_H

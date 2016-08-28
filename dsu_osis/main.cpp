@@ -58,6 +58,7 @@ void logOutput(QtMsgType type, const QMessageLogContext &/*context*/, const QStr
    if (enablePrint)
    {
       (*out) << debugdate << " " << msg << endl;
+      out->flush();
       logfile->flush();
    }
 }
@@ -89,10 +90,3 @@ int main(int argc, char *argv[])
 
    return res;
 }
-
-// Backlog
-#if 0
-* Min windows size (do not hide basic GUI elements by resizing)
-* Use QSettings (ip-addr, mode, other parameters). Save/Restore
-* Create Icon
-#endif

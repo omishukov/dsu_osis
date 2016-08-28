@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>454</width>
-    <height>264</height>
+    <width>374</width>
+    <height>386</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -212,16 +212,52 @@
      </item>
     </layout>
    </widget>
-   <zorder>Connection</zorder>
-   <zorder>Logging</zorder>
-   <zorder>Logging</zorder>
+   <widget class="QGroupBox" name="ObsConfigPathGB">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>150</y>
+      <width>341</width>
+      <height>71</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>OBS configuration</string>
+    </property>
+    <widget class="QLabel" name="ObsConfigPathLabel">
+     <property name="geometry">
+      <rect>
+       <x>10</x>
+       <y>20</y>
+       <width>251</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Path</string>
+     </property>
+    </widget>
+    <widget class="QPushButton" name="ChangeObsConfigPathPB">
+     <property name="geometry">
+      <rect>
+       <x>260</x>
+       <y>20</y>
+       <width>75</width>
+       <height>23</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Change</string>
+     </property>
+    </widget>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>454</width>
+     <width>374</width>
      <height>21</height>
     </rect>
    </property>

@@ -36,7 +36,7 @@
 class IsuCompetition: public OsisCompetitionIf, public ObsOsisIf
 {
 public:
-   IsuCompetition(Actions* actions);
+   IsuCompetition();
    ~IsuCompetition();
 
    OsisDataIf* GetDataIf() { return osisInfo; }
@@ -68,6 +68,7 @@ public:
 
    QString GetCurrentSkaterName();
    bool GetSegmentStartList(QMap<int, QList<QString> >& segmentStartList);
+   Actions* GetOsisActions() { return &actionHandler; }
 
 private:
    int Current_DB_ID;
@@ -89,7 +90,7 @@ private:
    OsisSegmentMap Segments;
    OsisOfficialMap Officials;
    OsisAction* Current_Action;
-   Actions* actionHandler;
+   Actions actionHandler;
 };
 
 #endif // ISUCOMPETITION_H

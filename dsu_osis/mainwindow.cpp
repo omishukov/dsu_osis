@@ -15,8 +15,11 @@
 #include <QSettings>
 #include <QtNetwork>
 #include <QTextStream>
+#include <QFileDialog>
 #include "trace.h"
 #include "isucompetition.h"
+#include "obs/actions.h"
+#include "obs/sceneswitcher.h"
 #include "obs/actions.h"
 
 const QString inifile = "osisc.ini";
@@ -40,11 +43,16 @@ MainWindow::MainWindow(QString logName, QWidget *parent) :
    logText.append(fi.fileName());
    ui->Logging->setTitle(logText);
 
-   Competition = new IsuCompetition(new Actions());
+   Competition = new IsuCompetition();
 
    OsisLink.setDataIf(Competition->GetDataIf());
 
    connect(&OsisLink, SIGNAL(UpdateConnectionState()), this, SLOT(showConnectionState()));
+
+   SceneSwitcherThread = new QThread;
+   SceneSwitcher = new ObsSceneSwitcher(Competition->GetOsisActions());
+   SceneSwitcher->moveToThread(SceneSwitcherThread);
+   SceneSwitcherThread->start();
 }
 
 MainWindow::~MainWindow()
@@ -52,6 +60,10 @@ MainWindow::~MainWindow()
    writeSettings();
    delete ui;
    delete Competition;
+   SceneSwitcherThread->quit();
+   SceneSwitcherThread->wait();
+   delete SceneSwitcherThread;
+   delete SceneSwitcher;
 }
 
 void MainWindow::loadSettings()
@@ -78,6 +90,14 @@ void MainWindow::loadSettings()
    ui->LogErrorCB->setChecked(logopt[LOG_ERROR]);
    ui->LogWarningCB->setChecked(logopt[LOG_WARN]);
    ui->LogDebugCB->setChecked(logopt[LOG_DEBUG]);
+
+   QDir dir(OBS_Path);
+   dir.setFilter(QDir::Hidden);
+   if (!dir.exists())
+   {
+      OBS_Path.clear();
+   }
+   ui->ObsConfigPathLabel->setText(OBS_Path);
 }
 
 void MainWindow::setIpValitation()
@@ -113,6 +133,11 @@ void MainWindow::readSettings()
    resize(settings.value("size", QSize(400, 400)).toSize());
    move(settings.value("pos", QPoint(200, 200)).toPoint());
    settings.endGroup();
+
+   settings.beginGroup("OBS");
+//   OBS_Path = settings.value("CONFIGURATION_PATH","\%APPDATA\%/obs-studio/").toString();
+   OBS_Path = settings.value("CONFIGURATION_PATH","").toString();
+   settings.endGroup();
 }
 
 void MainWindow::writeSettings()
@@ -135,6 +160,10 @@ void MainWindow::writeSettings()
    settings.beginGroup("MainWindow");
    settings.setValue("size", size());
    settings.setValue("pos", pos());
+   settings.endGroup();
+
+   settings.beginGroup("OBS");
+   settings.setValue("CONFIGURATION_PATH",OBS_Path);
    settings.endGroup();
 }
 
@@ -249,4 +278,14 @@ void MainWindow::on_LogWarningCB_stateChanged(int arg1)
 void MainWindow::on_LogDebugCB_stateChanged(int arg1)
 {
    logopt[LOG_DEBUG] = arg1 > 0;
+}
+
+void MainWindow::on_ChangeObsConfigPathPB_clicked()
+{
+    QString file_name = QFileDialog::getOpenFileName(this, "Select OBS configuration file", OBS_Path, "OBS (global.ini)");
+    if (QFileInfo(file_name).exists())
+    {
+      OBS_Path = QFileInfo(file_name).absolutePath();
+      ui->ObsConfigPathLabel->setText(OBS_Path);
+    }
 }

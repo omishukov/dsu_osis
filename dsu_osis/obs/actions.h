@@ -62,7 +62,8 @@ public:
                          // * Officials
       PRF_RANKING, // <Prf_Ranking>
       SEGMENT_RESULT_LIST,
-      CATEGORY_RESULT_LIST
+      CATEGORY_RESULT_LIST,
+      LAST_ACTION
    };
    Q_ENUM(ObsAction)
 
@@ -72,7 +73,9 @@ public:
    void DoActions();
    void AddAction(int action);
 
-   void SetOsisInfoIf(ObsOsisIf* obsOsisIf) { OsisIf = obsOsisIf; }
+   inline void SetOsisInfoIf(ObsOsisIf* obsOsisIf) { OsisIf = obsOsisIf; }
+
+   QString GetActionName(int action);
 
 private:
    void SaveToFile(const QString& file, const QString& text);

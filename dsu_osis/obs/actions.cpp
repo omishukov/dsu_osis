@@ -167,7 +167,19 @@ void Actions::DoActions()
 
 void Actions::AddAction(int action)
 {
-   ActionList.push_back(action);
+   if (action > NO_ACTIONS && action < LAST_ACTION)
+   {
+      ActionList.push_back(action);
+   }
+}
+
+QString Actions::GetActionName(int action)
+{
+   if (action > NO_ACTIONS && action < LAST_ACTION)
+   {
+      return MetaActionsEnum.valueToKey(action);
+   }
+   return QString();
 }
 
 void Actions::SaveToFile(const QString& fileName, const QString& text)

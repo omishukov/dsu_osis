@@ -11,7 +11,7 @@
 
 //#include <windows.h>
 
-IsuCompetition::IsuCompetition(Actions* actions)
+IsuCompetition::IsuCompetition()
    : Current_DB_ID(-1)
    , Current_Event(0)
    , Last_Category_Id(-1)
@@ -22,9 +22,8 @@ IsuCompetition::IsuCompetition(Actions* actions)
    , Current_Category_Id(-1)
    , Current_Segment_Id(-1)
    , Current_Action(0)
-   , actionHandler(actions)
 {
-   actionHandler->SetOsisInfoIf(this);
+   actionHandler.SetOsisInfoIf(this);
 }
 
 IsuCompetition::~IsuCompetition()
@@ -45,7 +44,6 @@ IsuCompetition::~IsuCompetition()
    Categories.clear();
    delete Current_Action;
    delete osisInfo;
-   delete actionHandler;
 }
 
 void IsuCompetition::Uninit()
@@ -184,7 +182,7 @@ void IsuCompetition::AddSegmentStart(OsisSegmentStart* newSegmentStart)
 
    Current_Category_Id = newSegmentStart->CategoryId;
    Current_Segment_Id = newSegmentStart->SegmentId;
-   actionHandler->AddAction(Actions::SEGMENT_START);
+   actionHandler.AddAction(Actions::SEGMENT_START);
    delete newSegmentStart;
 }
 
@@ -357,7 +355,7 @@ void IsuCompetition::AddWarmupGroup(OsisWarmupGroup* newWarmupGroup)
 void IsuCompetition::AddPrfRanking(OsisPrfRanking* newPrfRanking)
 {
    delete newPrfRanking;
-   actionHandler->AddAction(Actions::PRF_RANKING);
+   actionHandler.AddAction(Actions::PRF_RANKING);
 }
 
 void IsuCompetition::AddSegmentRunning(OsisSegmentRunning* newSegmentRunning)
@@ -418,11 +416,11 @@ void IsuCompetition::AddElementList(OsisElementList* newElementList)
 
 void IsuCompetition::ProcessAction(int action)
 {
-   actionHandler->AddAction(action);
+   actionHandler.AddAction(action);
 }
 
 void IsuCompetition::ProcessingDone()
 {
-   actionHandler->DoActions();
+   actionHandler.DoActions();
 //   Sleep(100);
 }

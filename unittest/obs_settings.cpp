@@ -20,6 +20,14 @@ void UnittestTest::ObsParseGlobalIni()
    QJsonObject jroot = jsonResponse.object();
    QJsonArray jSceneOrder = jroot["scene_order"].toArray();
 
+   static QStringList specialKeys;
+   specialKeys << "control" << "alt" << "shift" << "command";
+   enum {
+      SS_CONTROL = 0,
+      SS_ALT,
+      SS_SHIFT,
+      SS_COMMAND
+   };
    QList<QString> SceneNames;
    foreach (const QJsonValue & jvSceneName, jSceneOrder)
    {
@@ -45,10 +53,19 @@ void UnittestTest::ObsParseGlobalIni()
          QJsonArray jHotkeyArray = jHotkeys["OBSBasic.SelectScene"].toArray();
          foreach (const QJsonValue & jvHotkey, jHotkeyArray)
          {
-            QStringList keyList = jvHotkey.toObject().keys();
+            QJsonObject jKeyList = jvHotkey.toObject();;
+            QStringList keyList = jKeyList.keys();
             for (auto key : keyList)
             {
+               if (specialKeys.contains(key))
+               {
+                  bool value = jKeyList[key].toBool();
+                  if (value)
+                  {
+                  }
+               }
                qWarning() << key;
+               qWarning() << jKeyList[key].toString();
             }
          }
       }

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>374</width>
-    <height>386</height>
+    <width>490</width>
+    <height>774</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -160,7 +160,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>90</y>
+      <y>80</y>
       <width>341</width>
       <height>56</height>
      </rect>
@@ -216,9 +216,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>150</y>
+      <y>140</y>
       <width>341</width>
-      <height>71</height>
+      <height>51</height>
      </rect>
     </property>
     <property name="title">
@@ -251,13 +251,26 @@
      </property>
     </widget>
    </widget>
+   <widget class="QTableView" name="ActionToSceneQTV">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>200</y>
+      <width>461</width>
+      <height>521</height>
+     </rect>
+    </property>
+    <property name="sizeAdjustPolicy">
+     <enum>QAbstractScrollArea::AdjustIgnored</enum>
+    </property>
+   </widget>
   </widget>
   <widget class="QMenuBar" name="menuBar">
    <property name="geometry">
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>374</width>
+     <width>490</width>
      <height>21</height>
     </rect>
    </property>

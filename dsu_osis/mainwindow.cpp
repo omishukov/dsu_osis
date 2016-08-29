@@ -52,6 +52,7 @@ MainWindow::MainWindow(QString logName, QWidget *parent) :
    SceneSwitcherThread = new QThread;
    SceneSwitcher = new ObsSceneSwitcher(Competition->GetOsisActions());
    SceneSwitcher->moveToThread(SceneSwitcherThread);
+   SceneSwitcher->InitUi(ui->ActionToSceneQTV);
    SceneSwitcherThread->start();
 }
 

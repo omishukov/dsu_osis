@@ -76,7 +76,7 @@ bool OsisXml::ProcessOsisElement(QDomNode& n)
    QMetaEnum metaEnum = mo.enumerator(index);
 
    QString elementName = e.tagName();
-   int xmlElementTag = metaEnum.keyToValue(e.tagName().toLocal8Bit().constData());
+   int xmlElementTag = metaEnum.keyToValue(elementName.toLocal8Bit().constData());
    switch(xmlElementTag)
    {
       case Isu_Osis:

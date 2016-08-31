@@ -1,16 +1,24 @@
 #include "sceneswitcher.h"
 #include <QSettings>
 #include <QTableWidgetItem>
+#include <QDebug>
+#include <QFile>
 #include <windows.h>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
 extern const QString inifile;
 
-ObsSceneSwitcher::ObsSceneSwitcher(Actions* actions, QObject *parent)
+ObsSceneSwitcher::ObsSceneSwitcher(Actions* actions, QString obsCongigPath, QObject *parent)
    : QObject(parent)
    , osisAction(actions)
+   , MetaActionsEnum(QMetaEnum::fromType<obs_key>())
+   , OBS_Path(obsCongigPath)
 {
    osisAction->SetObsIf(this);
    LoadObsConfiguration();
+   //LoadObsTransition();
    LoadActions();
 }
 
@@ -20,12 +28,104 @@ ObsSceneSwitcher::~ObsSceneSwitcher()
    {
       delete obsAction;
    }
+   for (auto obsScene : ObsScenesList)
+   {
+      delete obsScene;
+   }
    ObsActions.clear();
    delete tableModel;
 }
 
 void ObsSceneSwitcher::LoadObsConfiguration()
 {
+   QString global_ini = OBS_Path + "/global.ini";
+   QSettings settings(global_ini, QSettings::IniFormat);
+   QString SceneFile = settings.value("Basic/SceneCollectionFile").toString();
+   SceneFile = OBS_Path + "/basic/scenes/" + SceneFile + ".json";
+   qInfo() << "QBS Scene file " << SceneFile;
+
+   QString val;
+   QFile file(SceneFile);
+   file.open(QIODevice::ReadOnly | QIODevice::Text);
+   val = file.readAll();
+   file.close();
+
+   qInfo() << "Read active OBS scenes:";
+   QJsonDocument jsonResponse = QJsonDocument::fromJson(val.toUtf8());
+   QJsonObject jroot = jsonResponse.object();
+   QJsonArray jSceneOrder = jroot["scene_order"].toArray();
+   QList<QString> ActiveScenes;
+   foreach (const QJsonValue & jvSceneName, jSceneOrder)
+   {
+       QJsonObject jScene = jvSceneName.toObject();
+       ActiveScenes.append(jScene["name"].toString());
+       qInfo() << jScene["name"].toString();
+   }
+
+   // Find scenes and associate with hotkeys
+   static QStringList specialKeys;
+   specialKeys << "control" << "alt" << "shift" << "command" << "key";
+   enum {
+      SS_CONTROL = 0,
+      SS_ALT,
+      SS_SHIFT,
+      SS_COMMAND
+   };
+   QJsonArray jSources = jroot["sources"].toArray();
+   foreach (const QJsonValue & jvSource, jSources)
+   {
+      QJsonObject jScource = jvSource.toObject();
+      if (ActiveScenes.contains(jScource["name"].toString()))
+      {
+         QString SceneName = jScource["name"].toString();
+         qInfo() << SceneName;
+
+         QJsonObject jHotkeys = jScource["hotkeys"].toObject();
+         QJsonArray jHotkeyArray = jHotkeys["OBSBasic.SelectScene"].toArray();
+         QList<int> hotkeys;
+         foreach (const QJsonValue & jvHotkey, jHotkeyArray)
+         {
+            QJsonObject jKeyList = jvHotkey.toObject();;
+            QStringList keyList = jKeyList.keys();
+            for (auto key : keyList)
+            {
+               if (specialKeys.contains(key, Qt::CaseInsensitive))
+               {
+                  if (!QString::compare(key, "control", Qt::CaseInsensitive) && jKeyList[key].toBool())
+                  {
+                     hotkeys.push_back(VK_CONTROL);
+                  }
+                  else if (!QString::compare(key, "alt", Qt::CaseInsensitive) && jKeyList[key].toBool())
+                  {
+                     hotkeys.push_back(VK_MENU);
+                  }
+                  else if (!QString::compare(key, "shift", Qt::CaseInsensitive) && jKeyList[key].toBool())
+                  {
+                     hotkeys.push_back(VK_SHIFT);
+                  }
+                  else if (!QString::compare(key, "key", Qt::CaseInsensitive))
+                  {
+                     int code = MetaActionsEnum.keyToValue(jKeyList[key].toString().toLocal8Bit().constData());
+                     if (code != -1)
+                     {
+                        hotkeys.push_back(get_virtual_key(code));
+                     }
+                  }
+               }
+               qWarning() << key;
+               qWarning() << jKeyList[key].toString();
+            }
+         }
+         if (hotkeys.count())
+         {
+            ObsScenesList.push_back(new SceneInfo(SceneName, hotkeys));
+         }
+         else
+         {
+            qWarning() << SceneName << " scene doesn't have hotkeys";
+         }
+      }
+   }
 }
 
 void ObsSceneSwitcher::LoadActions()

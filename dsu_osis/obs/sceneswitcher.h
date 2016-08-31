@@ -4,7 +4,9 @@
 #include <QObject>
 #include <QTableView>
 #include <QStandardItemModel>
+#include <QMetaEnum>
 #include "actions.h"
+#include "sceneinfo.h"
 
 class ObsAction
 {
@@ -25,7 +27,7 @@ class ObsSceneSwitcher : public QObject
 {
    Q_OBJECT
 public:
-   explicit ObsSceneSwitcher(Actions* actions, QObject *parent = 0);
+   explicit ObsSceneSwitcher(Actions* actions, QString obsCongigPath, QObject *parent = 0);
    ~ObsSceneSwitcher();
 
    void LoadObsConfiguration();
@@ -42,6 +44,9 @@ private:
    Actions* osisAction;
    QMap<uint, ObsAction*> ObsActions;
    QStandardItemModel* tableModel;
+   QMetaEnum MetaActionsEnum;
+   QString OBS_Path;
+   QList<SceneInfo*> ObsScenesList;
 
    int get_virtual_key(int key);
 

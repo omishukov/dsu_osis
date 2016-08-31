@@ -3,7 +3,7 @@
 void UnittestTest::OsisXmlTestInit()
 {
    osisLink = new CalcConnectionThread();
-   competition = new IsuCompetition(new Actions());
+   competition = new IsuCompetition();
    osisLink->setDataIf(competition->GetDataIf());
 }
 

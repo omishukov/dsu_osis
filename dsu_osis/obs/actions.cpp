@@ -183,7 +183,7 @@ void Actions::AddAction(int action)
 void Actions::SetObsIf(QObject* _obsIf)
 {
    ObsIf = _obsIf;
-   connect(this, SIGNAL(SendOsisEvent()), ObsIf, SLOT(HandleEvent()));
+   connect(this, SIGNAL(SendOsisEvent(int)), ObsIf, SLOT(HandleEvent(int)));
 }
 
 QString Actions::GetActionName(int action)

@@ -40,7 +40,8 @@ SOURCES += main.cpp\
     osis/element/isuosis.cpp \
     osis/element/elementlist.cpp \
     obs/actions.cpp \
-    obs/sceneswitcher.cpp
+    obs/sceneswitcher.cpp \
+    obs/sceneinfo.cpp
 
 HEADERS  += mainwindow.h \
     calcconnectionthread.h \
@@ -71,7 +72,8 @@ HEADERS  += mainwindow.h \
     osis/element/elementlist.h \
     obs/actions.h \
     obsosisif.h \
-    obs/sceneswitcher.h
+    obs/sceneswitcher.h \
+    obs/sceneinfo.h
 
 FORMS    += mainwindow.ui
 

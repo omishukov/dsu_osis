@@ -50,7 +50,7 @@ MainWindow::MainWindow(QString logName, QWidget *parent) :
    connect(&OsisLink, SIGNAL(UpdateConnectionState()), this, SLOT(showConnectionState()));
 
    SceneSwitcherThread = new QThread;
-   SceneSwitcher = new ObsSceneSwitcher(Competition->GetOsisActions());
+   SceneSwitcher = new ObsSceneSwitcher(Competition->GetOsisActions(), OBS_Path);
    SceneSwitcher->moveToThread(SceneSwitcherThread);
    SceneSwitcher->InitUi(ui->ActionToSceneQTV);
    SceneSwitcherThread->start();

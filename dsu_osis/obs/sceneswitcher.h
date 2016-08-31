@@ -31,6 +31,7 @@ public:
    ~ObsSceneSwitcher();
 
    void LoadObsConfiguration();
+   void LoadObsTransition();
    void LoadActions();
    void InitUi(QTableView* tableView);
 
@@ -47,6 +48,8 @@ private:
    QMetaEnum MetaActionsEnum;
    QString OBS_Path;
    QList<SceneInfo*> ObsScenesList;
+   SceneInfo* TransitionHotkeys;
+
 
    int get_virtual_key(int key);
 

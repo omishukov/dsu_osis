@@ -15,10 +15,11 @@ ObsSceneSwitcher::ObsSceneSwitcher(Actions* actions, QString obsCongigPath, QObj
    , osisAction(actions)
    , MetaActionsEnum(QMetaEnum::fromType<obs_key>())
    , OBS_Path(obsCongigPath)
+   , TransitionHotkeys(0)
 {
    osisAction->SetObsIf(this);
    LoadObsConfiguration();
-   //LoadObsTransition();
+   LoadObsTransition();
    LoadActions();
 }
 
@@ -55,7 +56,7 @@ void ObsSceneSwitcher::LoadObsConfiguration()
    QJsonObject jroot = jsonResponse.object();
    QJsonArray jSceneOrder = jroot["scene_order"].toArray();
    QList<QString> ActiveScenes;
-   foreach (const QJsonValue & jvSceneName, jSceneOrder)
+   foreach (const QJsonValue& jvSceneName, jSceneOrder)
    {
        QJsonObject jScene = jvSceneName.toObject();
        ActiveScenes.append(jScene["name"].toString());
@@ -65,12 +66,6 @@ void ObsSceneSwitcher::LoadObsConfiguration()
    // Find scenes and associate with hotkeys
    static QStringList specialKeys;
    specialKeys << "control" << "alt" << "shift" << "command" << "key";
-   enum {
-      SS_CONTROL = 0,
-      SS_ALT,
-      SS_SHIFT,
-      SS_COMMAND
-   };
    QJsonArray jSources = jroot["sources"].toArray();
    foreach (const QJsonValue & jvSource, jSources)
    {
@@ -112,8 +107,11 @@ void ObsSceneSwitcher::LoadObsConfiguration()
                      }
                   }
                }
-               qWarning() << key;
-               qWarning() << jKeyList[key].toString();
+            }
+            if (hotkeys.size())
+            {
+               // Take first hotkeys
+               break;
             }
          }
          if (hotkeys.count())
@@ -126,6 +124,83 @@ void ObsSceneSwitcher::LoadObsConfiguration()
          }
       }
    }
+}
+
+void ObsSceneSwitcher::LoadObsTransition()
+{
+   QString basic_ini = OBS_Path + "/basic/profiles/Untitled/basic.ini";
+   QString val;
+   QFile file(basic_ini);
+   file.open(QIODevice::ReadOnly | QIODevice::Text);
+   val = file.readAll();
+   file.close();
+   val.replace(',',';');
+   QFile data(basic_ini + ".bak");
+   if (data.open(QFile::WriteOnly | QFile::Truncate)) {
+       QTextStream out(&data);
+       out << val;
+   }
+   data.close();
+
+   QSettings settings(basic_ini + ".bak", QSettings::IniFormat);
+   QString transitionJson = settings.value("Hotkeys/OBSBasic.Transition").toString();
+//   if (value.type() == QVariant::StringList) {
+//     transitionJson = value.toStringList().join(",");
+//   } else {
+//     transitionJson = value.toString();
+//   }
+   transitionJson = transitionJson.remove(QRegExp("[\\n]"));
+   QJsonDocument jsonResponse = QJsonDocument::fromJson(transitionJson.toUtf8());
+   QJsonObject jroot = jsonResponse.object();
+   QJsonArray jHotkeyArray = jroot["bindings"].toArray();
+   QList<int> hotkeys;
+   static QStringList specialKeys;
+   specialKeys << "control" << "alt" << "shift" << "command" << "key";
+   foreach (const QJsonValue & jvHotkey, jHotkeyArray)
+   {
+      QJsonObject jKeyList = jvHotkey.toObject();;
+      QStringList keyList = jKeyList.keys();
+      for (auto key : keyList)
+      {
+         if (specialKeys.contains(key, Qt::CaseInsensitive))
+         {
+            if (!QString::compare(key, "control", Qt::CaseInsensitive) && jKeyList[key].toBool())
+            {
+               hotkeys.push_back(VK_CONTROL);
+            }
+            else if (!QString::compare(key, "alt", Qt::CaseInsensitive) && jKeyList[key].toBool())
+            {
+               hotkeys.push_back(VK_MENU);
+            }
+            else if (!QString::compare(key, "shift", Qt::CaseInsensitive) && jKeyList[key].toBool())
+            {
+               hotkeys.push_back(VK_SHIFT);
+            }
+            else if (!QString::compare(key, "key", Qt::CaseInsensitive))
+            {
+               int code = MetaActionsEnum.keyToValue(jKeyList[key].toString().toLocal8Bit().constData());
+               if (code != -1)
+               {
+                  hotkeys.push_back(get_virtual_key(code));
+               }
+            }
+         }
+      }
+      if (hotkeys.size())
+      {
+         // Take first
+         break;
+      }
+   }
+   if (hotkeys.size())
+   {
+      TransitionHotkeys = new SceneInfo("Transition", hotkeys);
+   }
+   else
+   {
+      qCritical() << "No hotkeys found for Scene Transition. Use OBS Settings Hotkeys section to attach hotkey to the Transion.";
+   }
+
 }
 
 void ObsSceneSwitcher::LoadActions()

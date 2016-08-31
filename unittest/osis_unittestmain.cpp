@@ -1,6 +1,8 @@
 #include <QString>
 #include <osis_unittest.h>
 
+QString inifile = "osisc.ini";
+
 UnittestTest::UnittestTest()
 {
    osisLink = 0;

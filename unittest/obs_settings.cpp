@@ -71,3 +71,10 @@ void UnittestTest::ObsParseGlobalIni()
       }
    }
 }
+
+void UnittestTest::ObsParseTransitionIni()
+{
+   ObsSceneSwitcher* oss = new ObsSceneSwitcher(new Actions(), "c:/Users/Oleksander/AppData/Roaming/obs-studio");
+   oss->LoadObsConfiguration();
+   oss->LoadObsTransition();
+}

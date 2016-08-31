@@ -8,7 +8,8 @@ QT       += testlib
 QT       += network
 QT       += xml
 
-QT       -= gui
+QT       += gui
+QT       += widgets
 
 TARGET = osis_unittest
 CONFIG   += console
@@ -47,7 +48,9 @@ SOURCES += \
     ../dsu_osis/osis/element/segmentrunning.cpp \
     ../dsu_osis/osis/element/warmupgroup.cpp \
     ../dsu_osis/isucompetition.cpp \
-    obs_settings.cpp
+    obs_settings.cpp \
+    ../dsu_osis/obs/sceneinfo.cpp \
+    ../dsu_osis/obs/sceneswitcher.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
@@ -78,7 +81,9 @@ HEADERS += \
     ../dsu_osis/osis/element/prfranking.h \
     ../dsu_osis/osis/element/segmentrunning.h \
     ../dsu_osis/osis/element/warmupgroup.h \
-    ../dsu_osis/isucompetition.h
+    ../dsu_osis/isucompetition.h \
+    ../dsu_osis/obs/sceneinfo.h \
+    ../dsu_osis/obs/sceneswitcher.h
 
 DISTFILES += \
     data/seg_run_jdg.xml \
@@ -86,7 +91,8 @@ DISTFILES += \
     data/event.xml \
     data/seg_start.xml \
     data/event_clear.xml \
-    data/scenes.json
+    data/scenes.json \
+    data/basic.ini
 
 INCLUDEPATH += \
     $$PWD/../dsu_osis/osis \

@@ -4,6 +4,7 @@
 #include "../dsu_osis/osis/osisxml.h"
 #include "../dsu_osis/calcconnectionthread.h"
 #include "../dsu_osis/isucompetition.h"
+#include "../dsu_osis/obs/sceneswitcher.h"
 
 class OsisDataIfStub: public OsisDataIf
 {
@@ -37,6 +38,7 @@ private Q_SLOTS:
    void ParseOsisAction();
    void ParseOsisAll();
    void ObsParseGlobalIni();
+   void ObsParseTransitionIni();
 
 private:
    // OsisLink Helpers

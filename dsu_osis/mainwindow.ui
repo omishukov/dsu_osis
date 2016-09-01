@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>490</width>
-    <height>774</height>
+    <height>1039</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -157,11 +157,14 @@
     </widget>
    </widget>
    <widget class="QGroupBox" name="Logging">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
     <property name="geometry">
      <rect>
-      <x>10</x>
-      <y>80</y>
-      <width>341</width>
+      <x>350</x>
+      <y>10</y>
+      <width>261</width>
       <height>56</height>
      </rect>
     </property>
@@ -216,7 +219,7 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>140</y>
+      <y>70</y>
       <width>341</width>
       <height>51</height>
      </rect>
@@ -255,9 +258,9 @@
     <property name="geometry">
      <rect>
       <x>10</x>
-      <y>200</y>
+      <y>130</y>
       <width>461</width>
-      <height>521</height>
+      <height>851</height>
      </rect>
     </property>
     <property name="sizeAdjustPolicy">

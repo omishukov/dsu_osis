@@ -15,30 +15,41 @@ ObsSceneSwitcher::ObsSceneSwitcher(Actions* actions, QString obsCongigPath, QObj
    , osisAction(actions)
    , MetaActionsEnum(QMetaEnum::fromType<obs_key>())
    , OBS_Path(obsCongigPath)
-   , TransitionHotkeys(0)
 {
    osisAction->SetObsIf(this);
    LoadObsConfiguration();
-   LoadObsTransition();
    LoadActions();
 }
 
 ObsSceneSwitcher::~ObsSceneSwitcher()
 {
+   SaveActions();
    for (auto obsAction : ObsActions)
    {
       delete obsAction;
    }
+   ResetScenes();
+   delete tableModel;
+}
+
+void ObsSceneSwitcher::ResetScenes()
+{
    for (auto obsScene : ObsScenesList)
    {
       delete obsScene;
    }
-   ObsActions.clear();
-   delete tableModel;
+   ObsScenesList.clear();
+   for (auto obsTransition: ObsTransitionList)
+   {
+      delete obsTransition;
+   }
+   ObsTransitionList.clear();
 }
 
 void ObsSceneSwitcher::LoadObsConfiguration()
 {
+   ResetScenes();
+
    QString global_ini = OBS_Path + "/global.ini";
    QSettings settings(global_ini, QSettings::IniFormat);
    QString SceneFile = settings.value("Basic/SceneCollectionFile").toString();
@@ -64,8 +75,6 @@ void ObsSceneSwitcher::LoadObsConfiguration()
    }
 
    // Find scenes and associate with hotkeys
-   static QStringList specialKeys;
-   specialKeys << "control" << "alt" << "shift" << "command" << "key";
    QJsonArray jSources = jroot["sources"].toArray();
    foreach (const QJsonValue & jvSource, jSources)
    {
@@ -77,43 +86,9 @@ void ObsSceneSwitcher::LoadObsConfiguration()
 
          QJsonObject jHotkeys = jScource["hotkeys"].toObject();
          QJsonArray jHotkeyArray = jHotkeys["OBSBasic.SelectScene"].toArray();
-         QList<int> hotkeys;
-         foreach (const QJsonValue & jvHotkey, jHotkeyArray)
-         {
-            QJsonObject jKeyList = jvHotkey.toObject();;
-            QStringList keyList = jKeyList.keys();
-            for (auto key : keyList)
-            {
-               if (specialKeys.contains(key, Qt::CaseInsensitive))
-               {
-                  if (!QString::compare(key, "control", Qt::CaseInsensitive) && jKeyList[key].toBool())
-                  {
-                     hotkeys.push_back(VK_CONTROL);
-                  }
-                  else if (!QString::compare(key, "alt", Qt::CaseInsensitive) && jKeyList[key].toBool())
-                  {
-                     hotkeys.push_back(VK_MENU);
-                  }
-                  else if (!QString::compare(key, "shift", Qt::CaseInsensitive) && jKeyList[key].toBool())
-                  {
-                     hotkeys.push_back(VK_SHIFT);
-                  }
-                  else if (!QString::compare(key, "key", Qt::CaseInsensitive))
-                  {
-                     int code = MetaActionsEnum.keyToValue(jKeyList[key].toString().toLocal8Bit().constData());
-                     if (code != -1)
-                     {
-                        hotkeys.push_back(get_virtual_key(code));
-                     }
-                  }
-               }
-            }
-            if (hotkeys.size())
-            {
-               // Take first hotkeys
-               break;
-            }
-         }
+
+         QList<int> hotkeys = GetHotkeys(jHotkeyArray);
+
          if (hotkeys.count())
          {
             ObsScenesList.push_back(new SceneInfo(SceneName, hotkeys));
@@ -124,38 +99,42 @@ void ObsSceneSwitcher::LoadObsConfiguration()
          }
       }
    }
+
+   // Find transitions and associate with hotkeys
+   QJsonArray jTtransitions = jroot["quick_transitions"].toArray();
+   foreach (const QJsonValue& jvTransition, jTtransitions)
+   {
+      QJsonObject jTransition = jvTransition.toObject();
+      QString TransitionName = jTransition["name"].toString();
+      qInfo() << TransitionName;
+
+      QJsonArray jHotkeys = jTransition["hotkeys"].toArray();
+
+      QList<int> hotkeys = GetHotkeys(jHotkeys);
+
+      if (hotkeys.count())
+      {
+         ObsTransitionList.push_back(new SceneInfo(TransitionName, hotkeys));
+      }
+      else
+      {
+         qWarning() << TransitionName << " transition doesn't have hotkeys";
+      }
+   }
+   if (ObsTransitionList.size())
+   {
+      for (auto obsScene : ObsScenesList)
+      {
+         obsScene->SetTransition(ObsTransitionList[0]);
+      }
+   }
 }
 
-void ObsSceneSwitcher::LoadObsTransition()
+QList<int> ObsSceneSwitcher::GetHotkeys(QJsonArray& jHotkeyArray)
 {
-   QString basic_ini = OBS_Path + "/basic/profiles/Untitled/basic.ini";
-   QString val;
-   QFile file(basic_ini);
-   file.open(QIODevice::ReadOnly | QIODevice::Text);
-   val = file.readAll();
-   file.close();
-   val.replace(',',';');
-   QFile data(basic_ini + ".bak");
-   if (data.open(QFile::WriteOnly | QFile::Truncate)) {
-       QTextStream out(&data);
-       out << val;
-   }
-   data.close();
-
-   QSettings settings(basic_ini + ".bak", QSettings::IniFormat);
-   QString transitionJson = settings.value("Hotkeys/OBSBasic.Transition").toString();
-//   if (value.type() == QVariant::StringList) {
-//     transitionJson = value.toStringList().join(",");
-//   } else {
-//     transitionJson = value.toString();
-//   }
-   transitionJson = transitionJson.remove(QRegExp("[\\n]"));
-   QJsonDocument jsonResponse = QJsonDocument::fromJson(transitionJson.toUtf8());
-   QJsonObject jroot = jsonResponse.object();
-   QJsonArray jHotkeyArray = jroot["bindings"].toArray();
-   QList<int> hotkeys;
    static QStringList specialKeys;
    specialKeys << "control" << "alt" << "shift" << "command" << "key";
+   QList<int> hotkeys;
    foreach (const QJsonValue & jvHotkey, jHotkeyArray)
    {
       QJsonObject jKeyList = jvHotkey.toObject();;
@@ -188,19 +167,11 @@ void ObsSceneSwitcher::LoadObsTransition()
       }
       if (hotkeys.size())
       {
-         // Take first
+         // Take first hotkeys
          break;
       }
    }
-   if (hotkeys.size())
-   {
-      TransitionHotkeys = new SceneInfo("Transition", hotkeys);
-   }
-   else
-   {
-      qCritical() << "No hotkeys found for Scene Transition. Use OBS Settings Hotkeys section to attach hotkey to the Transion.";
-   }
-
+   return hotkeys;
 }
 
 void ObsSceneSwitcher::LoadActions()
@@ -214,7 +185,23 @@ void ObsSceneSwitcher::LoadActions()
       obsAction->delay1 = settings.value("DELAY1", "0").toUInt();
       obsAction->delay2 = settings.value("DELAY2", "0").toUInt();
       obsAction->scene1 = settings.value("SCENE1", "").toString();
+      if (obsAction->scene1.size() && !SceneExists(obsAction->scene1))
+      {
+         qWarning() << "Scene [" << obsAction->scene1 << "] from config file doesn't exist in OBS configuration";
+         obsAction->scene1.clear();
+      }
       obsAction->scene2 = settings.value("SCENE2", "").toString();
+      if (obsAction->scene2.size() && !SceneExists(obsAction->scene2))
+      {
+         qWarning() << "Scene [" << obsAction->scene2 << "] from config file doesn't exist in OBS configuration";
+         obsAction->scene2.clear();
+      }
+      obsAction->transition = settings.value("TRANSITION", "").toString();
+      if (obsAction->transition.size() && !TransitionExists(obsAction->transition))
+      {
+         qWarning() << "Transition [" << obsAction->transition << "] from config file doesn't exist in OBS configuration";
+         obsAction->transition.clear();
+      }
       settings.endGroup();
       obsAction->Validate();
       if (ObsActions.contains(i))
@@ -225,11 +212,51 @@ void ObsSceneSwitcher::LoadActions()
    }
 }
 
+bool ObsSceneSwitcher::SceneExists(QString& scene)
+{
+   for (auto obsScene : ObsScenesList)
+   {
+      if (!QString::compare(obsScene->SceneName, scene))
+      {
+         return true;
+      }
+   }
+   return false;
+}
+
+bool ObsSceneSwitcher::TransitionExists(QString& transition)
+{
+   for (auto obsTransition : ObsTransitionList)
+   {
+      if (!QString::compare(obsTransition->SceneName, transition))
+      {
+         return true;
+      }
+   }
+   return false;
+}
+
+void ObsSceneSwitcher::SaveActions()
+{
+   QSettings settings(inifile, QSettings::IniFormat);
+
+   for (auto obsAction : ObsActions)
+   {
+      settings.beginGroup(obsAction->actionName);
+      settings.setValue("DELAY1", obsAction->delay1);
+      settings.setValue("SCENE1", obsAction->scene1);
+      settings.setValue("DELAY2", obsAction->delay2);
+      settings.setValue("SCENE2", obsAction->scene2);
+      settings.setValue("TRANSITION", obsAction->transition);
+      settings.endGroup();
+   }
+}
+
 void ObsSceneSwitcher::InitUi(QTableView* tableView)
 {
-   tableModel = new QStandardItemModel(ObsActions.count(), 5);
+   tableModel = new QStandardItemModel(ObsActions.count(), 6);
    tableView->setModel(tableModel);
-   tableModel->setHorizontalHeaderLabels(QString("Event;Delay;Scene1;Delay;Scene2").split(";"));
+   tableModel->setHorizontalHeaderLabels(QString("Event;Delay;Scene1;Delay;Scene2;Transition").split(";"));
    uint row = 0;
    for (auto obsAction : ObsActions)
    {
@@ -238,12 +265,14 @@ void ObsSceneSwitcher::InitUi(QTableView* tableView)
       QModelIndex index2 = tableModel->index(row, 2, QModelIndex());
       QModelIndex index3 = tableModel->index(row, 3, QModelIndex());
       QModelIndex index4 = tableModel->index(row, 4, QModelIndex());
+      QModelIndex index5 = tableModel->index(row, 5, QModelIndex());
 
       tableModel->setData(index0, QVariant(obsAction->actionName));
       tableModel->setData(index1, QVariant(obsAction->delay1));
       tableModel->setData(index2, QVariant(obsAction->scene1));
       tableModel->setData(index3, QVariant(obsAction->delay2));
       tableModel->setData(index4, QVariant(obsAction->scene2));
+      tableModel->setData(index5, QVariant(obsAction->transition));
 
       row++;
    }

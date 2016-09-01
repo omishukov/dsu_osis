@@ -17,6 +17,7 @@ public:
    uint delay2;
    QString scene1;
    QString scene2;
+   QString transition;
    QString actionName;
 
 public:
@@ -31,9 +32,10 @@ public:
    ~ObsSceneSwitcher();
 
    void LoadObsConfiguration();
-   void LoadObsTransition();
    void LoadActions();
+   void SaveActions();
    void InitUi(QTableView* tableView);
+   QList<int> GetHotkeys(QJsonArray& jHotkeyArray);
 
 
 signals:
@@ -43,15 +45,18 @@ public slots:
 
 private:
    Actions* osisAction;
-   QMap<uint, ObsAction*> ObsActions;
+   QMap<int, ObsAction*> ObsActions;
    QStandardItemModel* tableModel;
    QMetaEnum MetaActionsEnum;
    QString OBS_Path;
+public:
    QList<SceneInfo*> ObsScenesList;
-   SceneInfo* TransitionHotkeys;
-
-
+   QList<SceneInfo*> ObsTransitionList;
+private:
    int get_virtual_key(int key);
+   void ResetScenes();
+   bool SceneExists(QString& scene);
+   bool TransitionExists(QString& transition);
 
 public:
    enum obs_key {

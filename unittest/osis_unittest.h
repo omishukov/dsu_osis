@@ -37,8 +37,9 @@ private Q_SLOTS:
    void ParseOsisSegmentStart();
    void ParseOsisAction();
    void ParseOsisAll();
-   void ObsParseGlobalIni();
+   void ObsTransition();
    void ObsParseTransitionIni();
+   void ObsTimer();
 
 private:
    // OsisLink Helpers

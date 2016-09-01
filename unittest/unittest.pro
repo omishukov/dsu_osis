@@ -50,7 +50,8 @@ SOURCES += \
     ../dsu_osis/isucompetition.cpp \
     obs_settings.cpp \
     ../dsu_osis/obs/sceneinfo.cpp \
-    ../dsu_osis/obs/sceneswitcher.cpp
+    ../dsu_osis/obs/sceneswitcher.cpp \
+    obs_timer.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \

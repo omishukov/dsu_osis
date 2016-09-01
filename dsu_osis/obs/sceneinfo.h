@@ -9,10 +9,12 @@ public:
    SceneInfo(QString name, QList<int> list);
 
    void SwitchScene();
+   void SetTransition(SceneInfo* transition) { Transition = transition; }
 
-private:
    QString SceneName;
+private:
    QList<int> Hotkeys;
+   SceneInfo* Transition;
 };
 
 #endif // SCENEINFO_H

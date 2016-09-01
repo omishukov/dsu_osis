@@ -7,22 +7,7 @@
 #include <QMetaEnum>
 #include "actions.h"
 #include "sceneinfo.h"
-
-class ObsAction
-{
-public:
-   ObsAction(QString name) :delay1(0),delay2(0), actionName(name) {}
-
-   uint delay1;
-   uint delay2;
-   QString scene1;
-   QString scene2;
-   QString transition;
-   QString actionName;
-
-public:
-   bool Validate();
-};
+#include "scenetableui.h"
 
 class ObsSceneSwitcher : public QObject
 {
@@ -57,6 +42,7 @@ private:
    void ResetScenes();
    bool SceneExists(QString& scene);
    bool TransitionExists(QString& transition);
+   SceneTableUi TableGui;
 
 public:
    enum obs_key {

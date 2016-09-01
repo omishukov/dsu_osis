@@ -5,6 +5,7 @@ SceneInfo::SceneInfo(QString name, QList<int> list)
    : SceneName(name)
    , Hotkeys(list)
    , Transition(0)
+   , NextScene(0)
 {
 
 }

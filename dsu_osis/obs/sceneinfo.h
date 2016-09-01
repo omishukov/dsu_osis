@@ -15,6 +15,7 @@ public:
 private:
    QList<int> Hotkeys;
    SceneInfo* Transition;
+   SceneInfo* NextScene;
 };
 
 #endif // SCENEINFO_H

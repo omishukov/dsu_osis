@@ -19,6 +19,8 @@ ObsSceneSwitcher::ObsSceneSwitcher(Actions* actions, QString obsCongigPath, QObj
    osisAction->SetObsIf(this);
    LoadObsConfiguration();
    LoadActions();
+
+   TableGui.SetObsSwither(this);
 }
 
 ObsSceneSwitcher::~ObsSceneSwitcher()
@@ -254,9 +256,15 @@ void ObsSceneSwitcher::SaveActions()
 
 void ObsSceneSwitcher::InitUi(QTableView* tableView)
 {
+   TableGui.SetObsActions(&ObsActions);
+   TableGui.SetObsScenesList(&ObsScenesList);
+   TableGui.SetObsTransitionList(&ObsTransitionList);
+
    tableModel = new QStandardItemModel(ObsActions.count(), 6);
    tableView->setModel(tableModel);
    tableModel->setHorizontalHeaderLabels(QString("Event;Delay;Scene1;Delay;Scene2;Transition").split(";"));
+   tableView->setItemDelegate(&TableGui);
+
    uint row = 0;
    for (auto obsAction : ObsActions)
    {
@@ -272,6 +280,10 @@ void ObsSceneSwitcher::InitUi(QTableView* tableView)
       tableModel->setData(index2, QVariant(obsAction->scene1));
       tableModel->setData(index3, QVariant(obsAction->delay2));
       tableModel->setData(index4, QVariant(obsAction->scene2));
+      if (obsAction->transition.isEmpty())
+      {
+         obsAction->transition = ObsTransitionList[0]->SceneName;
+      }
       tableModel->setData(index5, QVariant(obsAction->transition));
 
       row++;

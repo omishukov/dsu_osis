@@ -1,22 +1,48 @@
 #ifndef OBSACTION_H
 #define OBSACTION_H
 
+#include <QMetaEnum>
 #include <QObject>
+#include "sceneinfo.h"
 
-class ObsAction
+class ObsAction : public QObject
 {
+   Q_OBJECT
 public:
-   ObsAction(QString name) :delay1(0),delay2(0), actionName(name) {}
+   ObsAction(QString name, QObject *parent = 0);
+   ~ObsAction();
 
-   int delay1;
-   int delay2;
-   QString scene1;
-   QString scene2;
-   QString transition;
    QString actionName;
 
 public:
-   bool Validate();
+   void Execute(ObsAction* previousAction);
+
+   void SetScene1(SceneInfo* sceneInfo);
+   QString GetScene1Name();
+
+   void SetScene2(SceneInfo* sceneInfo);
+   QString GetScene2Name();
+
+   void SetDelay1(int delay);
+   int GetDelay1();
+
+   void SetDelay2(int delay);
+   int GetDelay2();
+
+   void SetTransition(SceneInfo* transition);
+   QString GetTransitionName();
+
+   SceneInfo* GetScene() { return Scene;}
+
+public slots:
+   void TimerExpired();
+
+private:
+   SceneInfo* Scene;
+   SceneInfo* Transition;
+   int Delay1;
+   int Delay2;
+   QTimer* timer;
 };
 
 #endif // OBSACTION_H

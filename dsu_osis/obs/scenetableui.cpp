@@ -52,19 +52,19 @@ QWidget* SceneTableUi::createEditor(QWidget* parent, const QStyleOptionViewItem&
    switch (index.column())
    {
       case QTV_DELAY1:
-         delay = action ? action->delay1:0;
+         delay = action ? action->GetDelay1():0;
          break;
       case QTV_DELAY2:
-         delay = action ? action->delay2:0;
+         delay = action ? action->GetDelay2():0;
          break;
       case QTV_SCENE1:
-         currentSceneOrTransition = action ? action->scene1:"";
+         currentSceneOrTransition = action ? action->GetScene1Name():"";
          break;
       case QTV_SCENE2:
-         currentSceneOrTransition = action ? action->scene2:"";
+         currentSceneOrTransition = action ? action->GetScene2Name():"";
          break;
       case QTV_TRANSITION:
-         currentSceneOrTransition = action ? action->transition:"";
+         currentSceneOrTransition = action ? action->GetTransitionName():"";
          break;
    }
 
@@ -169,37 +169,42 @@ void SceneTableUi::setModelData(QWidget* editor, QAbstractItemModel* model, cons
       switch (index.column())
       {
          case QTV_DELAY1:
-            if (action->delay1 != value.toInt())
+            if (action->GetDelay1() != value.toInt())
             {
-               action->delay1 = value.toInt();
+               action->SetDelay1(value.toInt());
                changed = true;
             }
             break;
          case QTV_DELAY2:
-            if (action->delay2 != value.toInt())
+            if (action->GetDelay2() != value.toInt())
             {
-               action->delay2 = value.toInt();
+               action->SetDelay2(value.toInt());
                changed = true;
             }
             break;
          case QTV_SCENE1:
-            if (QString::compare(action->scene1, value.toString()))
+            if (QString::compare(action->GetScene1Name(), value.toString()))
             {
-               action->scene1 = value.toString();
+               action->SetScene1(ObsSwitcher->GetScene(value.toString()));
                changed = true;
+               if (value.toString().isEmpty() || value.toString().isNull())
+               {
+                  QModelIndex index = model->index(index.row(), 4, QModelIndex());
+                  model->setData(index, value, Qt::EditRole);
+               }
             }
             break;
          case QTV_SCENE2:
-            if (QString::compare(action->scene2, value.toString()))
+            if (QString::compare(action->GetScene2Name(), value.toString()))
             {
-               action->scene2 = value.toString();
+               action->SetScene2(ObsSwitcher->GetScene(value.toString()));
                changed = true;
             }
             break;
          case QTV_TRANSITION:
-            if (QString::compare(action->transition, value.toString()))
+            if (QString::compare(action->GetTransitionName(), value.toString()))
             {
-               action->transition = value.toString();
+               action->SetTransition(ObsSwitcher->GetTransition(value.toString()));
                changed = true;
             }
             break;

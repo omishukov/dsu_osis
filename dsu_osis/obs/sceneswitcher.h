@@ -22,11 +22,14 @@ public:
    void InitUi(QTableView* tableView);
    QList<int> GetHotkeys(QJsonArray& jHotkeyArray);
 
+   SceneInfo* GetScene(QString scene);
+   SceneInfo* GetTransition(QString transition);
 
 signals:
 
 public slots:
-   void HandleEvent(int action);
+   void HandleEvent(int command);
+   void TimerEvent();
 
 private:
    Actions* osisAction;
@@ -40,9 +43,9 @@ public:
 private:
    int get_virtual_key(int key);
    void ResetScenes();
-   bool SceneExists(QString& scene);
-   bool TransitionExists(QString& transition);
    SceneTableUi TableGui;
+   ObsAction* CurrentAction;
+   QTimer* timer;
 
 public:
    enum obs_key {

@@ -15,16 +15,20 @@ ObsSceneSwitcher::ObsSceneSwitcher(Actions* actions, QString obsCongigPath, QObj
    , osisAction(actions)
    , MetaActionsEnum(QMetaEnum::fromType<obs_key>())
    , OBS_Path(obsCongigPath)
+   , CurrentAction(0)
 {
    osisAction->SetObsIf(this);
    LoadObsConfiguration();
    LoadActions();
 
    TableGui.SetObsSwither(this);
+//   timer = new QTimer(this);
+//   connect(timer, SIGNAL(timeout()), this, SLOT(TimerEvent()));
 }
 
 ObsSceneSwitcher::~ObsSceneSwitcher()
 {
+//   delete timer;
    SaveActions();
    for (auto obsAction : ObsActions)
    {
@@ -179,33 +183,59 @@ QList<int> ObsSceneSwitcher::GetHotkeys(QJsonArray& jHotkeyArray)
 void ObsSceneSwitcher::LoadActions()
 {
    QSettings settings(inifile, QSettings::IniFormat);
+   QString sceneName;
 
    for(int i = Actions::NO_ACTIONS + 1; i < Actions::LAST_ACTION; i++)
    {
-      settings.beginGroup(osisAction->GetActionName(i));
       ObsAction* obsAction = new ObsAction(osisAction->GetActionName(i));
-      obsAction->delay1 = settings.value("DELAY1", "0").toUInt();
-      obsAction->delay2 = settings.value("DELAY2", "0").toUInt();
-      obsAction->scene1 = settings.value("SCENE1", "").toString();
-      if (obsAction->scene1.size() && !SceneExists(obsAction->scene1))
+
+      settings.beginGroup(osisAction->GetActionName(i));
+
+      sceneName = settings.value("SCENE1", "").toString();
+      if (!sceneName.isEmpty() && !sceneName.isNull())
       {
-         qWarning() << "Scene [" << obsAction->scene1 << "] from config file doesn't exist in OBS configuration";
-         obsAction->scene1.clear();
+         SceneInfo* scene1 = GetScene(sceneName);
+         if (!scene1)
+         {
+            qWarning() << "Scene [" << sceneName << "] from config file doesn't exist in OBS configuration";
+         }
+         else
+         {
+            obsAction->SetScene1(scene1);
+            obsAction->SetDelay1(settings.value("DELAY1", "0").toInt());
+         }
       }
-      obsAction->scene2 = settings.value("SCENE2", "").toString();
-      if (obsAction->scene2.size() && !SceneExists(obsAction->scene2))
+      if (obsAction->GetScene())
       {
-         qWarning() << "Scene [" << obsAction->scene2 << "] from config file doesn't exist in OBS configuration";
-         obsAction->scene2.clear();
+         sceneName = settings.value("SCENE2", "").toString();
+         if (!sceneName.isEmpty() && !sceneName.isNull())
+         {
+            SceneInfo* scene2 = GetScene(sceneName);
+            if (!scene2)
+            {
+               qWarning() << "Scene2 [" << sceneName << "] from config file doesn't exist in OBS configuration";
+            }
+            else
+            {
+               obsAction->SetScene2(scene2);
+               obsAction->SetDelay2(settings.value("DELAY2", "0").toInt());
+            }
+         }
+
+         sceneName = settings.value("TRANSITION", "").toString();
+         SceneInfo* transition = GetTransition(sceneName);
+         if (!transition)
+         {
+            obsAction->SetTransition(ObsTransitionList[0]);
+         }
+         else
+         {
+            obsAction->SetTransition(transition);
+         }
       }
-      obsAction->transition = settings.value("TRANSITION", "").toString();
-      if (obsAction->transition.size() && !TransitionExists(obsAction->transition))
-      {
-         qWarning() << "Transition [" << obsAction->transition << "] from config file doesn't exist in OBS configuration";
-         obsAction->transition.clear();
-      }
+
       settings.endGroup();
-      obsAction->Validate();
+
       if (ObsActions.contains(i))
       {
          delete ObsActions[i];
@@ -214,28 +244,28 @@ void ObsSceneSwitcher::LoadActions()
    }
 }
 
-bool ObsSceneSwitcher::SceneExists(QString& scene)
+SceneInfo* ObsSceneSwitcher::GetScene(QString scene)
 {
    for (auto obsScene : ObsScenesList)
    {
       if (!QString::compare(obsScene->SceneName, scene))
       {
-         return true;
+         return obsScene;
       }
    }
-   return false;
+   return NULL;
 }
 
-bool ObsSceneSwitcher::TransitionExists(QString& transition)
+SceneInfo* ObsSceneSwitcher::GetTransition(QString transition)
 {
    for (auto obsTransition : ObsTransitionList)
    {
       if (!QString::compare(obsTransition->SceneName, transition))
       {
-         return true;
+         return obsTransition;
       }
    }
-   return false;
+   return NULL;
 }
 
 void ObsSceneSwitcher::SaveActions()
@@ -245,11 +275,11 @@ void ObsSceneSwitcher::SaveActions()
    for (auto obsAction : ObsActions)
    {
       settings.beginGroup(obsAction->actionName);
-      settings.setValue("DELAY1", obsAction->delay1);
-      settings.setValue("SCENE1", obsAction->scene1);
-      settings.setValue("DELAY2", obsAction->delay2);
-      settings.setValue("SCENE2", obsAction->scene2);
-      settings.setValue("TRANSITION", obsAction->transition);
+      settings.setValue("DELAY1", obsAction->GetDelay1());
+      settings.setValue("SCENE1", obsAction->GetScene1Name());
+      settings.setValue("DELAY2", obsAction->GetDelay2());
+      settings.setValue("SCENE2", obsAction->GetScene2Name());
+      settings.setValue("TRANSITION", obsAction->GetTransitionName());
       settings.endGroup();
    }
 }
@@ -276,15 +306,11 @@ void ObsSceneSwitcher::InitUi(QTableView* tableView)
       QModelIndex index5 = tableModel->index(row, 5, QModelIndex());
 
       tableModel->setData(index0, QVariant(obsAction->actionName));
-      tableModel->setData(index1, QVariant(obsAction->delay1));
-      tableModel->setData(index2, QVariant(obsAction->scene1));
-      tableModel->setData(index3, QVariant(obsAction->delay2));
-      tableModel->setData(index4, QVariant(obsAction->scene2));
-      if (obsAction->transition.isEmpty())
-      {
-         obsAction->transition = ObsTransitionList[0]->SceneName;
-      }
-      tableModel->setData(index5, QVariant(obsAction->transition));
+      tableModel->setData(index1, QVariant(obsAction->GetDelay1()));
+      tableModel->setData(index2, QVariant(obsAction->GetScene1Name()));
+      tableModel->setData(index3, QVariant(obsAction->GetDelay2()));
+      tableModel->setData(index4, QVariant(obsAction->GetScene2Name()));
+      tableModel->setData(index5, QVariant(obsAction->GetTransitionName()));
 
       row++;
    }
@@ -292,21 +318,21 @@ void ObsSceneSwitcher::InitUi(QTableView* tableView)
    tableView->show();
 }
 
-void ObsSceneSwitcher::HandleEvent(int action)
+void ObsSceneSwitcher::HandleEvent(int command)
 {
-   // Find action in SceneSwitch list
-   // Start timer
-   // Send hotkey
+   ObsAction* action = ObsActions[command];
+   if (action)
+   {
+      qInfo() << "New action: " << action->actionName;
+      action->Execute(CurrentAction);
+      CurrentAction = action;
+   }
+//   timer->start(1000);
 }
 
-bool ObsAction::Validate()
+void ObsSceneSwitcher::TimerEvent()
 {
-   if (scene1.isEmpty())
-   {
-      delay1 = delay2 = 0;
-      scene2.clear();
-   }
-   return false;
+   qInfo() << "Timeout()";
 }
 
 int ObsSceneSwitcher::get_virtual_key(int key)

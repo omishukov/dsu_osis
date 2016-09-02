@@ -42,7 +42,6 @@ private:
    SceneInfo* NextScene;
    SceneInfo* PreviousScene;
    int Delay;
-   int TimerId;
    QTimer *timer;
 };
 

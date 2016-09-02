@@ -13,13 +13,13 @@ class ObsSceneSwitcher : public QObject
 {
    Q_OBJECT
 public:
-   explicit ObsSceneSwitcher(Actions* actions, QString obsCongigPath, QObject *parent = 0);
+   explicit ObsSceneSwitcher(Actions* actions, QString obsCongigPath, QTableView* tableView, QObject *parent = 0);
    ~ObsSceneSwitcher();
 
    void LoadObsConfiguration();
    void LoadActions();
    void SaveActions();
-   void InitUi(QTableView* tableView);
+   void InitUi();
    QList<int> GetHotkeys(QJsonArray& jHotkeyArray);
 
    SceneInfo* GetScene(QString scene);
@@ -29,6 +29,7 @@ signals:
 
 public slots:
    void HandleEvent(int command);
+   void Initialize();
    void TimerEvent();
 
 private:
@@ -46,6 +47,7 @@ private:
    SceneTableUi TableGui;
    ObsAction* CurrentAction;
    QTimer* timer;
+   QTableView* TableView;
 
 public:
    enum obs_key {

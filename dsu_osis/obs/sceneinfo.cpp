@@ -9,24 +9,21 @@ SceneInfo::SceneInfo(QString name, QList<int> list, QObject *parent)
    , NextScene(0)
    , PreviousScene(0)
    , Delay(0)
-   , TimerId(0)
+   , timer(new QTimer(0))
 {
-   timer = new QTimer(this);
+   timer->setSingleShot(true);
    connect(timer, SIGNAL(timeout()), this, SLOT(TimerExpired()));
 }
 
 SceneInfo::~SceneInfo()
 {
-   if (TimerId > 0)
-   {
-      killTimer(TimerId);
-   }
+   delete timer;
 }
 
 void SceneInfo::TimerExpired()
 {
    qInfo() << "Timeout";
-
+   SendHotkey();
 }
 
 void SceneInfo::SwitchScene(SceneInfo *previousScene)
@@ -37,17 +34,10 @@ void SceneInfo::SwitchScene(SceneInfo *previousScene)
    }
    PreviousScene = previousScene;
 
-   if (TimerId > 0)
-   {
-      killTimer(TimerId);
-      TimerId = 0;
-   }
 
-   timer->start(1000);
    if (Delay > 0)
    {
-//      TimerId = startTimer(Delay*1000);
-//      timer->start(1000);
+      timer->start(Delay*1000);
 
    }
    else
@@ -116,21 +106,9 @@ void SceneInfo::SendHotkey()
 
 void SceneInfo::Cancel()
 {
-   if (TimerId > 0)
-   {
-      killTimer(TimerId);
-      TimerId = 0;
-   }
    if (NextScene)
    {
       NextScene->Cancel();
    }
 
 }
-
-//void SceneInfo::timerEvent(QTimerEvent* event)
-//{
-//   killTimer(TimerId);
-//   TimerId = 0;
-//   SendHotkey();
-//}

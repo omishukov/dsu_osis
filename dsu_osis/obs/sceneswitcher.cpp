@@ -10,16 +10,15 @@
 
 extern const QString inifile;
 
-ObsSceneSwitcher::ObsSceneSwitcher(Actions* actions, QString obsCongigPath, QObject *parent)
+ObsSceneSwitcher::ObsSceneSwitcher(Actions* actions, QString obsCongigPath, QTableView* tableView, QObject *parent)
    : QObject(parent)
    , osisAction(actions)
    , MetaActionsEnum(QMetaEnum::fromType<obs_key>())
    , OBS_Path(obsCongigPath)
    , CurrentAction(0)
+   , TableView(tableView)
 {
    osisAction->SetObsIf(this);
-   LoadObsConfiguration();
-   LoadActions();
 
    TableGui.SetObsSwither(this);
 //   timer = new QTimer(this);
@@ -284,16 +283,16 @@ void ObsSceneSwitcher::SaveActions()
    }
 }
 
-void ObsSceneSwitcher::InitUi(QTableView* tableView)
+void ObsSceneSwitcher::InitUi()
 {
    TableGui.SetObsActions(&ObsActions);
    TableGui.SetObsScenesList(&ObsScenesList);
    TableGui.SetObsTransitionList(&ObsTransitionList);
 
    tableModel = new QStandardItemModel(ObsActions.count(), 6);
-   tableView->setModel(tableModel);
+   TableView->setModel(tableModel);
    tableModel->setHorizontalHeaderLabels(QString("Event;Delay;Scene1;Delay;Scene2;Transition").split(";"));
-   tableView->setItemDelegate(&TableGui);
+   TableView->setItemDelegate(&TableGui);
 
    uint row = 0;
    for (auto obsAction : ObsActions)
@@ -314,8 +313,8 @@ void ObsSceneSwitcher::InitUi(QTableView* tableView)
 
       row++;
    }
-   tableView->resizeColumnsToContents();
-   tableView->show();
+//   TableView->resizeColumnsToContents();
+//   TableView->show();
 }
 
 void ObsSceneSwitcher::HandleEvent(int command)
@@ -327,7 +326,14 @@ void ObsSceneSwitcher::HandleEvent(int command)
       action->Execute(CurrentAction);
       CurrentAction = action;
    }
-//   timer->start(1000);
+   //   timer->start(1000);
+}
+
+void ObsSceneSwitcher::Initialize()
+{
+   LoadObsConfiguration();
+   LoadActions();
+   InitUi();
 }
 
 void ObsSceneSwitcher::TimerEvent()

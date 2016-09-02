@@ -80,6 +80,7 @@ void ObsAction::SetScene2(SceneInfo* sceneInfo)
       {
          Scene->SetNextScene(new SceneInfo(sceneInfo->SceneName, sceneInfo->Hotkeys));
          Scene->GetNextScene()->SetDelay(Delay2);
+         Scene->GetNextScene()->SetTransition(Transition);
       }
    }
 }
@@ -143,10 +144,11 @@ void ObsAction::SetTransition(SceneInfo* transition)
    {
       delete Scene->GetTransition();
       Scene->SetTransition(0);
-      Transition = transition;
-      if (transition)
+      Transition = new SceneInfo(transition->SceneName, transition->Hotkeys);
+      Scene->SetTransition(Transition);
+      if (Scene->GetNextScene())
       {
-         Scene->SetTransition(new SceneInfo(transition->SceneName, transition->Hotkeys));
+         Scene->GetNextScene()->SetTransition(Transition);
       }
    }
 }

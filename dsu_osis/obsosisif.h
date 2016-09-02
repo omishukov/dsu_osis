@@ -10,6 +10,7 @@ public:
    virtual ~ObsOsisIf() {}
 
    virtual QString GetCurrentSkaterName() = 0;
+   virtual QString GetEventName() = 0;
    virtual bool GetSegmentStartList(QMap<int, QList<QString>>& segmentStartList) = 0;
 };
 

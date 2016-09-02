@@ -67,6 +67,7 @@ public:
    void Uninit();
 
    QString GetCurrentSkaterName();
+   QString GetEventName();
    bool GetSegmentStartList(QMap<int, QList<QString> >& segmentStartList);
    Actions* GetOsisActions() { return &actionHandler; }
 

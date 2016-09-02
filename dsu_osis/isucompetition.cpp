@@ -110,6 +110,11 @@ QString IsuCompetition::GetCurrentSkaterName()
    return Participants[id]->GetAttribute(OsisParticipant::Short_Name);
 }
 
+QString IsuCompetition::GetEventName()
+{
+    return Current_Event->GetAttribute(OsisEvent::Name);
+}
+
 bool IsuCompetition::GetSegmentStartList(QMap<int, QList<QString> >& segmentStartList)
 {
    for( auto performance : Performances)

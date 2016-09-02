@@ -150,6 +150,7 @@ void Actions::DoActions()
             // Do nothing yet
             break;
          case EVENT_OVERVIEW:
+            SaveToFile("obs/event_name.txt", OsisIf->GetEventName());
             break;
          case SEGMENT_START:
             break;
@@ -195,7 +196,7 @@ QString Actions::GetActionName(int action)
    return QString();
 }
 
-void Actions::SaveToFile(const QString& fileName, const QString& text)
+void Actions::SaveToFile(const QString& fileName, const QString text)
 {
    QFileInfo info(fileName);
    if (!info.exists())

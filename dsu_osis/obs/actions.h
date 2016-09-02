@@ -82,7 +82,7 @@ signals:
    void SendOsisEvent(int);
 
 private:
-   void SaveToFile(const QString& file, const QString& text);
+   void SaveToFile(const QString& file, const QString text);
    void GenerateHtml(QMap<int, QList<QString>>& segmentStartList);
 
 private:

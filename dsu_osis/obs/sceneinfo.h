@@ -9,6 +9,7 @@ class SceneInfo : public QObject
    Q_OBJECT
 public:
    SceneInfo(QString name, QList<int> list, QObject *parent = 0);
+   SceneInfo(QObject *parent = 0);
    ~SceneInfo();
 
 public slots:
@@ -16,6 +17,8 @@ public slots:
 
 public:
    void SwitchScene(SceneInfo *previousScene = 0);
+
+   void Update(SceneInfo* newScene);
 
    void SetTransition(SceneInfo* transition);
    SceneInfo* GetTransition() { return Transition; }

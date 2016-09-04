@@ -15,6 +15,18 @@ SceneInfo::SceneInfo(QString name, QList<int> list, QObject *parent)
    connect(timer, SIGNAL(timeout()), this, SLOT(TimerExpired()));
 }
 
+SceneInfo::SceneInfo(QObject *parent)
+   : QObject(parent)
+   , Transition(0)
+   , NextScene(0)
+   , PreviousScene(0)
+   , Delay(0)
+   , timer(new QTimer(0))
+{
+   timer->setSingleShot(true);
+   connect(timer, SIGNAL(timeout()), this, SLOT(TimerExpired()));
+}
+
 SceneInfo::~SceneInfo()
 {
    delete timer;
@@ -46,9 +58,24 @@ void SceneInfo::SwitchScene(SceneInfo *previousScene)
    }
 }
 
+void SceneInfo::Update(SceneInfo* newScene)
+{
+   Hotkeys.clear();
+   Hotkeys = newScene->Hotkeys;
+   SceneName = newScene->SceneName;
+}
+
 void SceneInfo::SetTransition(SceneInfo* transition)
 {
+   if (!transition)
+   {
+      return;
+   }
    Transition = transition;
+   if (NextScene)
+   {
+      NextScene->SetTransition(transition);
+   }
 }
 
 void SceneInfo::SetNextScene(SceneInfo* nextScene)

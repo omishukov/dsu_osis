@@ -67,8 +67,18 @@ public:
    void Uninit();
 
    QString GetCurrentSkaterName();
+   QString GetCurrentSkaterNumber();
+   QString GetCurrentSkaterNation();
+   QString GetCurrentSkaterClub();
    QString GetEventName();
    bool GetSegmentStartList(QMap<int, QList<QString> >& segmentStartList);
+   bool GetSegmentResultList(QMap<int, QList<QString> >& segmentResultList);
+   QString GetPoints();
+   QString GetTES();
+   QString GetTCS();
+   QString GetBonus();
+   QString GetDeduction();
+   QString GetRank();
    Actions* GetOsisActions() { return &actionHandler; }
 
 private:

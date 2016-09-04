@@ -8,7 +8,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-extern const QString inifile;
+extern QString inifile;
 
 ObsSceneSwitcher::ObsSceneSwitcher(Actions* actions, QString obsCongigPath, QTableView* tableView, QObject *parent)
    : QObject(parent)
@@ -313,6 +313,7 @@ void ObsSceneSwitcher::InitUi()
 
       row++;
    }
+// Todo: this crash if no valid OBS Path specified.
 //   TableView->resizeColumnsToContents();
 //   TableView->show();
 }

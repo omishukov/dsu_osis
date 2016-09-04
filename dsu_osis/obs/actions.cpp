@@ -29,13 +29,28 @@ void Actions::DoActions()
          case ACTION_1SC:
             break;
          case ACTION_1S1:
-            // Save results from OsisPrfDetails
-            // * points.txt
-            // * tes.txt (technical element score)
-            // * tcs.txt (program component score)
+            {
+               // Save results from OsisPrfDetails
+               // * points.txt
+               // * tes.txt (technical element score)
+               // * tcs.txt (program component score)
+               SaveToFile("obs/points.txt", OsisIf->GetPoints());
+               SaveToFile("obs/tes.txt", OsisIf->GetTES());
+               SaveToFile("obs/tcs.txt", OsisIf->GetTCS());
+               SaveToFile("obs/bonus.txt", OsisIf->GetBonus());
+               SaveToFile("obs/deduction.txt", OsisIf->GetDeduction());
+            }
             break;
          case ACTION_1S2:
-            // Save rank from Performance (ID from Current Action, Current_Participant_ID)
+            {
+               // Save rank from Performance
+               SaveToFile("obs/current_participant_rank.txt", OsisIf->GetRank());
+
+               // Segment Result list
+               QMap<int, QList<QString>> SegmentResultList;
+               OsisIf->GetSegmentResultList(SegmentResultList);
+               GenerateSegmentResultListHtml(SegmentResultList);
+            }
             break;
          case ACTION_1S3:
             // Do nothing yet
@@ -65,9 +80,10 @@ void Actions::DoActions()
             {
                // Generate Starting order from Performances (list) and Participants.
                // starting_list.csv
-
-               QString CurrentSkater = OsisIf->GetCurrentSkaterName();
-               SaveToFile("obs/current_skater.txt", CurrentSkater);
+               SaveToFile("obs/current_skater.txt", OsisIf->GetCurrentSkaterName());
+               SaveToFile("obs/current_start_number.txt", OsisIf->GetCurrentSkaterNumber());
+               SaveToFile("obs/current_skater_club.txt", OsisIf->GetCurrentSkaterClub());
+               SaveToFile("obs/current_skater_nation.txt", OsisIf->GetCurrentSkaterNation());
 
                QMap<int, QList<QString>> SegmentStartList;
                OsisIf->GetSegmentStartList(SegmentStartList);
@@ -107,10 +123,10 @@ void Actions::DoActions()
             break;
          case ACTION_NXT:
             {
-               // Save current skater
-               // * current_skater.txt
-               QString CurrentSkater = OsisIf->GetCurrentSkaterName();
-               SaveToFile("obs/current_skater.txt", CurrentSkater);
+               SaveToFile("obs/current_skater.txt", OsisIf->GetCurrentSkaterName());
+               SaveToFile("obs/current_start_number.txt", OsisIf->GetCurrentSkaterNumber());
+               SaveToFile("obs/current_skater_club.txt", OsisIf->GetCurrentSkaterClub());
+               SaveToFile("obs/current_skater_nation.txt", OsisIf->GetCurrentSkaterNation());
             }
             break;
          case ACTION_PRV:
@@ -233,4 +249,26 @@ void Actions::GenerateHtml(QMap<int, QList<QString> >& segmentStartList)
    }
    html += "</table></body></html>";
    SaveToFile("obs/starting_order.html", html);
+}
+
+void Actions::GenerateSegmentResultListHtml(QMap<int, QList<QString> >& segmentResultList)
+{
+   QString html;
+   html = "<html>";
+   html +="<head> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\"> ";
+   html += "<script type=\"text/JavaScript\"> function timedRefresh(timeoutPeriod) { setTimeout(\"location.reload(true);\",timeoutPeriod);}</script>";
+   html += "<link rel=\"stylesheet\" href=\"fs_info.css\"> </head>";
+   html += "<body class=\"PageBody\"  onload=\"JavaScript:timedRefresh(3000);\">";
+   html += "<table width=\"100%\" align=\"center\" border=\"0\" cellspacing=\"1\">";
+   for (auto rank : segmentResultList.keys())
+   {
+      QList<QString> info = segmentResultList[rank];
+      html += "<tr class=\"Line1White\">";
+      html += "<td>" + QString::number(rank) + "</td>";
+      html += "<td class=\"CellLeft\"><a>" + info[0] + "</a></td>";
+      html += "<td class=\"CellLeft\"><a>" + info[1] + "</a></td>";
+      html += "<td>" + info[2] + "</td></tr>";
+   }
+   html += "</table></body></html>";
+   SaveToFile("obs/segment_result_list.html", html);
 }

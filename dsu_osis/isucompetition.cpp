@@ -102,12 +102,58 @@ void IsuCompetition::Uninit()
 
 QString IsuCompetition::GetCurrentSkaterName()
 {
+   if (!Current_Action)
+   {
+      return QString();
+   }
    int id = Current_Action->Current_Participant_Id;
    if (id == -1)
    {
       return QString();
    }
    return Participants[id]->GetAttribute(OsisParticipant::Short_Name);
+}
+
+QString IsuCompetition::GetCurrentSkaterNumber()
+{
+   if (!Current_Action)
+   {
+      return QString();
+   }
+   int id = Current_Action->Current_Participant_Id;
+   if (id == -1)
+   {
+      return QString();
+   }
+   return Current_Action->GetAttribute(OsisAction::Current_Start_Number);
+}
+
+QString IsuCompetition::GetCurrentSkaterNation()
+{
+   if (!Current_Action)
+   {
+      return QString();
+   }
+   int id = Current_Action->Current_Participant_Id;
+   if (id == -1)
+   {
+      return QString();
+   }
+   return Participants[id]->GetAttribute(OsisParticipant::Nation);
+}
+
+QString IsuCompetition::GetCurrentSkaterClub()
+{
+   if (!Current_Action)
+   {
+      return QString();
+   }
+   int id = Current_Action->Current_Participant_Id;
+   if (id == -1)
+   {
+      return QString();
+   }
+   return Participants[id]->GetAttribute(OsisParticipant::Club);
 }
 
 QString IsuCompetition::GetEventName()
@@ -130,6 +176,83 @@ bool IsuCompetition::GetSegmentStartList(QMap<int, QList<QString> >& segmentStar
       segmentStartList[StartNum] = NameAndClub;
    }
    return true;
+}
+
+bool IsuCompetition::GetSegmentResultList(QMap<int, QList<QString> >& segmentResultList)
+{
+   int Rank;
+   for( auto performance : Performances)
+   {
+      Rank = performance->GetAttributeInt(OsisPerformance::Rank);
+      if (Rank == -1 || performance->Id == -1)
+      {
+         continue;
+      }
+      QList<QString> NameClubPoints;
+      NameClubPoints << Participants[Rank]->GetAttribute(OsisParticipant::Short_Name) <<
+                     Participants[Rank]->GetAttribute(OsisParticipant::Nation) <<
+                     performance->GetAttribute(OsisPerformance::Points);
+      segmentResultList[Rank] = NameClubPoints;
+   }
+   return true;
+}
+
+
+QString IsuCompetition::GetPoints()
+{
+   if (Current_Performance_Result)
+   {
+      return Current_Performance_Result->GetAttribute(OsisPrfDetails::Points);
+   }
+   return QString();
+}
+
+QString IsuCompetition::GetTES()
+{
+   if (Current_Performance_Result)
+   {
+      return Current_Performance_Result->GetAttribute(OsisPrfDetails::TES);
+   }
+   return QString();
+}
+
+QString IsuCompetition::GetTCS()
+{
+   if (Current_Performance_Result)
+   {
+      return Current_Performance_Result->GetAttribute(OsisPrfDetails::TCS);
+   }
+   return QString();
+}
+
+QString IsuCompetition::GetBonus()
+{
+   if (Current_Performance_Result)
+   {
+      return Current_Performance_Result->GetAttribute(OsisPrfDetails::Bonus);
+   }
+   return QString();
+}
+
+QString IsuCompetition::GetDeduction()
+{
+   if (Current_Performance_Result)
+   {
+      return Current_Performance_Result->GetAttribute(OsisPrfDetails::Ded_Sum);
+   }
+   return QString();
+}
+
+QString IsuCompetition::GetRank()
+{
+   for( auto performance : Performances)
+   {
+      if (performance->Id == Current_Participant_Id)
+      {
+         return performance->GetAttribute(OsisPerformance::Rank);
+      }
+   }
+   return QString();
 }
 
 void IsuCompetition::AddIsuOsis(IsuOsis* newIsuOsis)

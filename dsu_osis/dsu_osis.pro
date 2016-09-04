@@ -86,7 +86,7 @@ DISTFILES += \
     LICENSE.txt \
     SceneSwithDll_example.txt
 
-LIBS += -lws2_32
+LIBS += -lws2_32 -luser32
 
 CONFIG += c++11
 

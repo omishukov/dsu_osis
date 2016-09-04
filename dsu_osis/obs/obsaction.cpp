@@ -3,171 +3,93 @@
 ObsAction::ObsAction(QString name, QObject* parent)
    : QObject(parent)
    , actionName(name)
-   , Scene(0)
+   , Scene(new SceneInfo(this))
    , Transition(0)
    , Delay1(0)
    , Delay2(0)
 {
-//   timer = new QTimer(this);
-//   connect(timer, SIGNAL(timeout()), this, SLOT(TimerExpired()));
-//   timer->start(1000);
+   Scene->SetNextScene(new SceneInfo(this));
+   Scene->SetTransition(new SceneInfo(this));
 }
 
 ObsAction::~ObsAction()
 {
-   if (Scene)
-   {
-      delete Scene->GetNextScene();
-      delete Scene->GetTransition();
-   }
+   delete Scene->GetNextScene();
+   delete Scene->GetTransition();
    delete Scene;
 }
 
 void ObsAction::Execute(ObsAction* previousAction)
 {
-   if (!Scene)
-   {
-      return;
-   }
    Scene->SwitchScene(previousAction?previousAction->GetScene():0);
 }
 
 void ObsAction::SetScene1(SceneInfo* sceneInfo)
 {
-   SceneInfo* nextScene = 0;
-   SceneInfo* transition = Transition;
-   if (Scene)
+   if (!sceneInfo ||
+       !QString::compare(Scene->SceneName, sceneInfo->SceneName))
    {
-      if (!sceneInfo)
-      {
-         delete Scene->GetNextScene();
-         Transition = Scene->GetTransition();
-         delete Scene;
-         Scene = 0;
-         return;
-      }
-      if (!QString::compare(Scene->SceneName, sceneInfo->SceneName))
-      {
-         return;
-      }
-      nextScene = Scene->GetNextScene();
-      transition = Scene->GetTransition();
-      delete Scene;
+      return;
    }
-   Scene = new SceneInfo(sceneInfo->SceneName, sceneInfo->Hotkeys);
-   Scene->SetDelay(Delay1);
-   Scene->SetNextScene(nextScene);
-   Scene->SetTransition(transition);
-   Transition = transition;
+   Scene->Update(sceneInfo);
 }
 
 QString ObsAction::GetScene1Name()
 {
-   if (Scene)
-   {
-      return Scene->SceneName;
-   }
-   return QString();
+   return Scene->SceneName;
 }
 
 void ObsAction::SetScene2(SceneInfo* sceneInfo)
 {
-   if (Scene)
+   if (sceneInfo)
    {
-      delete Scene->GetNextScene();
-      Scene->SetNextScene(0);
-      if (sceneInfo)
-      {
-         Scene->SetNextScene(new SceneInfo(sceneInfo->SceneName, sceneInfo->Hotkeys));
-         Scene->GetNextScene()->SetDelay(Delay2);
-         Scene->GetNextScene()->SetTransition(Transition);
-      }
+      Scene->GetNextScene()->Update(sceneInfo);
    }
 }
 
 QString ObsAction::GetScene2Name()
 {
-   if (Scene)
-   {
-      SceneInfo* nextScene = Scene->GetNextScene();
-      if (nextScene)
-      {
-         return nextScene->SceneName;
-      }
-   }
-   return QString();
+   return Scene->GetNextScene()->SceneName;
 }
 
 void ObsAction::SetDelay1(int delay)
 {
-   if (Scene)
-   {
-      Scene->SetDelay(delay);
-   }
+   Scene->SetDelay(delay);
    Delay1 = delay;
 }
 
 int ObsAction::GetDelay1()
 {
-   return Scene?Scene->GetDelay():0;
+   return Scene->GetDelay();
 }
 
 void ObsAction::SetDelay2(int delay)
 {
-   if (Scene)
-   {
-      SceneInfo* nextScene = Scene->GetNextScene();
-      if (nextScene)
-      {
-         nextScene->SetDelay(delay);
-      }
-   }
+   Scene->GetNextScene()->SetDelay(delay);
    Delay2 = delay;
 }
 
 int ObsAction::GetDelay2()
 {
-   if (Scene)
-   {
-      SceneInfo* nextScene = Scene->GetNextScene();
-      if (nextScene)
-      {
-         return nextScene->GetDelay();
-      }
-   }
-   return 0;
+   return Scene->GetNextScene()->GetDelay();
 }
 
 void ObsAction::SetTransition(SceneInfo* transition)
 {
-   if (Scene)
+   Transition = new SceneInfo(transition->SceneName, transition->Hotkeys);
+   Scene->GetTransition()->Update(transition);
+   if (Scene->GetNextScene())
    {
-      delete Scene->GetTransition();
-      Scene->SetTransition(0);
-      Transition = new SceneInfo(transition->SceneName, transition->Hotkeys);
-      Scene->SetTransition(Transition);
-      if (Scene->GetNextScene())
-      {
-         Scene->GetNextScene()->SetTransition(Transition);
-      }
+      Scene->GetNextScene()->GetTransition()->Update(transition);
    }
 }
 
 QString ObsAction::GetTransitionName()
 {
-   if (Scene)
-   {
-      SceneInfo* transition = Scene->GetTransition();
-      if (transition)
-      {
-         return transition->SceneName;
-      }
-   }
-   return QString();
+   return Scene->GetTransition()->SceneName;
 }
 
 void ObsAction::TimerExpired()
 {
    qInfo() << "Timeout()";
 }
-

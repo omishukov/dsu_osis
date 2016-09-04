@@ -88,7 +88,6 @@ void Actions::DoActions()
                QMap<int, QList<QString>> SegmentStartList;
                OsisIf->GetSegmentStartList(SegmentStartList);
                GenerateHtml(SegmentStartList);
-
             }
             break;
          case ACTION_IDT:
@@ -169,6 +168,10 @@ void Actions::DoActions()
             SaveToFile("obs/event_name.txt", OsisIf->GetEventName());
             break;
          case SEGMENT_START:
+            {
+            SaveToFile("obs/segment_name.txt", OsisIf->GetSegmentName());
+            SaveToFile("obs/category_name.txt", OsisIf->GetCategoryName());
+            }
             break;
          case PRF_RANKING:
             break;

@@ -158,7 +158,25 @@ QString IsuCompetition::GetCurrentSkaterClub()
 
 QString IsuCompetition::GetEventName()
 {
-    return Current_Event->GetAttribute(OsisEvent::Name);
+   return Current_Event->GetAttribute(OsisEvent::Name);
+}
+
+QString IsuCompetition::GetSegmentName()
+{
+   if (Current_Segment_Id == -1)
+   {
+      return QString();
+   }
+   return Segments[Current_Segment_Id]->GetAttribute(OsisSegment::Name);
+}
+
+QString IsuCompetition::GetCategoryName()
+{
+   if (Current_Category_Id == -1)
+   {
+      return QString();
+   }
+   return Categories[Current_Category_Id]->GetAttribute(OsisCategory::Name);
 }
 
 bool IsuCompetition::GetSegmentStartList(QMap<int, QList<QString> >& segmentStartList)
@@ -189,8 +207,8 @@ bool IsuCompetition::GetSegmentResultList(QMap<int, QList<QString> >& segmentRes
          continue;
       }
       QList<QString> NameClubPoints;
-      NameClubPoints << Participants[Rank]->GetAttribute(OsisParticipant::Short_Name) <<
-                     Participants[Rank]->GetAttribute(OsisParticipant::Nation) <<
+      NameClubPoints << Participants[performance->Id]->GetAttribute(OsisParticipant::Short_Name) <<
+                     Participants[performance->Id]->GetAttribute(OsisParticipant::Nation) <<
                      performance->GetAttribute(OsisPerformance::Points);
       segmentResultList[Rank] = NameClubPoints;
    }

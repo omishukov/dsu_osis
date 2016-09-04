@@ -51,7 +51,9 @@ SOURCES += \
     obs_settings.cpp \
     ../dsu_osis/obs/sceneinfo.cpp \
     ../dsu_osis/obs/sceneswitcher.cpp \
-    obs_timer.cpp
+    obs_timer.cpp \
+    ../dsu_osis/obs/scenetableui.cpp \
+    ../dsu_osis/obs/obsaction.cpp
 DEFINES += SRCDIR=\\\"$$PWD/\\\"
 
 HEADERS += \
@@ -84,7 +86,8 @@ HEADERS += \
     ../dsu_osis/osis/element/warmupgroup.h \
     ../dsu_osis/isucompetition.h \
     ../dsu_osis/obs/sceneinfo.h \
-    ../dsu_osis/obs/sceneswitcher.h
+    ../dsu_osis/obs/sceneswitcher.h \
+    ../dsu_osis/obs/obsaction.h
 
 DISTFILES += \
     data/seg_run_jdg.xml \

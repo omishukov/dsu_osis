@@ -71,6 +71,8 @@ public:
    QString GetCurrentSkaterNation();
    QString GetCurrentSkaterClub();
    QString GetEventName();
+   QString GetSegmentName();
+   QString GetCategoryName();
    bool GetSegmentStartList(QMap<int, QList<QString> >& segmentStartList);
    bool GetSegmentResultList(QMap<int, QList<QString> >& segmentResultList);
    QString GetPoints();

@@ -191,4 +191,3 @@ void OsisXml::DataInd(QByteArray& qba)
    QDomNode n = docElem.firstChild();
    ProcessOsisData(n);
 }
-

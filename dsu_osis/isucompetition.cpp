@@ -107,7 +107,7 @@ QString IsuCompetition::GetCurrentSkaterName()
       return QString();
    }
    int id = Current_Action->Current_Participant_Id;
-   if (id == -1)
+   if (id == -1 || !Participants.contains(id))
    {
       return QString();
    }
@@ -135,7 +135,7 @@ QString IsuCompetition::GetCurrentSkaterNation()
       return QString();
    }
    int id = Current_Action->Current_Participant_Id;
-   if (id == -1)
+   if (id == -1 || !Participants.contains(id))
    {
       return QString();
    }
@@ -149,7 +149,7 @@ QString IsuCompetition::GetCurrentSkaterClub()
       return QString();
    }
    int id = Current_Action->Current_Participant_Id;
-   if (id == -1)
+   if (id == -1 || !Participants.contains(id))
    {
       return QString();
    }
@@ -172,7 +172,7 @@ QString IsuCompetition::GetSegmentName()
 
 QString IsuCompetition::GetCategoryName()
 {
-   if (Current_Category_Id == -1)
+   if (Current_Category_Id == -1 || !Categories.contains(Current_Category_Id))
    {
       return QString();
    }
@@ -184,7 +184,7 @@ bool IsuCompetition::GetSegmentStartList(QMap<int, QList<QString> >& segmentStar
    for( auto performance : Performances)
    {
       int StartNum = performance->GetAttributeInt(OsisPerformance::Start_Number);
-      if (StartNum == -1 || performance->Id == -1)
+      if (StartNum == -1 || performance->Id == -1 || !Participants.contains(performance->Id))
       {
          continue;
       }
@@ -202,7 +202,7 @@ bool IsuCompetition::GetSegmentResultList(QMap<int, QList<QString> >& segmentRes
    for( auto performance : Performances)
    {
       Rank = performance->GetAttributeInt(OsisPerformance::Rank);
-      if (Rank == -1 || performance->Id == -1)
+      if (Rank == -1 || performance->Id == -1 || !Participants.contains(performance->Id))
       {
          continue;
       }

@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 #include <QRegExpValidator>
+#include <QThread>
+#include <QMetaEnum>
+#include "isucalclink.h"
 
 namespace Ui {
 class MainWindow;
@@ -16,16 +19,36 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+   enum IsuCalcLinkButton
+   {
+      Connect,
+      Cancel,
+      Disconnect
+   };
+   Q_ENUM(IsuCalcLinkButton)
+
+private slots:
+   void on_Connect_PB_clicked();
+
+signals:
+   void ChangedIsuCalcSettings(const QString&, quint16, uint);
+
 private:
     Ui::MainWindow *ui;
 
+    void InitIsuCalcLink();
     void setIpValitation();
-    void readSettings();
+    void ReadSettings();
     void saveSettings();
+    void SetLinkStatus(QString label, QString buttonText, bool buttonEnabled, bool ipAddrEnabled, bool ipPortEnabled);
 
 
     QValidator* CalcIpValidator;
     QValidator* PortValidator;
+    QThread CalcLinkThread;
+    IsuCalcLinkThread CalcLink;
+    QMetaEnum MetaCalLinkEnum;
+
 };
 
 #endif // MAINWINDOW_H

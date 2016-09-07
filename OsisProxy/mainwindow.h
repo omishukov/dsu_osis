@@ -30,8 +30,12 @@ public:
 private slots:
    void on_Connect_PB_clicked();
 
+public slots:
+   void IsuCalcConnected();
+
 signals:
    void ChangedIsuCalcSettings(const QString&, quint16, uint);
+   void EstablishConnection();
 
 private:
     Ui::MainWindow *ui;

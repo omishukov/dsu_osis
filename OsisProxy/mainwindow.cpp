@@ -30,6 +30,8 @@ MainWindow::~MainWindow()
 void MainWindow::InitIsuCalcLink()
 {
    CalcLink.moveToThread(&CalcLinkThread);
+   connect(this, SIGNAL(EstablishConnection()), &CalcLink, SLOT(Establish())); // Connect to the IsuCalc
+   connect(&CalcLink, SIGNAL(Established()), this, SLOT(IsuCalcConnected())); // Connect to the IsuCalc
    connect(this, SIGNAL(ChangedIsuCalcSettings(const QString&, quint16, uint)),
            &CalcLink, SLOT(ChangedSettings(const QString&, quint16, uint))); // on settings change
    connect(&CalcLinkThread, SIGNAL(started()), &CalcLink, SLOT(Initialize())); // on thread start
@@ -88,7 +90,7 @@ void MainWindow::on_Connect_PB_clicked()
       case Connect:
       {
          SetLinkStatus("Connecting...", MetaCalLinkEnum.valueToKey(Cancel), true, false, false);
-         emit
+         emit EstablishConnection();
       }
          break;
       case Cancel:
@@ -103,6 +105,11 @@ void MainWindow::on_Connect_PB_clicked()
          break;
 
    }
+}
+
+void MainWindow::IsuCalcConnected()
+{
+    SetLinkStatus("Connected", MetaCalLinkEnum.valueToKey(Disconnect), true, false, false);
 }
 
 void MainWindow::SetLinkStatus(QString label, QString buttonText, bool buttonEnabled, bool ipAddrEnabled, bool ipPortEnabled)

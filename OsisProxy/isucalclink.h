@@ -10,6 +10,7 @@ class IsuCalcLinkThread : public QObject
    Q_OBJECT
 public:
    IsuCalcLinkThread(QObject* parent = 0);
+   ~IsuCalcLinkThread();
 
 public slots:
    void ChangedSettings(const QString& hostName, quint16 port, uint reconnect);
@@ -18,19 +19,23 @@ public slots:
    void Connected();
    void Disconnected();
    void ReadyRead();
-   void SocketError();
+   void SocketError(QAbstractSocket::SocketError err);
    void Establish();
+   void StopConnection();
    void TimerExpired();
 
 signals:
    void Established();
+   void IsuCalcDisconnected();
+   void Reconnecting();
 
 private:
    QString HostName;
    quint16 Port;
    bool Reconnect;
-   QTcpSocket Socket;
+   QTcpSocket* Socket;
    QTimer* Timer;
+   bool IgnoreReconnect;
 
 };
 

@@ -31,7 +31,10 @@ void MainWindow::InitIsuCalcLink()
 {
    CalcLink.moveToThread(&CalcLinkThread);
    connect(this, SIGNAL(EstablishConnection()), &CalcLink, SLOT(Establish())); // Connect to the IsuCalc
-   connect(&CalcLink, SIGNAL(Established()), this, SLOT(IsuCalcConnected())); // Connect to the IsuCalc
+   connect(this, SIGNAL(StopConnection()), &CalcLink, SLOT(StopConnection())); // Disconnect from the IsuCalc
+   connect(&CalcLink, SIGNAL(Established()), this, SLOT(IsuCalcConnected())); // Update UI
+   connect(&CalcLink, SIGNAL(IsuCalcDisconnected()), this, SLOT(IsuCalcDisconnected())); // Update UI
+   connect(&CalcLink, SIGNAL(Reconnecting()), this, SLOT(IsuCalcReconnecting())); // Update UI
    connect(this, SIGNAL(ChangedIsuCalcSettings(const QString&, quint16, uint)),
            &CalcLink, SLOT(ChangedSettings(const QString&, quint16, uint))); // on settings change
    connect(&CalcLinkThread, SIGNAL(started()), &CalcLink, SLOT(Initialize())); // on thread start
@@ -88,28 +91,28 @@ void MainWindow::on_Connect_PB_clicked()
    switch(MetaCalLinkEnum.keyToValue(ui->Connect_PB->text().toLocal8Bit().constData()))
    {
       case Connect:
-      {
-         SetLinkStatus("Connecting...", MetaCalLinkEnum.valueToKey(Cancel), true, false, false);
          emit EstablishConnection();
-      }
          break;
       case Cancel:
-      {
-
-      }
-         break;
       case Disconnect:
-      {
-
-      }
+         emit StopConnection();
          break;
-
    }
 }
 
 void MainWindow::IsuCalcConnected()
 {
-    SetLinkStatus("Connected", MetaCalLinkEnum.valueToKey(Disconnect), true, false, false);
+   SetLinkStatus("Connected", MetaCalLinkEnum.valueToKey(Disconnect), true, false, false);
+}
+
+void MainWindow::IsuCalcReconnecting()
+{
+   SetLinkStatus("Connecting...", MetaCalLinkEnum.valueToKey(Cancel), true, false, false);
+}
+
+void MainWindow::IsuCalcDisconnected()
+{
+   SetLinkStatus("Disconnected", MetaCalLinkEnum.valueToKey(Connect), true, true, true);
 }
 
 void MainWindow::SetLinkStatus(QString label, QString buttonText, bool buttonEnabled, bool ipAddrEnabled, bool ipPortEnabled)
@@ -119,4 +122,9 @@ void MainWindow::SetLinkStatus(QString label, QString buttonText, bool buttonEna
    ui->Connect_PB->setEnabled(buttonEnabled);
    ui->IsuCalcIP_LE->setEnabled(ipAddrEnabled);
    ui->IsuCalcPort_LE->setEnabled(ipPortEnabled);
+}
+
+void MainWindow::on_Reconnect_CB_stateChanged(int /*arg1*/)
+{
+   emit ChangedIsuCalcSettings(ui->IsuCalcIP_LE->text(),ui->IsuCalcPort_LE->text().toUShort(),ui->Reconnect_CB->checkState());
 }

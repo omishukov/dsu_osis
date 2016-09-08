@@ -29,13 +29,17 @@ public:
 
 private slots:
    void on_Connect_PB_clicked();
+   void on_Reconnect_CB_stateChanged(int);
 
 public slots:
    void IsuCalcConnected();
+   void IsuCalcReconnecting();
+   void IsuCalcDisconnected();
 
 signals:
    void ChangedIsuCalcSettings(const QString&, quint16, uint);
    void EstablishConnection();
+   void StopConnection();
 
 private:
     Ui::MainWindow *ui;

@@ -6,6 +6,7 @@
 #include <QThread>
 #include <QMetaEnum>
 #include "isucalclink.h"
+#include "dataqueue.h"
 
 namespace Ui {
 class MainWindow;
@@ -54,8 +55,9 @@ private:
     QValidator* CalcIpValidator;
     QValidator* PortValidator;
     QThread CalcLinkThread;
-    IsuCalcLinkThread CalcLink;
+    IsuCalcLink CalcLink;
     QMetaEnum MetaCalLinkEnum;
+    DataQueue DataIf;
 
 };
 

@@ -4,13 +4,16 @@
 #include <QObject>
 #include <QTcpSocket>
 #include <QTimer>
+#include "dataqueue.h"
 
-class IsuCalcLinkThread : public QObject
+class IsuCalcLink : public QObject
 {
    Q_OBJECT
 public:
-   IsuCalcLinkThread(QObject* parent = 0);
-   ~IsuCalcLinkThread();
+   IsuCalcLink(QObject* parent = 0);
+   ~IsuCalcLink();
+
+   void SetDataIf(DataQueue* dataIf) { DataIf = dataIf; }
 
 public slots:
    void ChangedSettings(const QString& hostName, quint16 port, uint reconnect);
@@ -36,6 +39,7 @@ private:
    QTcpSocket* Socket;
    QTimer* Timer;
    bool IgnoreReconnect;
+   DataQueue* DataIf;
 
 };
 

@@ -15,9 +15,11 @@ TEMPLATE = app
 
 SOURCES += main.cpp\
         mainwindow.cpp \
-    isucalclink.cpp
+    isucalclink.cpp \
+    dataqueue.cpp
 
 HEADERS  += mainwindow.h \
-    isucalclink.h
+    isucalclink.h \
+    dataqueue.h
 
 FORMS    += mainwindow.ui

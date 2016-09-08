@@ -29,7 +29,9 @@ MainWindow::~MainWindow()
 
 void MainWindow::InitIsuCalcLink()
 {
+   CalcLink.SetDataIf(&DataIf);
    CalcLink.moveToThread(&CalcLinkThread);
+
    connect(this, SIGNAL(EstablishConnection()), &CalcLink, SLOT(Establish())); // Connect to the IsuCalc
    connect(this, SIGNAL(StopConnection()), &CalcLink, SLOT(StopConnection())); // Disconnect from the IsuCalc
    connect(&CalcLink, SIGNAL(Established()), this, SLOT(IsuCalcConnected())); // Update UI
@@ -39,6 +41,7 @@ void MainWindow::InitIsuCalcLink()
            &CalcLink, SLOT(ChangedSettings(const QString&, quint16, uint))); // on settings change
    connect(&CalcLinkThread, SIGNAL(started()), &CalcLink, SLOT(Initialize())); // on thread start
    connect(&CalcLinkThread, SIGNAL(finished()), &CalcLink, SLOT(Uninit())); // on thread stop
+
    CalcLinkThread.start();
 }
 

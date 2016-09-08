@@ -22,7 +22,8 @@ public slots:
    void Connected();
    void Disconnected();
    void ReadyRead();
-   void SocketError(QAbstractSocket::SocketError err);
+   void ProcessData(QByteArray qba);
+   void SocketError(QAbstractSocket::SocketError);
    void Establish();
    void StopConnection();
    void TimerExpired();
@@ -40,6 +41,8 @@ private:
    QTimer* Timer;
    bool IgnoreReconnect;
    DataQueue* DataIf;
+   bool RemainingData;
+   QByteArray RemainingQBA;
 
 };
 

@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QTcpSocket>
 #include <QTimer>
+#include <QMutex>
 #include "dataqueue.h"
 
 class IsuCalcLink : public QObject
@@ -41,8 +42,9 @@ private:
    QTimer* Timer;
    bool IgnoreReconnect;
    DataQueue* DataIf;
-   bool RemainingData;
    QByteArray RemainingQBA;
+   QMutex m;
+
 
 };
 

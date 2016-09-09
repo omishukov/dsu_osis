@@ -13,6 +13,7 @@ MainWindow::MainWindow(QWidget *parent)
 {
    ui->setupUi(this);
    InitIsuCalcLink();
+   InitOsisDataProxy();
    ReadSettings();
 }
 
@@ -43,6 +44,15 @@ void MainWindow::InitIsuCalcLink()
    connect(&CalcLinkThread, SIGNAL(finished()), &CalcLink, SLOT(Uninit())); // on thread stop
 
    CalcLinkThread.start();
+}
+
+void MainWindow::InitOsisDataProxy()
+{
+   DataProxy.SetDataIf(&DataIf);
+   DataProxy.moveToThread(&DataProxyThread);
+
+   connect(&DataIf, SIGNAL(NewData()), &DataProxy, SLOT(ProcessData())); // Update UI
+
 }
 
 void MainWindow::setIpValitation()

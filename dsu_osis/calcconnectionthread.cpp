@@ -126,6 +126,102 @@ void CalcConnectionThread::readyRead()
 
 void CalcConnectionThread::processData(QByteArray& qba)
 {
+   // Frame1: s........es....es...
+   // Frame2: ....................
+   // Frame3: es
+   // Frame4: ...es
+   // Frame5: ...e
+   int pos_STX = -1;
+   int pos_ETX = -1;
+   while (!qba.isEmpty())
+   {
+      pos_STX = qba.indexOf(STX);
+      pos_ETX = qba.indexOf(ETX);
+
+      if (newdata.isEmpty())
+      {
+         if (pos_STX < 0)
+         {  // .....e // ......
+            qba.clear();
+            return;
+         }
+         else
+         {
+            if (pos_STX != 0)
+            {  // ...s...e
+               qba.remove(0, pos_STX);
+               continue;
+            }
+            if (pos_ETX != -1)
+            {
+               if (pos_STX < pos_ETX)
+               {  // s...es....
+                  QByteArray Data(qba.mid(1, pos_ETX-1));
+                  osisData->DataInd(Data);
+                  qba.remove(0, pos_ETX + 1);
+                  continue;
+               }
+            }
+            else
+            {  // s.....
+               newdata.append(qba.mid(1));
+               qba.clear();
+               return;
+            }
+         }
+      }
+      else
+      {
+         if (pos_ETX < 0)
+         {
+            if (pos_STX != -1)
+            {  // ......s....
+               newdata.clear();
+               qba.remove(0, pos_STX);
+               continue;
+            }
+            else
+            {   // .........
+                newdata.append(qba);
+                qba.clear();
+                return;
+            }
+         }
+         else
+         {
+            if (pos_STX == -1)
+            { // .....e
+               newdata.append(qba.mid(0, pos_ETX-1));
+               osisData->DataInd(newdata);
+               newdata.clear();
+               qba.clear();
+               return;
+            }
+            else
+            {
+               if (pos_ETX < pos_STX)
+               {  // ...es....
+                  newdata.append(qba.mid(0, pos_ETX-1));
+                  osisData->DataInd(newdata);
+                  qba.remove(0, pos_ETX + 1);
+                  newdata.clear();
+                  continue;
+               }
+               else
+               {  // s....e , .....s....e
+                  newdata.clear();
+                  qba.remove(0, pos_STX);
+                  continue;
+               }
+            }
+         }
+      }
+   }
+}
+
+#if 0
+void CalcConnectionThread::processData(QByteArray& qba)
+{
    for (int i = 0; i < qba.size(); i++)
    {
       if (qba.at(i) == STX)
@@ -159,7 +255,7 @@ void CalcConnectionThread::processData(QByteArray& qba)
       newdata = qba.mid(StartPos);
    }
 }
-
+#endif
 
 void CalcConnectionThread::Stop()
 {

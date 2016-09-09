@@ -14,6 +14,7 @@ public:
    ~DataQueue();
 
    void AddData(QByteArray* qba);
+   QByteArray* GetData();
 
 signals:
    void NewData();

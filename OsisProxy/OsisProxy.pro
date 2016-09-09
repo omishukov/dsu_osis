@@ -16,10 +16,12 @@ TEMPLATE = app
 SOURCES += main.cpp\
         mainwindow.cpp \
     isucalclink.cpp \
-    dataqueue.cpp
+    dataqueue.cpp \
+    osisdataproxy.cpp
 
 HEADERS  += mainwindow.h \
     isucalclink.h \
-    dataqueue.h
+    dataqueue.h \
+    osisdataproxy.h
 
 FORMS    += mainwindow.ui

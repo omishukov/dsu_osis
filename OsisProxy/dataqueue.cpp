@@ -24,3 +24,14 @@ void DataQueue::AddData(QByteArray* qba)
 
    emit NewData();
 }
+
+QByteArray* DataQueue::GetData()
+{
+   QMutexLocker lock(&m);
+
+   if (!OsisData.isEmpty())
+   {
+      return OsisData.dequeue();
+   }
+   return 0;
+}

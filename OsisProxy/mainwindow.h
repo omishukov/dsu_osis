@@ -7,6 +7,7 @@
 #include <QMetaEnum>
 #include "isucalclink.h"
 #include "dataqueue.h"
+#include "osisdataproxy.h"
 
 namespace Ui {
 class MainWindow;
@@ -43,22 +44,24 @@ signals:
    void StopConnection();
 
 private:
-    Ui::MainWindow *ui;
+   Ui::MainWindow *ui;
 
-    void InitIsuCalcLink();
-    void setIpValitation();
-    void ReadSettings();
-    void saveSettings();
-    void SetLinkStatus(QString label, QString buttonText, bool buttonEnabled, bool ipAddrEnabled, bool ipPortEnabled);
+   void InitIsuCalcLink();
+   void InitOsisDataProxy();
+   void setIpValitation();
+   void ReadSettings();
+   void saveSettings();
+   void SetLinkStatus(QString label, QString buttonText, bool buttonEnabled, bool ipAddrEnabled, bool ipPortEnabled);
 
 
-    QValidator* CalcIpValidator;
-    QValidator* PortValidator;
-    QThread CalcLinkThread;
-    IsuCalcLink CalcLink;
-    QMetaEnum MetaCalLinkEnum;
-    DataQueue DataIf;
-
+   QValidator* CalcIpValidator;
+   QValidator* PortValidator;
+   QThread CalcLinkThread;
+   IsuCalcLink CalcLink;
+   QMetaEnum MetaCalLinkEnum;
+   DataQueue DataIf;
+   OsisDataProxy DataProxy;
+   QThread DataProxyThread;
 };
 
 #endif // MAINWINDOW_H

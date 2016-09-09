@@ -8,6 +8,7 @@
 #include "isucalclink.h"
 #include "dataqueue.h"
 #include "osisdataproxy.h"
+#include "proxyserver.h"
 
 namespace Ui {
 class MainWindow;
@@ -33,13 +34,18 @@ private slots:
    void on_Connect_PB_clicked();
    void on_Reconnect_CB_stateChanged(int);
 
+   void on_ProxyServerPort_LE_editingFinished();
+
 public slots:
    void IsuCalcConnected();
    void IsuCalcReconnecting();
    void IsuCalcDisconnected();
+   void NewConnection(quint32 addr);
+   void ClientDisconnected(quint32 addr);
 
 signals:
    void ChangedIsuCalcSettings(const QString&, quint16, uint);
+   void ChangedProxyServerSettings(quint16);
    void EstablishConnection();
    void StopConnection();
 
@@ -48,6 +54,7 @@ private:
 
    void InitIsuCalcLink();
    void InitOsisDataProxy();
+   void InitProxyServer();
    void setIpValitation();
    void ReadSettings();
    void saveSettings();
@@ -62,6 +69,9 @@ private:
    DataQueue DataIf;
    OsisDataProxy DataProxy;
    QThread DataProxyThread;
+   ProxyServer Server;
+   QThread ProxyServerThread;
+
 };
 
 #endif // MAINWINDOW_H

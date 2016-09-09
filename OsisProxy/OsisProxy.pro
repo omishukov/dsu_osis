@@ -6,6 +6,7 @@
 
 QT       += core gui
 QT       += network
+QT       += xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -17,11 +18,21 @@ SOURCES += main.cpp\
         mainwindow.cpp \
     isucalclink.cpp \
     dataqueue.cpp \
-    osisdataproxy.cpp
+    osisdataproxy.cpp \
+    ../dsu_osis/osis/osisdata.cpp \
+    ../dsu_osis/osis/element/action.cpp \
+    proxyserver.cpp
 
 HEADERS  += mainwindow.h \
     isucalclink.h \
     dataqueue.h \
-    osisdataproxy.h
+    osisdataproxy.h \
+    ../dsu_osis/osis/osisdata.h \
+    ../dsu_osis/osis/element/action.h \
+    proxyserver.h
 
 FORMS    += mainwindow.ui
+
+INCLUDEPATH += \
+    $$PWD/../dsu_osis/osis \
+    $$PWD/../dsu_osis

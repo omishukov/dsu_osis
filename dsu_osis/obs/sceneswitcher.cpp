@@ -225,7 +225,10 @@ void ObsSceneSwitcher::LoadActions()
          SceneInfo* transition = GetTransition(sceneName);
          if (!transition)
          {
-            obsAction->SetTransition(ObsTransitionList[0]);
+            if (!ObsTransitionList.isEmpty())
+            {
+               obsAction->SetTransition(ObsTransitionList[0]);
+            }
          }
          else
          {

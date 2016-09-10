@@ -3,13 +3,14 @@
 
 #include <QObject>
 #include <QTcpServer>
-#include <QList>
+#include <QMultiMap>
 
 class ProxyServer : public QObject
 {
    Q_OBJECT
 public:
    explicit ProxyServer(QObject *parent = 0);
+   ~ProxyServer();
 
 signals:
    void ProxyConnected(quint32);
@@ -17,14 +18,20 @@ signals:
 
 public slots:
    void Initialize();
+   void Uninit();
    void ChangedSettings(quint16 port);
    void NewConnection();
+   void ClientDisconnected();
+   void DisconnectAllClients();
+   void DisconnectAllClientsSilent();
 
 private:
+   void SendCachedOsisData(QTcpSocket* socket);
+
    QTcpServer* Server;
    quint16 Port;
    bool Initialized;
-   QList<QTcpSocket*> Clients;
+   QMultiMap<quint32, QTcpSocket*> Clients;
 };
 
 #endif // PROXYSERVER_H

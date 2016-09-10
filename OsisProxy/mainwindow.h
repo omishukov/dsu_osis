@@ -5,6 +5,7 @@
 #include <QRegExpValidator>
 #include <QThread>
 #include <QMetaEnum>
+#include <QLabel>
 #include "isucalclink.h"
 #include "dataqueue.h"
 #include "osisdataproxy.h"
@@ -36,6 +37,8 @@ private slots:
 
    void on_ProxyServerPort_LE_editingFinished();
 
+   void on_ProxyDisconnect_PB_clicked();
+
 public slots:
    void IsuCalcConnected();
    void IsuCalcReconnecting();
@@ -46,6 +49,7 @@ public slots:
 signals:
    void ChangedIsuCalcSettings(const QString&, quint16, uint);
    void ChangedProxyServerSettings(quint16);
+   void DisconnectAllClients();
    void EstablishConnection();
    void StopConnection();
 
@@ -61,6 +65,7 @@ private:
    void SetLinkStatus(QString label, QString buttonText, bool buttonEnabled, bool ipAddrEnabled, bool ipPortEnabled);
 
 
+   QList<QLabel*> ConnStatusUIList;
    QValidator* CalcIpValidator;
    QValidator* PortValidator;
    QThread CalcLinkThread;

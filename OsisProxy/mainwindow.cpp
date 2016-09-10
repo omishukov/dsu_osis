@@ -24,11 +24,13 @@ MainWindow::~MainWindow()
    CalcLinkThread.wait();
    DataProxyThread.quit();
    DataProxyThread.wait();
+   ProxyServerThread.quit();
+   ProxyServerThread.wait();
    saveSettings();
 
-   delete ui;
    delete CalcIpValidator;
    delete PortValidator;
+   delete ui;
 }
 
 void MainWindow::InitIsuCalcLink()
@@ -53,19 +55,19 @@ void MainWindow::InitOsisDataProxy()
 {
    DataProxy.SetDataIf(&DataIf);
    DataProxy.moveToThread(&DataProxyThread);
-
    connect(&DataIf, SIGNAL(NewData()), &DataProxy, SLOT(ProcessData())); // Update UI
    DataProxyThread.start();
-
 }
 
 void MainWindow::InitProxyServer()
 {
    Server.moveToThread(&ProxyServerThread);
    connect(&ProxyServerThread, SIGNAL(started()), &Server, SLOT(Initialize())); // on thread start
+   connect(&ProxyServerThread, SIGNAL(finished()), &Server, SLOT(Uninit())); // on thread start
    connect(this, SIGNAL(ChangedProxyServerSettings(quint16)), &Server, SLOT(ChangedSettings(quint16))); // on settings change
+   connect(this, SIGNAL(DisconnectAllClients()), &Server, SLOT(DisconnectAllClients())); // on settings change
    connect(&Server, SIGNAL(ProxyConnected(quint32)), this, SLOT(NewConnection(quint32))); // on settings change
-   connect(&Server, SIGNAL(ProxyDisconnected(quint32)), this, SLOT(NewConnection(quint32))); // on settings change
+   connect(&Server, SIGNAL(ProxyDisconnected(quint32)), this, SLOT(ClientDisconnected(quint32))); // on settings change
    ProxyServerThread.start();
 }
 
@@ -92,12 +94,17 @@ void MainWindow::ReadSettings()
    ui->IsuCalcPort_LE->setText(settings.value("isu_calc_port", "4000").toString());
    ui->Reconnect_CB->setCheckState(settings.value("isu_calc_recon", false).toBool()?Qt::Checked:Qt::Unchecked);
    ui->ProxyServerPort_LE->setText(settings.value("proxy_server_port", "5000").toString());
+   settings.endGroup();
 
    ui->Connect_PB->setText(MetaCalLinkEnum.valueToKey(Connect));
-
+   ConnStatusUIList.push_back(ui->Connection1_LE);
+   ConnStatusUIList.push_back(ui->Connection2_LE);
+   ConnStatusUIList.push_back(ui->Connection3_LE);
+   ConnStatusUIList.push_back(ui->Connection4_LE);
+   ConnStatusUIList.push_back(ui->Connection5_LE);
+   ConnStatusUIList.push_back(ui->Connection6_LE);
    emit ChangedIsuCalcSettings(ui->IsuCalcIP_LE->text(),ui->IsuCalcPort_LE->text().toUShort(),ui->Reconnect_CB->checkState());
    emit ChangedProxyServerSettings(ui->ProxyServerPort_LE->text().toUShort());
-   settings.endGroup();
 }
 
 void MainWindow::saveSettings()
@@ -144,37 +151,35 @@ void MainWindow::IsuCalcDisconnected()
 
 void MainWindow::NewConnection(quint32 addr)
 {
-   if (ui->Connection1_LE->text().isEmpty())
+   for (auto label:ConnStatusUIList)
    {
-      ui->Connection1_LE->setText(QString::number(addr));
-   }
-   else if (ui->Connection2_LE->text().isEmpty())
-   {
-      ui->Connection2_LE->setText(QString::number(addr));
-   }
-   else if (ui->Connection3_LE->text().isEmpty())
-   {
-      ui->Connection3_LE->setText(QString::number(addr));
-   }
-   else if (ui->Connection4_LE->text().isEmpty())
-   {
-      ui->Connection4_LE->setText(QString::number(addr));
-   }
-   else if (ui->Connection5_LE->text().isEmpty())
-   {
-      ui->Connection5_LE->setText(QString::number(addr));
-   }
-   else if (ui->Connection6_LE->text().isEmpty())
-   {
-      ui->Connection6_LE->setText(QString::number(addr));
+      if (label->text().isEmpty())
+      {
+         label->setText(QString::number(addr));
+         ui->ProxyDisconnect_PB->setEnabled(true);
+         label->setStyleSheet("QLabel { background-color : lightgreen; }");
+         return;
+      }
    }
 }
 
 void MainWindow::ClientDisconnected(quint32 addr)
 {
+   for (auto label:ConnStatusUIList)
+   {
+      if (!addr || label->text().toUInt() == addr)
+      {
+         label->setStyleSheet("QLabel { background-color : red; }");
+         label->setText("");
+         if (addr)
+         {
+            break;
+         }
+      }
+   }
    if (!addr)
-   {  // All disconnected
-      ui->Connection1_LE->setStyleSheet("QLabel { background-color : red; }");
+   {
+      ui->ProxyDisconnect_PB->setEnabled(false);
    }
 }
 
@@ -195,4 +200,9 @@ void MainWindow::on_Reconnect_CB_stateChanged(int /*arg1*/)
 void MainWindow::on_ProxyServerPort_LE_editingFinished()
 {
    emit ChangedProxyServerSettings(ui->ProxyServerPort_LE->text().toUShort());
+}
+
+void MainWindow::on_ProxyDisconnect_PB_clicked()
+{
+   DisconnectAllClients();
 }

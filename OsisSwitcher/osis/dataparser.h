@@ -1,17 +1,18 @@
-#ifndef OSISDATAPROXY_H
-#define OSISDATAPROXY_H
+#ifndef OSISPARSER_H
+#define OSISPARSER_H
 
-#include <QObject>
 #include <QDomDocument>
-#include <QTcpSocket>
+#include <QObject>
 #include <QMutex>
+#include <QMetaEnum>
 #include "dataqueue.h"
+#include "competitiondata.h"
 
-class OsisDataProxy : public QObject
+class OsisParser : public QObject
 {
    Q_OBJECT
 public:
-   explicit OsisDataProxy(QObject *parent = 0);
+   explicit OsisParser(QObject *parent = 0);
 
    enum OsisXmlElements
    {
@@ -59,29 +60,21 @@ public:
    Q_ENUM(OsisXmlElements)
 
    void SetDataIf(DataQueue* dataIf) { DataIf = dataIf; }
-   void SendCache(QTcpSocket* socket);
 
 signals:
-   void Distribute(QByteArray*);
 
 public slots:
    void ProcessData();
 
 private:
-   void Handle(QByteArray* qba);
-   void Cache(QByteArray* qba);
+   void Handle(QByteArray& qba);
+   void ProcessOsisData(QDomNode& n);
    bool ProcessOsisTree(QDomNode& n);
    bool ProcessOsisElement(QDomNode& n);
 
    DataQueue* DataIf;
-   bool TagFound;
-   int Tag;
-   QByteArray EventOverview;
-   QByteArray SegmentStart;
-   QByteArray PrfRanking;
-   QByteArray ActionIni;
    QMutex M;
-
+   OsisCompetitionData Competition;
 };
 
-#endif // OSISDATAPROXY_H
+#endif // OSISPARSER_H

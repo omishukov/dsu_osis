@@ -1,10 +1,12 @@
 #include <QTcpSocket>
+#include <QMutexLocker>
 #include "proxyserver.h"
 
 ProxyServer::ProxyServer(QObject *parent)
    : QObject(parent)
    , Port(0)
    , Initialized(false)
+   , Proxy(0)
 {
 
 }
@@ -43,6 +45,8 @@ void ProxyServer::ChangedSettings(quint16 port)
 
 void ProxyServer::NewConnection()
 {
+   QMutexLocker lock(&M);
+
    QTcpSocket* newClient = Server->nextPendingConnection();
    quint32 addr = newClient->peerAddress().toIPv4Address() & 0xFF;
    emit ProxyConnected(addr);
@@ -75,7 +79,10 @@ void ProxyServer::ClientDisconnected()
    }
    if (socket)
    {
-      Clients.remove(addr, socket);
+      {
+         QMutexLocker lock(&M);
+         Clients.remove(addr, socket);
+      }
       if (Clients.isEmpty())
       {
          addr = 0;
@@ -96,6 +103,7 @@ void ProxyServer::DisconnectAllClients()
 
 void ProxyServer::DisconnectAllClientsSilent()
 {
+   QMutexLocker lock(&M);
    QMapIterator<quint32, QTcpSocket*> i(Clients);
    while (i.hasNext())
    {
@@ -111,7 +119,23 @@ void ProxyServer::DisconnectAllClientsSilent()
    Clients.clear();
 }
 
+void ProxyServer::NewData(QByteArray *qba)
+{
+   QMutexLocker lock(&M);
+   for (auto client:Clients)
+   {
+      if (client->state() == QAbstractSocket::ConnectedState)
+      {
+         client->write(*qba);
+      }
+   }
+   delete qba;
+}
+
 void ProxyServer::SendCachedOsisData(QTcpSocket *socket)
 {
-
+   if (Proxy)
+   {
+      Proxy->SendCache(socket);
+   }
 }

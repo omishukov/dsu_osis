@@ -3,6 +3,8 @@
 
 #include <QObject>
 #include <QDomDocument>
+#include <QTcpSocket>
+#include <QMutex>
 #include "dataqueue.h"
 
 class OsisDataProxy : public QObject
@@ -57,8 +59,10 @@ public:
    Q_ENUM(OsisXmlElements)
 
    void SetDataIf(DataQueue* dataIf) { DataIf = dataIf; }
+   void SendCache(QTcpSocket* socket);
 
 signals:
+   void Distribute(QByteArray*);
 
 public slots:
    void ProcessData();
@@ -75,6 +79,7 @@ private:
    QByteArray SegmentStart;
    QByteArray PrfRanking;
    QByteArray ActionIni;
+   QMutex M;
 
 };
 

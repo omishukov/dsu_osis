@@ -135,6 +135,7 @@ const quint8 ETX = 0x03;
 
 void IsuCalcLink::ProcessData(QByteArray qba)
 {
+   qInfo() << qba.constData() << endl;
    // Frame1: s........es....es...
    // Frame2: ....................
    // Frame3: es

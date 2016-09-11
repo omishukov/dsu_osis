@@ -61,6 +61,7 @@ void MainWindow::InitOsisDataProxy()
 
 void MainWindow::InitProxyServer()
 {
+   Server.SetProxyIf(&DataProxy);
    Server.moveToThread(&ProxyServerThread);
    connect(&ProxyServerThread, SIGNAL(started()), &Server, SLOT(Initialize())); // on thread start
    connect(&ProxyServerThread, SIGNAL(finished()), &Server, SLOT(Uninit())); // on thread start
@@ -68,6 +69,7 @@ void MainWindow::InitProxyServer()
    connect(this, SIGNAL(DisconnectAllClients()), &Server, SLOT(DisconnectAllClients())); // on settings change
    connect(&Server, SIGNAL(ProxyConnected(quint32)), this, SLOT(NewConnection(quint32))); // on settings change
    connect(&Server, SIGNAL(ProxyDisconnected(quint32)), this, SLOT(ClientDisconnected(quint32))); // on settings change
+   connect(&DataProxy, SIGNAL(Distribute(QByteArray*)), &Server, SLOT(NewData(QByteArray*))); // on settings change
    ProxyServerThread.start();
 }
 

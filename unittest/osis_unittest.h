@@ -31,6 +31,7 @@ private Q_SLOTS:
    // OsisLink
    void ReceiveStxEtx();
    void ReceiveStxEtxMultiple();
+   void ReceiveSegmentStart();
 
    //XmlParse
    void ParseOsisEventOverview();

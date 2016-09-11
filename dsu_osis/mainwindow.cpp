@@ -55,7 +55,6 @@ MainWindow::MainWindow(QString logName, QWidget *parent) :
    connect(SceneSwitcherThread, SIGNAL(finished()), SceneSwitcher, SLOT(deleteLater()));
    connect(SceneSwitcherThread, SIGNAL(started()), SceneSwitcher, SLOT(Initialize()));
    connect(Competition->GetOsisActions(), SIGNAL(SendOsisEvent(int)), SceneSwitcher, SLOT(HandleEvent(int)));
-//   SceneSwitcher->InitUi(ui->ActionToSceneQTV);
    SceneSwitcherThread->start();
 }
 

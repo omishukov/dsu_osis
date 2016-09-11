@@ -2,8 +2,12 @@
 #include <QDomDocument>
 #include <QDebug>
 #include <QMetaEnum>
+#include <QMutexLocker>
 #include "osisdataproxy.h"
 #include "element/action.h"
+
+const static QByteArray STX("\x02");
+const static QByteArray ETX("\x03");
 
 OsisDataProxy::OsisDataProxy(QObject *parent)
    : QObject(parent)
@@ -13,28 +17,54 @@ OsisDataProxy::OsisDataProxy(QObject *parent)
 
 }
 
+void OsisDataProxy::SendCache(QTcpSocket *socket)
+{
+   QMutexLocker lock(&M);
+
+   if (!EventOverview.isEmpty())
+   {
+      socket->write(EventOverview);
+      socket->flush();
+   }
+   if (!SegmentStart.isEmpty())
+   {
+      socket->write(SegmentStart);
+      socket->flush();
+   }
+   if (!PrfRanking.isEmpty())
+   {
+      socket->write(PrfRanking);
+      socket->flush();
+   }
+   if (!ActionIni.isEmpty())
+   {
+      socket->write(ActionIni);
+      socket->flush();
+   }
+}
+
 void OsisDataProxy::ProcessData()
 {
+   QMutexLocker lock(&M);
+
    if (DataIf)
    {
       QByteArray* data = 0;
-      do
+      data = DataIf->GetData();
+      if (data)
       {
-         data = DataIf->GetData();
-         if (data)
-         {
-            Handle (data);
-         }
-      } while(data);
+         qDebug() << "New data";
+         Handle (data);
+      }
    }
-
 }
 
 void OsisDataProxy::Handle(QByteArray* qba)
 {
    Cache(qba);
-   delete qba; // temporary
-//   Distribute(qba);
+   qba->prepend(STX);
+   qba->append(ETX);
+   emit Distribute(qba);
 }
 
 void OsisDataProxy::Cache(QByteArray* qba)
@@ -43,6 +73,7 @@ void OsisDataProxy::Cache(QByteArray* qba)
    QString errMsg;
    int errLine;
    int errColumn;
+
    if (!doc.setContent(*qba, &errMsg, &errLine, &errColumn))
    {
       qCritical() << "XML Parser Error " << errMsg << " (" << errLine << ":" << errColumn << ")" << endl;
@@ -66,7 +97,9 @@ void OsisDataProxy::Cache(QByteArray* qba)
          case Event_Overview:
          {
             EventOverview.clear();
+            EventOverview.append(STX);
             EventOverview.append(*qba);
+            EventOverview.append(ETX);
             SegmentStart.clear();
             PrfRanking.clear();
             ActionIni.clear();
@@ -77,7 +110,9 @@ void OsisDataProxy::Cache(QByteArray* qba)
             SegmentStart.clear();
             if (!EventOverview.isEmpty())
             {
+               SegmentStart.append(STX);
                SegmentStart.append(*qba);
+               SegmentStart.append(ETX);
             }
          }
             break;
@@ -86,7 +121,9 @@ void OsisDataProxy::Cache(QByteArray* qba)
             PrfRanking.clear();
             if (!EventOverview.isEmpty() && !SegmentStart.isEmpty())
             {
+               PrfRanking.append(STX);
                PrfRanking.append(*qba);
+               PrfRanking.append(ETX);
             }
          }
             break;
@@ -95,7 +132,9 @@ void OsisDataProxy::Cache(QByteArray* qba)
             ActionIni.clear();
             if (!EventOverview.isEmpty() && !SegmentStart.isEmpty() && !PrfRanking.isEmpty())
             {
+               ActionIni.append(STX);
                ActionIni.append(*qba);
+               ActionIni.append(ETX);
             }
          }
             break;

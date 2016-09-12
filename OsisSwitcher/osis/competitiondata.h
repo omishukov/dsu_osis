@@ -21,7 +21,9 @@
 #include "element/prfdetails.h"
 #include "element/event.h"
 #include "element/isuosis.h"
-class OsisCompetitionData : public QObject
+#include "obsosisif.h"
+
+class OsisCompetitionData : public QObject, public ObsOsisIf
 {
    Q_OBJECT
 public:
@@ -67,9 +69,26 @@ public:
    QString GetBonus();
    QString GetDeduction();
    QString GetRank();
+
 signals:
+   void NewAction(int);
 
 public slots:
+
+private:
+   int Current_DB_ID;
+   OsisEvent* Current_Event;
+   int Current_Category_Id;
+   int Current_Segment_Id;
+   int Last_Category_Id;
+   OsisCategoryMap Categories;
+   OsisSegmentMap Segments;
+   int Last_Participant_Id;
+   OsisParticipantMap Participants;
+   OsisPerformanceMap Performances;
+   OsisWarmupGroupMap WarmupGroups;
+   OsisAction* Current_Action;
+   OsisPrfDetails* Current_Performance_Result;
 };
 
 #endif // OSISCOMPETITIONDATA_H

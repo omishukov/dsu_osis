@@ -4,8 +4,9 @@
 #include <QMap>
 #include "actions.h"
 
-Actions::Actions()
-   : MetaActionsEnum(QMetaEnum::fromType<ObsAction>())
+Actions::Actions(QObject* parent)
+   : QObject(parent)
+   , MetaActionsEnum(QMetaEnum::fromType<ObsAction>())
 {
 }
 

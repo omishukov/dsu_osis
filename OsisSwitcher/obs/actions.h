@@ -68,15 +68,17 @@ public:
    Q_ENUM(ObsAction)
 
 public:
-   Actions();
+   Actions(QObject *parent = 0);
 
    void DoActions();
-   void AddAction(int action);
 
    inline void SetOsisInfoIf(ObsOsisIf* obsOsisIf) { OsisIf = obsOsisIf; }
    void SetObsIf(QObject* _obsIf);
 
    QString GetActionName(int action);
+
+public slots:
+   void AddAction(int action);
 
 signals:
    void SendOsisEvent(int);

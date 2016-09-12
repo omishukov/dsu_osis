@@ -7,6 +7,7 @@
 #include <QValidator>
 #include "isucalclink.h"
 #include "osis/dataparser.h"
+#include "obs/actions.h"
 
 namespace Ui {
 class MainWindow;
@@ -44,6 +45,7 @@ signals:
 private:
    void InitIsuCalcLink();
    void InitOsisParser();
+   void InitObsData();
    void SetLinkStatus(QString label, QString buttonText, bool buttonEnabled, bool ipAddrEnabled, bool ipPortEnabled);
    void ReadSettings();
    void setIpValitation();
@@ -59,7 +61,8 @@ private:
    QValidator* PortValidator;
    OsisParser OsisDataParser;
    QThread OsisDataParserThread;
-
+   Actions ObsDataSaver;
+   QThread ObsDataSaverThread;
 };
 
 #endif // MAINWINDOW_H

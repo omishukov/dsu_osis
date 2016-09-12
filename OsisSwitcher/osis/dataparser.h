@@ -7,6 +7,7 @@
 #include <QMetaEnum>
 #include "dataqueue.h"
 #include "competitiondata.h"
+#include "obs/actions.h"
 
 class OsisParser : public QObject
 {
@@ -60,11 +61,14 @@ public:
    Q_ENUM(OsisXmlElements)
 
    void SetDataIf(DataQueue* dataIf) { DataIf = dataIf; }
+   void SetObsDataSaver(Actions* obsData) { ObsDataSaver = obsData; }
 
 signals:
 
 public slots:
    void ProcessData();
+   void Initialize();
+   void Uninit();
 
 private:
    void Handle(QByteArray& qba);
@@ -75,6 +79,7 @@ private:
    DataQueue* DataIf;
    QMutex M;
    OsisCompetitionData Competition;
+   Actions* ObsDataSaver;
 };
 
 #endif // OSISPARSER_H

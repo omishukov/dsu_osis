@@ -2,7 +2,10 @@
 #include "dataparser.h"
 #include "obs/actions.h"
 
-OsisParser::OsisParser(QObject *parent) : QObject(parent)
+OsisParser::OsisParser(QObject *parent)
+   : QObject(parent)
+   , DataIf(0)
+   , ObsDataSaver(0)
 {
 
 }
@@ -21,6 +24,15 @@ void OsisParser::ProcessData()
          delete data;
       }
    }
+}
+
+void OsisParser::Initialize()
+{
+   if (ObsDataSaver)
+   {
+      connect(&Competition, SIGNAL(NewAction(int)), ObsDataSaver, SLOT(AddAction(int))); // Update UI
+   }
+
 }
 
 void OsisParser::Handle(QByteArray& qba)

@@ -24,6 +24,11 @@ int OsisData::getEnumKey(const char* enumTypeName, const char* enumName)
 
 void OsisData::Update(OsisData* newData)
 {
+   if (!newData)
+   {
+      return;
+   }
+
    for(auto a : Attribute.keys())
    {
      if (!newData->Attribute.contains(a))

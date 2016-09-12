@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
    ui->setupUi(this);
    InitIsuCalcLink();
    InitOsisParser();
+   InitObsData();
    ReadSettings();
 }
 
@@ -91,9 +92,18 @@ void MainWindow::InitIsuCalcLink()
 void MainWindow::InitOsisParser()
 {
    OsisDataParser.SetDataIf(&DataIf);
+   OsisDataParser.SetObsDataSaver(&ObsDataSaver);
    OsisDataParser.moveToThread(&OsisDataParserThread);
    connect(&DataIf, SIGNAL(NewData()), &OsisDataParser, SLOT(ProcessData())); // Update UI
+   connect(&OsisDataParserThread, SIGNAL(started()), &OsisDataParser, SLOT(Initialize())); // on thread start
+   connect(&OsisDataParserThread, SIGNAL(finished()), &OsisDataParser, SLOT(Uninit())); // on thread stop
    OsisDataParserThread.start();
+}
+
+void MainWindow::InitObsData()
+{
+   ObsDataSaver.moveToThread(&ObsDataSaverThread);
+
 }
 
 void MainWindow::on_Connect_PB_clicked()

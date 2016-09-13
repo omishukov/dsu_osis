@@ -104,6 +104,8 @@ void MainWindow::InitObsData()
 {
    ObsDataSaver.moveToThread(&ObsDataSaverThread);
 
+   connect(&ObsDataSaver, SIGNAL(SendOsisEvent(int)), &Switcher, SLOT(HandleEvent())); // on thread start
+   ObsDataSaverThread.start();
 }
 
 void MainWindow::on_Connect_PB_clicked()

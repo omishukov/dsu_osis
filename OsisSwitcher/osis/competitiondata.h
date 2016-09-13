@@ -28,6 +28,7 @@ class OsisCompetitionData : public QObject, public ObsOsisIf
    Q_OBJECT
 public:
    explicit OsisCompetitionData(QObject *parent = 0);
+   ~OsisCompetitionData();
 
    void AddIsuOsis(IsuOsis *newIsuOsis);
    void AddEvent(OsisEvent *newEvent);
@@ -72,6 +73,7 @@ public:
 
 signals:
    void NewAction(int);
+   void DoActions();
 
 public slots:
 

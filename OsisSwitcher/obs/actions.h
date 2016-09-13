@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QList>
 #include <QMetaEnum>
+#include <QMutex>
 #include <obsosisif.h>
 
 class Actions : public QObject
@@ -70,14 +71,14 @@ public:
 public:
    Actions(QObject *parent = 0);
 
-   void DoActions();
-
    inline void SetOsisInfoIf(ObsOsisIf* obsOsisIf) { OsisIf = obsOsisIf; }
 
    QString GetActionName(int action);
+   void SetLock(QMutex* m) {M = m;}
 
 public slots:
    void AddAction(int action);
+   void DoActions();
 
 signals:
    void SendOsisEvent(int);
@@ -91,6 +92,7 @@ private:
    QList<int> ActionList;
    QMetaEnum MetaActionsEnum;
    ObsOsisIf* OsisIf;
+   QMutex* M;
 };
 
 #endif // ACTIONS_H

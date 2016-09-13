@@ -2,6 +2,7 @@
 #include <QDir>
 #include <QTextStream>
 #include <QMap>
+#include <QMutexLocker>
 #include "actions.h"
 
 Actions::Actions(QObject* parent)
@@ -17,7 +18,7 @@ void Actions::DoActions()
    {
       return;
    }
-
+   QMutexLocker lock(M);
    bool passToObs;
    foreach(int action, ActionList)
    {

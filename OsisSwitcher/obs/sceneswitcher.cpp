@@ -19,13 +19,10 @@ ObsSceneSwitcher::ObsSceneSwitcher(Actions* actions, QString obsCongigPath, QTab
    , TableView(tableView)
 {
    TableGui.SetObsSwither(this);
-//   timer = new QTimer(this);
-//   connect(timer, SIGNAL(timeout()), this, SLOT(TimerEvent()));
 }
 
 ObsSceneSwitcher::~ObsSceneSwitcher()
 {
-//   delete timer;
    SaveActions();
    for (auto obsAction : ObsActions)
    {
@@ -49,6 +46,9 @@ void ObsSceneSwitcher::ResetScenes()
    ObsTransitionList.clear();
 }
 
+//
+// Build ObsTransitionList and ObsScenesList
+//
 void ObsSceneSwitcher::LoadObsConfiguration()
 {
    ResetScenes();
@@ -177,6 +177,7 @@ QList<int> ObsSceneSwitcher::GetHotkeys(QJsonArray& jHotkeyArray)
    return hotkeys;
 }
 
+// Build ObsActions
 void ObsSceneSwitcher::LoadActions()
 {
    QSettings settings(inifile, QSettings::IniFormat);

@@ -22,8 +22,7 @@ void OsisParser::ProcessData()
 
    if (DataIf)
    {
-      QByteArray* data = 0;
-      data = DataIf->GetData();
+      QByteArray* data = DataIf->GetData();
       if (data)
       {
          Handle(*data);
@@ -36,8 +35,15 @@ void OsisParser::Initialize()
 {
    if (ObsDataSaver)
    {
+      ObsDataSaver->SetLock(&M);
       connect(&Competition, SIGNAL(NewAction(int)), ObsDataSaver, SLOT(AddAction(int))); // Update UI
+      connect(&Competition, SIGNAL(DoActions()), ObsDataSaver, SLOT(DoActions())); // Update UI
    }
+
+}
+
+void OsisParser::Uninit()
+{
 
 }
 

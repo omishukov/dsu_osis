@@ -16,6 +16,12 @@ OsisCompetitionData::OsisCompetitionData(QObject *parent)
 
 }
 
+OsisCompetitionData::~OsisCompetitionData()
+{
+   Uninit();
+
+}
+
 void OsisCompetitionData::AddIsuOsis(IsuOsis* newIsuOsis)
 {
    if (Current_DB_ID == -1 || Current_DB_ID != newIsuOsis->DatabaseId)
@@ -282,6 +288,69 @@ void OsisCompetitionData::AddPrfDetails(OsisPrfDetails* newPrfDetails)
 void OsisCompetitionData::AddElementList(OsisElementList* newElementList)
 {
    delete newElementList;
+}
+
+void OsisCompetitionData::ProcessAction(int action)
+{
+   emit NewAction(action);
+}
+
+void OsisCompetitionData::ProcessingDone()
+{
+   emit DoActions();
+}
+
+void OsisCompetitionData::Uninit()
+{
+   delete Current_Event;
+   Current_Event = 0;
+
+   foreach (OsisCategory* category, Categories)
+   {
+      delete category;
+   }
+   Categories.clear();
+   Current_Category_Id = -1;
+   Last_Category_Id = -1;
+
+   foreach (OsisSegment* segment, Segments)
+   {
+      delete segment;
+   }
+   Segments.clear();
+   Current_Segment_Id = -1;
+
+   foreach (OsisParticipant* participant, Participants)
+   {
+      delete participant;
+   }
+   Participants.clear();
+   Last_Participant_Id = -1;
+
+   foreach (OsisPerformance* performance, Performances)
+   {
+      delete performance;
+   }
+   Performances.clear();
+
+   foreach (OsisWarmupGroup* warmup, WarmupGroups)
+   {
+      delete warmup;
+   }
+   WarmupGroups.clear();
+
+//   for (auto official : Officials)
+//   {
+//      delete official;
+//   }
+
+   WarmupGroups.clear();
+
+   delete Current_Action;
+   Current_Action = 0;
+
+   delete Current_Performance_Result;
+   Current_Performance_Result = 0;
 }
 
 QString OsisCompetitionData::GetCurrentSkaterName()

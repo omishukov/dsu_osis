@@ -61,7 +61,7 @@ public:
    Q_ENUM(OsisXmlElements)
 
    void SetDataIf(DataQueue* dataIf) { DataIf = dataIf; }
-   void SetObsDataSaver(Actions* obsData) { ObsDataSaver = obsData; }
+   void SetObsDataSaver(Actions* obsData);
 
 signals:
 

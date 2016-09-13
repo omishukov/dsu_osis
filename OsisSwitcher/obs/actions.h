@@ -73,7 +73,6 @@ public:
    void DoActions();
 
    inline void SetOsisInfoIf(ObsOsisIf* obsOsisIf) { OsisIf = obsOsisIf; }
-   void SetObsIf(QObject* _obsIf);
 
    QString GetActionName(int action);
 
@@ -92,7 +91,6 @@ private:
    QList<int> ActionList;
    QMetaEnum MetaActionsEnum;
    ObsOsisIf* OsisIf;
-   QObject* ObsIf;
 };
 
 #endif // ACTIONS_H

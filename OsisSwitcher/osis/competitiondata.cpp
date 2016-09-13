@@ -79,10 +79,8 @@ void OsisCompetitionData::AddSegmentStart(OsisSegmentStart* newSegmentStart)
 
 void OsisCompetitionData::AddCategory(OsisCategory* newCategory)
 {
-   if (!newCategory)
-   {
-      return;
-   }
+   if (!newCategory) { return; }
+
    if (newCategory->Id == -1)
    {
       delete newCategory;
@@ -284,4 +282,180 @@ void OsisCompetitionData::AddPrfDetails(OsisPrfDetails* newPrfDetails)
 void OsisCompetitionData::AddElementList(OsisElementList* newElementList)
 {
    delete newElementList;
+}
+
+QString OsisCompetitionData::GetCurrentSkaterName()
+{
+   if (!Current_Action)
+   {
+      return QString();
+   }
+   int id = Current_Action->Current_Participant_Id;
+   if (id == -1 || !Participants.contains(id))
+   {
+      return QString();
+   }
+   return Participants[id]->GetAttribute(OsisParticipant::Short_Name);
+}
+
+QString OsisCompetitionData::GetCurrentSkaterNumber()
+{
+   if (!Current_Action)
+   {
+      return QString();
+   }
+   int id = Current_Action->Current_Participant_Id;
+   if (id == -1)
+   {
+      return QString();
+   }
+   return Current_Action->GetAttribute(OsisAction::Current_Start_Number);
+}
+
+QString OsisCompetitionData::GetCurrentSkaterNation()
+{
+   if (!Current_Action)
+   {
+      return QString();
+   }
+   int id = Current_Action->Current_Participant_Id;
+   if ((id == -1) || !Participants.contains(id))
+   {
+      return QString();
+   }
+   return Participants[id]->GetAttribute(OsisParticipant::Nation);
+}
+
+QString OsisCompetitionData::GetCurrentSkaterClub()
+{
+   if (!Current_Action)
+   {
+      return QString();
+   }
+   int id = Current_Action->Current_Participant_Id;
+   if (id == -1 || !Participants.contains(id))
+   {
+      return QString();
+   }
+   return Participants[id]->GetAttribute(OsisParticipant::Club);
+}
+
+QString OsisCompetitionData::GetEventName()
+{
+   return Current_Event->GetAttribute(OsisEvent::Name);
+}
+
+QString OsisCompetitionData::GetSegmentName()
+{
+   if (Current_Segment_Id == -1 || !Segments.contains(Current_Segment_Id))
+   {
+      return QString();
+   }
+   return Segments[Current_Segment_Id]->GetAttribute(OsisSegment::Name);
+}
+
+QString OsisCompetitionData::GetCategoryName()
+{
+   if (Current_Category_Id == -1 || !Categories.contains(Current_Category_Id))
+   {
+      return QString();
+   }
+   return Categories[Current_Category_Id]->GetAttribute(OsisCategory::Name);
+}
+
+bool OsisCompetitionData::GetSegmentStartList(QMap<int, QList<QString> >& segmentStartList)
+{
+   for( auto performance : Performances)
+   {
+      int StartNum = performance->GetAttributeInt(OsisPerformance::Start_Number);
+      if (StartNum == -1 || performance->Id == -1 || !Participants.contains(performance->Id))
+      {
+         continue;
+      }
+      QList<QString> NameAndClub;
+      NameAndClub << Participants[performance->Id]->GetAttribute(OsisParticipant::Short_Name) <<
+                     Participants[performance->Id]->GetAttribute(OsisParticipant::Nation);
+
+      segmentStartList[StartNum] = NameAndClub;
+   }
+   return true;
+}
+
+bool OsisCompetitionData::GetSegmentResultList(QMap<int, QList<QString> >& segmentResultList)
+{
+   int Rank;
+   for( auto performance : Performances)
+   {
+      Rank = performance->GetAttributeInt(OsisPerformance::Rank);
+      if (Rank == -1 || performance->Id == -1 || !Participants.contains(performance->Id))
+      {
+         continue;
+      }
+      QList<QString> NameClubPoints;
+      NameClubPoints << Participants[performance->Id]->GetAttribute(OsisParticipant::Short_Name) <<
+                     Participants[performance->Id]->GetAttribute(OsisParticipant::Nation) <<
+                     performance->GetAttribute(OsisPerformance::Points);
+
+      segmentResultList[Rank] = NameClubPoints;
+   }
+   return true;
+}
+
+QString OsisCompetitionData::GetPoints()
+{
+   if (Current_Performance_Result)
+   {
+      return Current_Performance_Result->GetAttribute(OsisPrfDetails::Points);
+   }
+   return QString();
+}
+
+QString OsisCompetitionData::GetTES()
+{
+   if (Current_Performance_Result)
+   {
+      return Current_Performance_Result->GetAttribute(OsisPrfDetails::TES);
+   }
+   return QString();
+}
+
+QString OsisCompetitionData::GetTCS()
+{
+   if (Current_Performance_Result)
+   {
+      return Current_Performance_Result->GetAttribute(OsisPrfDetails::TCS);
+   }
+   return QString();
+}
+
+QString OsisCompetitionData::GetBonus()
+{
+   if (Current_Performance_Result)
+   {
+      return Current_Performance_Result->GetAttribute(OsisPrfDetails::Bonus);
+   }
+   return QString();
+}
+
+QString OsisCompetitionData::GetDeduction()
+{
+   if (Current_Performance_Result)
+   {
+      return Current_Performance_Result->GetAttribute(OsisPrfDetails::Ded_Sum);
+   }
+   return QString();
+}
+
+QString OsisCompetitionData::GetRank()
+{
+   if (!Current_Action) { return QString(); }
+
+   for( auto performance : Performances)
+   {
+      if (performance->Id == Current_Action->Current_Participant_Id)
+      {
+         return performance->GetAttribute(OsisPerformance::Rank);
+      }
+   }
+   return QString();
 }

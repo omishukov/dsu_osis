@@ -7,6 +7,7 @@
 Actions::Actions(QObject* parent)
    : QObject(parent)
    , MetaActionsEnum(QMetaEnum::fromType<ObsAction>())
+   , OsisIf(0)
 {
 }
 
@@ -198,12 +199,6 @@ void Actions::AddAction(int action)
    {
       ActionList.push_back(action);
    }
-}
-
-void Actions::SetObsIf(QObject* _obsIf)
-{
-   ObsIf = _obsIf;
-   //connect(this, SIGNAL(SendOsisEvent(int)), ObsIf, SLOT(HandleEvent(int)));
 }
 
 QString Actions::GetActionName(int action)

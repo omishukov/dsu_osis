@@ -18,8 +18,6 @@ ObsSceneSwitcher::ObsSceneSwitcher(Actions* actions, QString obsCongigPath, QTab
    , CurrentAction(0)
    , TableView(tableView)
 {
-   osisAction->SetObsIf(this);
-
    TableGui.SetObsSwither(this);
 //   timer = new QTimer(this);
 //   connect(timer, SIGNAL(timeout()), this, SLOT(TimerEvent()));

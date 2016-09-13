@@ -10,6 +10,12 @@ OsisParser::OsisParser(QObject *parent)
 
 }
 
+void OsisParser::SetObsDataSaver(Actions* obsData)
+{
+    ObsDataSaver = obsData;
+    ObsDataSaver->SetOsisInfoIf(&Competition);
+}
+
 void OsisParser::ProcessData()
 {
    QMutexLocker lock(&M);

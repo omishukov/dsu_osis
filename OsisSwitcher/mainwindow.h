@@ -12,6 +12,7 @@
 #include "obs/actions.h"
 #include "obs/obsaction.h"
 #include "obs/scenetableui.h"
+#include "obs/sceneswitcher.h"
 
 namespace Ui {
 class MainWindow;
@@ -50,6 +51,7 @@ private:
    void InitIsuCalcLink();
    void InitOsisParser();
    void InitObsData();
+   void InitSceneSwitcher();
    void SetLinkStatus(QString label, QString buttonText, bool buttonEnabled, bool ipAddrEnabled, bool ipPortEnabled);
    void ReadSettings();
    void setIpValitation();
@@ -81,6 +83,7 @@ private:
    SceneTableUi TableGui;
    ActionToScene ActionToScenes[Actions::LAST_ACTION];
    QStandardItemModel* TableModel;
+   ObsSceneSwitcher Switcher;
 
 public:
    enum obs_key {

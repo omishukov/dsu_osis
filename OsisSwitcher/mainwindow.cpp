@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
    , PortValidator(0)
    , MetaActionsEnum(QMetaEnum::fromType<obs_key>())
    , TableModel(0)
+   , Switcher(ActionToScenes)
 {
    ui->setupUi(this);
    InitIsuCalcLink();
@@ -29,6 +30,8 @@ MainWindow::MainWindow(QWidget *parent)
    LoadObsConfiguration();
    LoadSceneConfiguration();
    InitActionSceneUi();
+
+   InitSceneSwitcher();
 }
 
 MainWindow::~MainWindow()
@@ -140,6 +143,11 @@ void MainWindow::InitObsData()
 
 //   connect(&ObsDataSaver, SIGNAL(SendOsisEvent(int)), &Switcher, SLOT(HandleEvent())); // on thread start
    ObsDataSaverThread.start();
+}
+
+void MainWindow::InitSceneSwitcher()
+{
+
 }
 
 void MainWindow::on_Connect_PB_clicked()

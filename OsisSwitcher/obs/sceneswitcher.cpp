@@ -10,26 +10,20 @@
 
 extern QString inifile;
 
-ObsSceneSwitcher::ObsSceneSwitcher(Actions* actions, QString obsCongigPath, QTableView* tableView, QObject *parent)
+ObsSceneSwitcher::ObsSceneSwitcher(ActionToScene *actions, QObject *parent)
    : QObject(parent)
    , osisAction(actions)
-   , MetaActionsEnum(QMetaEnum::fromType<obs_key>())
-   , OBS_Path(obsCongigPath)
    , CurrentAction(0)
-   , TableView(tableView)
 {
-   TableGui.SetObsSwither(this);
 }
 
 ObsSceneSwitcher::~ObsSceneSwitcher()
 {
-   SaveActions();
    for (auto obsAction : ObsActions)
    {
       delete obsAction;
    }
    ResetScenes();
-   delete tableModel;
 }
 
 void ObsSceneSwitcher::ResetScenes()
@@ -71,22 +65,6 @@ SceneInfo* ObsSceneSwitcher::GetTransition(QString transition)
    return NULL;
 }
 
-void ObsSceneSwitcher::SaveActions()
-{
-   QSettings settings(inifile, QSettings::IniFormat);
-
-   for (auto obsAction : ObsActions)
-   {
-      settings.beginGroup(obsAction->actionName);
-      settings.setValue("DELAY1", obsAction->GetDelay1());
-      settings.setValue("SCENE1", obsAction->GetScene1Name());
-      settings.setValue("DELAY2", obsAction->GetDelay2());
-      settings.setValue("SCENE2", obsAction->GetScene2Name());
-      settings.setValue("TRANSITION", obsAction->GetTransitionName());
-      settings.endGroup();
-   }
-}
-
 void ObsSceneSwitcher::HandleEvent(int command)
 {
    ObsAction* action = ObsActions[command];
@@ -96,7 +74,6 @@ void ObsSceneSwitcher::HandleEvent(int command)
       action->Execute(CurrentAction);
       CurrentAction = action;
    }
-   //   timer->start(1000);
 }
 
 void ObsSceneSwitcher::Initialize()

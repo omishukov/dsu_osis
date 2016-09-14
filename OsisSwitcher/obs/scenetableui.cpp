@@ -220,7 +220,7 @@ void SceneTableUi::setModelData(QWidget* editor, QAbstractItemModel* model, cons
    }
 }
 
-void SceneTableUi::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& index) const
+void SceneTableUi::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& /*index*/) const
 {
    editor->setGeometry(option.rect);
 }

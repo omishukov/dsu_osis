@@ -34,6 +34,8 @@ public:
    };
    Q_ENUM(IsuCalcLinkButton)
 
+   void UpdateSceneConfiguration();
+
 private slots:
    void on_Connect_PB_clicked();
    void IsuCalcConnected();

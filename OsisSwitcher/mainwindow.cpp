@@ -18,6 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
    , CalcIpValidator(0)
    , PortValidator(0)
    , MetaActionsEnum(QMetaEnum::fromType<obs_key>())
+   , TableGui()
    , TableModel(0)
    , Switcher(ActionToScenes)
 {
@@ -482,6 +483,10 @@ void MainWindow::LoadSceneConfiguration()
          sceneName.clear();
          qWarning() << "Scene [" << sceneName << "] from config file doesn't exist in OBS configuration";
       }
+      else
+      {
+         ActionToScenes[i].Hkey = SceneHkeyMap.value(sceneName);
+      }
       ActionToScenes[i].Scene = sceneName;
       ActionToScenes[i].Delay = settings.value("DELAY1", "0").toInt();
 
@@ -490,6 +495,10 @@ void MainWindow::LoadSceneConfiguration()
       {
          sceneName.clear();
          qWarning() << "Scene [" << sceneName << "] from config file doesn't exist in OBS configuration";
+      }
+      else
+      {
+         ActionToScenes[i].NextHkey = SceneHkeyMap.value(sceneName);
       }
       ActionToScenes[i].NextScene = sceneName;
       ActionToScenes[i].NextDelay = settings.value("DELAY2", "0").toInt();
@@ -500,11 +509,50 @@ void MainWindow::LoadSceneConfiguration()
          sceneName.clear();
          qWarning() << "Transition [" << sceneName << "] from config file doesn't exist in OBS configuration";
       }
+      else
+      {
+         ActionToScenes[i].TransitionHkey = TransitionHkeyMap.value(sceneName);
+      }
       ActionToScenes[i].Transition = sceneName;
 
       settings.endGroup();
    }
 }
+
+void MainWindow::UpdateSceneConfiguration()
+{
+   for(int i = Actions::NO_ACTIONS + 1; i < Actions::LAST_ACTION; i++)
+   {
+      if (SceneHkeyMap.contains(ActionToScenes[i].Scene))
+      {
+         ActionToScenes[i].Hkey = SceneHkeyMap.value(ActionToScenes[i].Scene);
+      }
+      else
+      {
+         ActionToScenes[i].Hkey.clear();
+      }
+
+      if (SceneHkeyMap.contains(ActionToScenes[i].NextScene))
+      {
+         ActionToScenes[i].NextHkey = SceneHkeyMap.value(ActionToScenes[i].NextScene);
+      }
+      else
+      {
+         ActionToScenes[i].NextHkey.clear();
+      }
+
+      if (!TransitionHkeyMap.contains(ActionToScenes[i].Transition))
+      {
+         ActionToScenes[i].TransitionHkey = TransitionHkeyMap.value(ActionToScenes[i].Transition);
+      }
+      else
+      {
+         ActionToScenes[i].TransitionHkey.clear();
+      }
+   }
+   SaveSceneConfiguration();
+}
+
 
 void MainWindow::SaveSceneConfiguration()
 {

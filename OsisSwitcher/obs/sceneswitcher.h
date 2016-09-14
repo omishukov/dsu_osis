@@ -16,26 +16,18 @@ public:
    explicit ObsSceneSwitcher(ActionToScene* actions, QObject *parent = 0);
    ~ObsSceneSwitcher();
 
-   SceneInfo* GetScene(QString scene);
-   SceneInfo* GetTransition(QString transition);
-
 signals:
 
 public slots:
-   void HandleEvent(int command);
+   void HandleEvent(int act);
    void Initialize();
-   void TimerEvent();
 
 private:
    ActionToScene* osisAction;
-   QMap<int, ObsAction*> ObsActions;
-public:
-   QList<SceneInfo*> ObsScenesList;
-   QList<SceneInfo*> ObsTransitionList;
-private:
-   void ResetScenes();
-   SceneTableUi TableGui;
+   QMap<QString, QList<int>>* SceneHkeyMap;
+   QMap<QString, QList<int>>* TransitionHkeyMap;
    ObsAction* CurrentAction;
+
 };
 
 #endif // OBSSCENESWITCHER_H

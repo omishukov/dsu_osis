@@ -1,35 +1,26 @@
 #include <windows.h>
 #include "sceneinfo.h"
 
-SceneInfo::SceneInfo(QString name, QList<int> list, QObject *parent)
+SceneInfo::SceneInfo(QString name, QList<int> hKey, int delay, QObject *parent)
    : QObject(parent)
    , SceneName(name)
-   , Hotkeys(list)
+   , Hotkeys(hKey)
    , Transition(0)
    , NextScene(0)
    , PreviousScene(0)
-   , Delay(0)
-   , timer(new QTimer(0))
+   , Delay(delay)
 {
-   timer->setSingleShot(true);
-   connect(timer, SIGNAL(timeout()), this, SLOT(TimerExpired()));
-}
-
-SceneInfo::SceneInfo(QObject *parent)
-   : QObject(parent)
-   , Transition(0)
-   , NextScene(0)
-   , PreviousScene(0)
-   , Delay(0)
-   , timer(new QTimer(0))
-{
-   timer->setSingleShot(true);
-   connect(timer, SIGNAL(timeout()), this, SLOT(TimerExpired()));
+   Timer.setSingleShot(true);
+   connect(&Timer, SIGNAL(timeout()), this, SLOT(TimerExpired()));
 }
 
 SceneInfo::~SceneInfo()
 {
-   delete timer;
+   if (NextScene)
+   {
+      NextScene->Cancel();
+   }
+   Timer.stop();
 }
 
 void SceneInfo::TimerExpired()
@@ -38,31 +29,27 @@ void SceneInfo::TimerExpired()
    SendHotkey();
 }
 
-void SceneInfo::SwitchScene(SceneInfo *previousScene)
+void SceneInfo::SwitchScene()
 {
    if (Hotkeys.isEmpty())
    {
       return;
    }
-   PreviousScene = previousScene;
 
+   if (PreviousScene)
+   {
+      PreviousScene->Cancel();
+   }
 
    if (Delay > 0)
    {
-      timer->start(Delay*1000);
+      Timer.start(Delay*1000);
 
    }
    else
    {
       SendHotkey();
    }
-}
-
-void SceneInfo::Update(SceneInfo* newScene)
-{
-   Hotkeys.clear();
-   Hotkeys = newScene->Hotkeys;
-   SceneName = newScene->SceneName;
 }
 
 void SceneInfo::SetTransition(SceneInfo* transition)
@@ -88,7 +75,6 @@ void SceneInfo::SendHotkey()
    if (PreviousScene)
    {
       PreviousScene->Cancel();
-      PreviousScene = 0;
    }
 
    INPUT ip;
@@ -133,9 +119,15 @@ void SceneInfo::SendHotkey()
 
 void SceneInfo::Cancel()
 {
+   Timer.stop();
+
    if (NextScene)
    {
       NextScene->Cancel();
    }
 
+   if (PreviousScene)
+   {
+      PreviousScene->Cancel();
+   }
 }

@@ -8,44 +8,30 @@ class SceneInfo : public QObject
 {
    Q_OBJECT
 public:
-   SceneInfo(QString name, QList<int> list, QObject *parent = 0);
-   SceneInfo(QObject *parent = 0);
+   SceneInfo(QString name, QList<int> hKey, int delay, QObject *parent = 0);
    ~SceneInfo();
 
 public slots:
    void TimerExpired();
 
 public:
-   void SwitchScene(SceneInfo *previousScene = 0);
-
-   void Update(SceneInfo* newScene);
-
+   void SwitchScene();
    void SetTransition(SceneInfo* transition);
-   SceneInfo* GetTransition() { return Transition; }
-
    void SetNextScene(SceneInfo* nextScene);
-   SceneInfo* GetNextScene() { return NextScene; }
-
-   void SetDelay(int delay) { Delay = delay; }
-   int GetDelay() { return Delay; }
-
+   void SetPreviousScene(SceneInfo* previousScene) { PreviousScene = previousScene; }
    void Cancel();
-
-   QString SceneName;
-   QList<int> Hotkeys;
-
-//protected:
-//    void timerEvent(QTimerEvent *event);
 
 private:
     void SendHotkey();
 
 private:
+   QString SceneName;
+   QList<int> Hotkeys;
    SceneInfo* Transition;
    SceneInfo* NextScene;
    SceneInfo* PreviousScene;
    int Delay;
-   QTimer *timer;
+   QTimer Timer;
 };
 
 #endif // SCENEINFO_H

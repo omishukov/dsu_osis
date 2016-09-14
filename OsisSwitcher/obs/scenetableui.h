@@ -2,6 +2,7 @@
 #define SCENETABLEUI_H
 
 #include <QStyledItemDelegate>
+#include "mainwindow.h"
 #include "obsaction.h"
 #include "sceneinfo.h"
 
@@ -10,7 +11,7 @@ class ObsSceneSwitcher;
 class SceneTableUi : public QStyledItemDelegate
 {
 public:
-   SceneTableUi();
+   SceneTableUi(MainWindow *mainWindow);
 
    enum
    {
@@ -38,11 +39,17 @@ public:
    void updateEditorGeometry(QWidget *editor,
        const QStyleOptionViewItem &option, const QModelIndex &) const Q_DECL_OVERRIDE;
 
+signals:
+   void UpdateActions();
+
+public slots:
+
 private:
    ActionToScene* ObsActions;
    QStringList Scenes;
    QStringList Transitions;
    ObsSceneSwitcher* ObsSwitcher;
+   MainWindow* MainWindow;
 
 };
 

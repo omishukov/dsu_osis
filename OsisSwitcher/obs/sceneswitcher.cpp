@@ -8,80 +8,30 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-extern QString inifile;
-
 ObsSceneSwitcher::ObsSceneSwitcher(ActionToScene *actions, QObject *parent)
    : QObject(parent)
    , osisAction(actions)
    , CurrentAction(0)
 {
+
 }
 
 ObsSceneSwitcher::~ObsSceneSwitcher()
 {
-   for (auto obsAction : ObsActions)
-   {
-      delete obsAction;
-   }
-   ResetScenes();
-}
-
-void ObsSceneSwitcher::ResetScenes()
-{
-   for (auto obsScene : ObsScenesList)
-   {
-      delete obsScene;
-   }
-   ObsScenesList.clear();
-   for (auto obsTransition: ObsTransitionList)
-   {
-      delete obsTransition;
-   }
-   ObsTransitionList.clear();
 }
 
 
-SceneInfo* ObsSceneSwitcher::GetScene(QString scene)
+void ObsSceneSwitcher::HandleEvent(int act)
 {
-   for (auto obsScene : ObsScenesList)
+   if (osisAction[act].Hkey.isEmpty() || osisAction[act].TransitionHkey.isEmpty())
    {
-      if (!QString::compare(obsScene->SceneName, scene))
-      {
-         return obsScene;
-      }
+      return;
    }
-   return NULL;
-}
-
-SceneInfo* ObsSceneSwitcher::GetTransition(QString transition)
-{
-   for (auto obsTransition : ObsTransitionList)
-   {
-      if (!QString::compare(obsTransition->SceneName, transition))
-      {
-         return obsTransition;
-      }
-   }
-   return NULL;
-}
-
-void ObsSceneSwitcher::HandleEvent(int command)
-{
-   ObsAction* action = ObsActions[command];
-   if (action)
-   {
-      qInfo() << "New action: " << action->actionName;
-      action->Execute(CurrentAction);
-      CurrentAction = action;
-   }
+   ObsAction* newAction = new ObsAction(&osisAction[act], CurrentAction);
+   CurrentAction = newAction;
+   newAction->Execute();
 }
 
 void ObsSceneSwitcher::Initialize()
 {
 }
-
-void ObsSceneSwitcher::TimerEvent()
-{
-   qInfo() << "Timeout()";
-}
-

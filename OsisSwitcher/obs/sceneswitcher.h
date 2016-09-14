@@ -16,11 +16,7 @@ public:
    explicit ObsSceneSwitcher(Actions* actions, QString obsCongigPath, QTableView* tableView, QObject *parent = 0);
    ~ObsSceneSwitcher();
 
-   void LoadObsConfiguration();
-   void LoadActions();
    void SaveActions();
-   void InitUi();
-   QList<int> GetHotkeys(QJsonArray& jHotkeyArray);
 
    SceneInfo* GetScene(QString scene);
    SceneInfo* GetTransition(QString transition);

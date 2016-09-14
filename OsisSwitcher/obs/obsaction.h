@@ -5,6 +5,17 @@
 #include <QObject>
 #include "sceneinfo.h"
 
+struct ActionToScene
+{
+   QString ActionName;
+   int Delay;
+   QString Scene;
+   int NextDelay;
+   QString NextScene;
+   QString Transition;
+
+};
+
 class ObsAction : public QObject
 {
    Q_OBJECT

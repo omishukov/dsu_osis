@@ -22,13 +22,13 @@ public:
       QTV_TRANSITION
    };
 
-   void SetObsActions(QMap<int, ObsAction*> *obsActions) { ObsActions = obsActions; }
-   void SetObsScenesList(const QList<SceneInfo*> *obsScenesList);
-   void SetObsTransitionList(const QList<SceneInfo*> *obsTransitionList);
+   void SetObsActions(ActionToScene* obsActions) { ObsActions = obsActions; }
+   void SetObsScenesList(const QList<QString> obsScenesList);
+   void SetObsTransitionList(const QList<QString> obsTransitionList);
    void SetObsSwither(ObsSceneSwitcher* oSS) {ObsSwitcher = oSS;}
 
 public:
-   QWidget *createEditor(QWidget *parent, const QStyleOptionViewItem &option,
+   QWidget* createEditor(QWidget *parent, const QStyleOptionViewItem &option,
                          const QModelIndex &index) const Q_DECL_OVERRIDE;
 
    void setEditorData(QWidget *editor, const QModelIndex &index) const Q_DECL_OVERRIDE;
@@ -39,9 +39,7 @@ public:
        const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
 
 private:
-   QMap<int, ObsAction*> *ObsActions;
-   const QList<SceneInfo*> *ObsScenesList;
-   const QList<SceneInfo*> *ObsTransitionList;
+   ActionToScene* ObsActions;
    QStringList Scenes;
    QStringList Transitions;
    ObsSceneSwitcher* ObsSwitcher;

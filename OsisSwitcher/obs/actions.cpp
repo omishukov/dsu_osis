@@ -18,7 +18,9 @@ void Actions::DoActions()
    {
       return;
    }
+
    QMutexLocker lock(M);
+
    bool passToObs;
    foreach(int action, ActionList)
    {

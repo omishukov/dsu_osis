@@ -1,11 +1,11 @@
 #include "obsaction.h"
 
-ObsAction::ObsAction(ActionToScene *action, ObsAction *previousAction, QObject* parent)
+ObsAction::ObsAction(Action2SceneStruct& actionInfo, ObsAction *previousAction, QObject* parent)
    : QObject(parent)
-   , ActionName(action->ActionName)
-   , Scene(action->Scene, action->Hkey, action->Delay)
-   , NextScene(action->NextScene, action->NextHkey, action->NextDelay)
-   , Transition(action->Transition, action->TransitionHkey, 0)
+   , ActionName(actionInfo.ActionName)
+   , Scene(actionInfo.Scene, actionInfo.Hkey, actionInfo.Delay)
+   , NextScene(actionInfo.NextScene, actionInfo.NextHkey, actionInfo.NextDelay)
+   , Transition(actionInfo.Transition, actionInfo.TransitionHkey, 0)
 {
    Scene.SetNextScene(&NextScene);
    Scene.SetTransition(&Transition);

@@ -8,9 +8,9 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-ObsSceneSwitcher::ObsSceneSwitcher(ActionToScene *actions, QObject *parent)
+ObsSceneSwitcher::ObsSceneSwitcher(ActionToScene* actions, QObject *parent)
    : QObject(parent)
-   , osisAction(actions)
+   , Action2Scene(actions)
    , CurrentAction(0)
 {
 
@@ -23,11 +23,12 @@ ObsSceneSwitcher::~ObsSceneSwitcher()
 
 void ObsSceneSwitcher::HandleEvent(int act)
 {
-   if (osisAction[act].Hkey.isEmpty() || osisAction[act].TransitionHkey.isEmpty())
+   Action2SceneStruct info = Action2Scene->GetActionSceneInfo(act);
+   if (info.Hkey.isEmpty() || info.TransitionHkey.isEmpty())
    {
       return;
    }
-   ObsAction* newAction = new ObsAction(&osisAction[act], CurrentAction);
+   ObsAction* newAction = new ObsAction(info, CurrentAction);
    CurrentAction = newAction;
    newAction->Execute();
 }

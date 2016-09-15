@@ -4,26 +4,13 @@
 #include <QMetaEnum>
 #include <QObject>
 #include "sceneinfo.h"
-
-struct ActionToScene
-{
-   QString ActionName;
-   int Delay;
-   QString Scene;
-   QList<int> Hkey;
-   int NextDelay;
-   QString NextScene;
-   QList<int> NextHkey;
-   QString Transition;
-   QList<int> TransitionHkey;
-
-};
+#include "actiontoscene.h"
 
 class ObsAction : public QObject
 {
    Q_OBJECT
 public:
-   ObsAction(ActionToScene *action, ObsAction* previousAction, QObject *parent = 0);
+   ObsAction(Action2SceneStruct& actionInfo, ObsAction* previousAction, QObject *parent = 0);
    ~ObsAction();
 
 public:

@@ -1,6 +1,6 @@
 #include <QDebug>
 #include "competitiondata.h"
-#include "obs/actions.h"
+#include "actiontoscene.h"
 
 OsisCompetitionData::OsisCompetitionData(QObject *parent)
    : QObject(parent)
@@ -78,7 +78,7 @@ void OsisCompetitionData::AddSegmentStart(OsisSegmentStart* newSegmentStart)
 
    Current_Category_Id = newSegmentStart->CategoryId;
    Current_Segment_Id = newSegmentStart->SegmentId;
-   emit NewAction(Actions::SEGMENT_START);
+   emit NewAction(ActionToScene::SEGMENT_START);
 
    delete newSegmentStart;
 }
@@ -242,7 +242,7 @@ void OsisCompetitionData::AddWarmupGroup(OsisWarmupGroup* newWarmupGroup)
 void OsisCompetitionData::AddPrfRanking(OsisPrfRanking* newPrfRanking)
 {
    delete newPrfRanking;
-   emit NewAction(Actions::PRF_RANKING);
+   emit NewAction(ActionToScene::PRF_RANKING);
 }
 
 void OsisCompetitionData::AddSegmentRunning(OsisSegmentRunning* newSegmentRunning)
@@ -261,7 +261,7 @@ void OsisCompetitionData::AddAction(OsisAction* newAction)
    delete Current_Action;
    Current_Action = newAction;
 
-   const QMetaObject &mo = Actions::staticMetaObject;
+   const QMetaObject &mo = ActionToScene::staticMetaObject;
    int index = mo.indexOfEnumerator("ObsAction");
    QMetaEnum metaEnum = mo.enumerator(index);
    QString elementName = newAction->GetAttribute(OsisAction::Command);

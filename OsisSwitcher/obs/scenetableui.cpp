@@ -4,29 +4,29 @@
 #include "scenetableui.h"
 #include "sceneswitcher.h"
 
-SceneTableUi::SceneTableUi(MainWindow *mainWindow)
+SceneTableUi::SceneTableUi()
    : ObsActions(0)
    , ObsSwitcher(0)
-   , MainWindow(mainWindow)
 {
 }
 
-void SceneTableUi::SetObsScenesList(const QList<QString> obsScenesList)
+void SceneTableUi::SetObsActions(ActionToScene* obsActions)
 {
+    ObsActions = obsActions;
+
+    QList<QString> obsScenesList = ObsActions->GetSceneList();
     Scenes.clear();
     Scenes << "";
     for (auto scene:obsScenesList)
     {
        Scenes << scene;
     }
-}
 
-void SceneTableUi::SetObsTransitionList(const QList<QString> obsTransitionList)
-{
+   QList<QString> obsTransitionList = ObsActions->GetTransitionList();
    Transitions.clear();
    for (auto transition:obsTransitionList)
    {
-      Transitions << transition;
+    Transitions << transition;
    }
 }
 
@@ -40,22 +40,23 @@ QWidget* SceneTableUi::createEditor(QWidget* parent, const QStyleOptionViewItem&
 
    int delay = 0;
    QString currentSceneOrTransition;
+   Action2SceneStruct Action = ObsActions->GetActionSceneInfo(action);
    switch (index.column())
    {
       case QTV_DELAY1:
-         delay = ObsActions[action].Delay;
+         delay = Action.Delay;
          break;
       case QTV_DELAY2:
-         delay = ObsActions[action].NextDelay;
+         delay = Action.NextDelay;
          break;
       case QTV_SCENE1:
-         currentSceneOrTransition = ObsActions[action].Scene;
+         currentSceneOrTransition = Action.Scene;
          break;
       case QTV_SCENE2:
-         currentSceneOrTransition = ObsActions[action].NextScene;
+         currentSceneOrTransition = Action.NextScene;
          break;
       case QTV_TRANSITION:
-         currentSceneOrTransition = ObsActions[action].Transition;
+         currentSceneOrTransition = Action.Transition;
          break;
    }
 
@@ -63,7 +64,7 @@ QWidget* SceneTableUi::createEditor(QWidget* parent, const QStyleOptionViewItem&
    {
       case QTV_ACTION:
       {
-         return new QLabel(ObsActions[action].ActionName);
+         return new QLabel(Action.ActionName);
       }
       case QTV_DELAY1:
       case QTV_DELAY2:
@@ -129,47 +130,48 @@ void SceneTableUi::setEditorData(QWidget* editor, const QModelIndex& index) cons
    }
 
    bool changed = false;
+   Action2SceneStruct Action = ObsActions->GetActionSceneInfo(action);
    switch (index.column())
    {
       case QTV_DELAY1:
-         if (ObsActions[action].Delay == delay)
+         if (Action.Delay != delay)
          {
-            ObsActions[action].Delay = delay;
+            Action.Delay = delay;
             changed = true;
          }
          break;
       case QTV_DELAY2:
-         if (ObsActions[action].NextDelay == delay)
+         if (Action.NextDelay != delay)
          {
-            ObsActions[action].NextDelay = delay;
+            Action.NextDelay = delay;
             changed = true;
          }
          break;
       case QTV_SCENE1:
-         if (QString::compare(ObsActions[action].Scene, currentSceneOrTransition))
+         if (QString::compare(Action.Scene, currentSceneOrTransition))
          {
-            ObsActions[action].Scene = currentSceneOrTransition;
+            Action.Scene = currentSceneOrTransition;
             changed = true;
          }
          break;
       case QTV_SCENE2:
-         if (QString::compare(ObsActions[action].NextScene, currentSceneOrTransition))
+         if (QString::compare(Action.NextScene, currentSceneOrTransition))
          {
-            ObsActions[action].NextScene = currentSceneOrTransition;
+            Action.NextScene = currentSceneOrTransition;
             changed = true;
          }
          break;
       case QTV_TRANSITION:
-         if (QString::compare(ObsActions[action].Transition, currentSceneOrTransition))
+         if (QString::compare(Action.Transition, currentSceneOrTransition))
          {
-            ObsActions[action].Transition = currentSceneOrTransition;
+            Action.Transition = currentSceneOrTransition;
             changed = true;
          }
          break;
    }
    if (changed)
    {
-      MainWindow->UpdateSceneConfiguration();
+      ObsActions->UpdateAction(action, Action);
    }
 }
 
@@ -206,26 +208,27 @@ void SceneTableUi::setModelData(QWidget* editor, QAbstractItemModel* model, cons
    if (action)
    {
       bool changed = false;
+      Action2SceneStruct ActionInfo = ObsActions->GetActionSceneInfo(action);
       switch (index.column())
       {
          case QTV_DELAY1:
-            if (ObsActions[action].Delay != value.toInt())
+            if (ActionInfo.Delay != value.toInt())
             {
-               ObsActions[action].Delay = value.toInt();
+               ActionInfo.Delay = value.toInt();
                changed = true;
             }
             break;
          case QTV_DELAY2:
-            if (ObsActions[action].NextDelay != value.toInt())
+            if (ActionInfo.NextDelay != value.toInt())
             {
-               ObsActions[action].NextDelay = value.toInt();
+               ActionInfo.NextDelay = value.toInt();
                changed = true;
             }
             break;
          case QTV_SCENE1:
-            if (QString::compare(ObsActions[action].Scene, value.toString()))
+            if (QString::compare(ActionInfo.Scene, value.toString()))
             {
-               ObsActions[action].Scene = value.toString();
+               ActionInfo.Scene = value.toString();
                if (value.toString().isEmpty() || value.toString().isNull())
                {
                   QModelIndex newIndex = model->index(index.row(), 4, QModelIndex());
@@ -235,23 +238,23 @@ void SceneTableUi::setModelData(QWidget* editor, QAbstractItemModel* model, cons
             }
             break;
          case QTV_SCENE2:
-            if (QString::compare(ObsActions[action].NextScene, value.toString()))
+            if (QString::compare(ActionInfo.NextScene, value.toString()))
             {
-               ObsActions[action].NextScene = value.toString();
+               ActionInfo.NextScene = value.toString();
                changed = true;
             }
             break;
          case QTV_TRANSITION:
-            if (QString::compare(ObsActions[action].Transition, value.toString()))
+            if (QString::compare(ActionInfo.Transition, value.toString()))
             {
-               ObsActions[action].Transition = value.toString();
+               ActionInfo.Transition = value.toString();
                changed = true;
             }
             break;
       }
       if (changed)
       {
-         MainWindow->UpdateSceneConfiguration();
+         ObsActions->UpdateAction(action, ActionInfo);
       }
    }
 }

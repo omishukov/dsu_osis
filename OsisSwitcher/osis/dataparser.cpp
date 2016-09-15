@@ -1,6 +1,6 @@
 #include <QDebug>
 #include "dataparser.h"
-#include "obs/actions.h"
+#include "actiontoscene.h"
 
 OsisParser::OsisParser(QObject *parent)
    : QObject(parent)
@@ -175,10 +175,10 @@ bool OsisParser::ProcessOsisElement(QDomNode& n)
          break;
       case Event_Overview:
          Competition.Uninit();
-         Competition.ProcessAction(Actions::EVENT_OVERVIEW);
+         Competition.ProcessAction(ActionToScene::EVENT_OVERVIEW);
          break;
       case Segment_Result_List:
-         Competition.ProcessAction(Actions::SEGMENT_RESULT_LIST);
+         Competition.ProcessAction(ActionToScene::SEGMENT_RESULT_LIST);
          break;
       case Prf:
       case Participant_List:

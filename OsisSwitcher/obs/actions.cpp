@@ -5,10 +5,10 @@
 #include <QMutexLocker>
 #include "actions.h"
 
-Actions::Actions(QObject* parent)
+Actions::Actions(ActionToScene* actionInfo, QObject* parent)
    : QObject(parent)
-   , MetaActionsEnum(QMetaEnum::fromType<ObsAction>())
    , OsisIf(0)
+   , ActionInfo(actionInfo)
 {
 }
 
@@ -24,15 +24,14 @@ void Actions::DoActions()
    bool passToObs;
    foreach(int action, ActionList)
    {
-      QString actionName = MetaActionsEnum.valueToKey(action);
-      SaveToFile("obs/current_action.txt", actionName);
+      SaveToFile("obs/current_action.txt", ActionInfo->GetActionName(action));
 
       passToObs = true;
       switch (action)
       {
-         case ACTION_1SC:
+         case ActionToScene::ACTION_1SC:
             break;
-         case ACTION_1S1:
+         case ActionToScene::ACTION_1S1:
             {
                // Save results from OsisPrfDetails
                // * points.txt
@@ -45,7 +44,7 @@ void Actions::DoActions()
                SaveToFile("obs/deduction.txt", OsisIf->GetDeduction());
             }
             break;
-         case ACTION_1S2:
+         case ActionToScene::ACTION_1S2:
             {
                // Save rank from Performance
                SaveToFile("obs/current_participant_rank.txt", OsisIf->GetRank());
@@ -56,31 +55,31 @@ void Actions::DoActions()
                GenerateSegmentResultListHtml(SegmentResultList);
             }
             break;
-         case ACTION_1S3:
+         case ActionToScene::ACTION_1S3:
             // Do nothing yet
             break;
-         case ACTION_1S4:
+         case ActionToScene::ACTION_1S4:
             // Do nothing yet
             break;
-         case ACTION_1S5:
+         case ActionToScene::ACTION_1S5:
             // Do nothing yet
             break;
-         case ACTION_2SC:
+         case ActionToScene::ACTION_2SC:
             // Do nothing yet
             break;
-         case ACTION_3SC:
+         case ActionToScene::ACTION_3SC:
             // Do nothing yet
             break;
-         case ACTION_CLR:
+         case ActionToScene::ACTION_CLR:
             // Do nothing yet
             break;
-         case ACTION_ELM:
+         case ActionToScene::ACTION_ELM:
             // Do nothing yet
             break;
-         case ACTION_ELS:
+         case ActionToScene::ACTION_ELS:
             // Do nothing yet
             break;
-         case ACTION_INI:
+         case ActionToScene::ACTION_INI:
             {
                // Generate Starting order from Performances (list) and Participants.
                // starting_list.csv
@@ -94,37 +93,37 @@ void Actions::DoActions()
                GenerateHtml(SegmentStartList);
             }
             break;
-         case ACTION_IDT:
+         case ActionToScene::ACTION_IDT:
             // Do nothing yet
             break;
-         case ACTION_IRS:
+         case ActionToScene::ACTION_IRS:
             // Do nothing yet
             break;
-         case ACTION_JDG:
+         case ActionToScene::ACTION_JDG:
             // Do nothing yet
             break;
-         case ACTION_LTV:
+         case ActionToScene::ACTION_LTV:
             // Do nothing yet
             break;
-         case ACTION_NAM:
+         case ActionToScene::ACTION_NAM:
             // Do nothing yet
             break;
-         case ACTION_NXP:
+         case ActionToScene::ACTION_NXP:
             // Do nothing yet
             break;
-         case ACTION_RES:
+         case ActionToScene::ACTION_RES:
             // Do nothing yet
             break;
-         case ACTION_SEG:
+         case ActionToScene::ACTION_SEG:
             // Do nothing yet
             break;
-         case ACTION_STL:
+         case ActionToScene::ACTION_STL:
             // Do nothing yet
             break;
-         case ACTION_STP:
+         case ActionToScene::ACTION_STP:
             // Do nothing yet
             break;
-         case ACTION_NXT:
+         case ActionToScene::ACTION_NXT:
             {
                SaveToFile("obs/current_skater.txt", OsisIf->GetCurrentSkaterName());
                SaveToFile("obs/current_start_number.txt", OsisIf->GetCurrentSkaterNumber());
@@ -132,57 +131,57 @@ void Actions::DoActions()
                SaveToFile("obs/current_skater_nation.txt", OsisIf->GetCurrentSkaterNation());
             }
             break;
-         case ACTION_PRV:
+         case ActionToScene::ACTION_PRV:
             // Do nothing yet
             break;
-         case ACTION_TBW:
+         case ActionToScene::ACTION_TBW:
             // Do nothing yet
             break;
-         case ACTION_TFW:
+         case ActionToScene::ACTION_TFW:
             // Do nothing yet
             break;
-         case ACTION_TR1:
+         case ActionToScene::ACTION_TR1:
             // Do nothing yet
             break;
-         case ACTION_TR2:
+         case ActionToScene::ACTION_TR2:
             // Do nothing yet
             break;
-         case ACTION_TST:
+         case ActionToScene::ACTION_TST:
             // Do nothing yet
             break;
-         case ACTION_TPA:
+         case ActionToScene::ACTION_TPA:
             // Do nothing yet
             break;
-         case ACTION_TCL:
+         case ActionToScene::ACTION_TCL:
             // Do nothing yet
             break;
-         case ACTION_TIM:
+         case ActionToScene::ACTION_TIM:
             // Do nothing yet
             break;
-         case ACTION_URK:
+         case ActionToScene::ACTION_URK:
             // Do nothing yet
             break;
-         case ACTION_VTR:
+         case ActionToScene::ACTION_VTR:
             // Do nothing yet
             break;
-         case ACTION_WUP:
+         case ActionToScene::ACTION_WUP:
             // Do nothing yet
             break;
-         case EVENT_OVERVIEW:
+         case ActionToScene::EVENT_OVERVIEW:
             SaveToFile("obs/event_name.txt", OsisIf->GetEventName());
             break;
-         case SEGMENT_START:
+         case ActionToScene::SEGMENT_START:
             {
             SaveToFile("obs/segment_name.txt", OsisIf->GetSegmentName());
             SaveToFile("obs/category_name.txt", OsisIf->GetCategoryName());
             }
             break;
-         case PRF_RANKING:
+         case ActionToScene::PRF_RANKING:
             break;
-         case SEGMENT_RESULT_LIST:
+         case ActionToScene::SEGMENT_RESULT_LIST:
             // Generate HTML Table with Segment result
             break;
-         case CATEGORY_RESULT_LIST:
+         case ActionToScene::CATEGORY_RESULT_LIST:
             break;
          default:
             passToObs = false;
@@ -198,19 +197,10 @@ void Actions::DoActions()
 
 void Actions::AddAction(int action)
 {
-   if (action > NO_ACTIONS && action < LAST_ACTION)
+   if (action > ActionToScene::NO_ACTIONS && action < ActionToScene::LAST_ACTION)
    {
       ActionList.push_back(action);
    }
-}
-
-QString Actions::GetActionName(int action)
-{
-   if (action > NO_ACTIONS && action < LAST_ACTION)
-   {
-      return MetaActionsEnum.valueToKey(action);
-   }
-   return QString();
 }
 
 void Actions::SaveToFile(const QString& fileName, const QString text)

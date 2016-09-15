@@ -8,6 +8,7 @@
 #include "actions.h"
 #include "sceneinfo.h"
 #include "scenetableui.h"
+#include "actiontoscene.h"
 
 class ObsSceneSwitcher : public QObject
 {
@@ -23,7 +24,7 @@ public slots:
    void Initialize();
 
 private:
-   ActionToScene* osisAction;
+   ActionToScene* Action2Scene;
    QMap<QString, QList<int>>* SceneHkeyMap;
    QMap<QString, QList<int>>* TransitionHkeyMap;
    ObsAction* CurrentAction;

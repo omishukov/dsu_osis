@@ -2,16 +2,16 @@
 #define SCENETABLEUI_H
 
 #include <QStyledItemDelegate>
-#include "mainwindow.h"
 #include "obsaction.h"
 #include "sceneinfo.h"
+#include "actiontoscene.h"
 
 class ObsSceneSwitcher;
 
 class SceneTableUi : public QStyledItemDelegate
 {
 public:
-   SceneTableUi(MainWindow *mainWindow);
+   SceneTableUi();
 
    enum
    {
@@ -23,9 +23,9 @@ public:
       QTV_TRANSITION
    };
 
-   void SetObsActions(ActionToScene* obsActions) { ObsActions = obsActions; }
-   void SetObsScenesList(const QList<QString> obsScenesList);
-   void SetObsTransitionList(const QList<QString> obsTransitionList);
+   void SetObsActions(ActionToScene* obsActions);
+//   void SetObsScenesList(const QList<QString> obsScenesList);
+//   void SetObsTransitionList(const QList<QString> obsTransitionList);
    void SetObsSwither(ObsSceneSwitcher* oSS) {ObsSwitcher = oSS;}
 
 public:
@@ -49,7 +49,6 @@ private:
    QStringList Scenes;
    QStringList Transitions;
    ObsSceneSwitcher* ObsSwitcher;
-   MainWindow* MainWindow;
 
 };
 

@@ -6,7 +6,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-static QString inifile = "osisproxy.ini";
+static QString inifile = "osisc.ini";
 
 MainWindow::MainWindow(QWidget *parent)
    : QMainWindow(parent)

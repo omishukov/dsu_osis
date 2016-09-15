@@ -13,7 +13,7 @@
 static QTextStream *out = 0;
 static QFile *logfile = 0;
 
-static bool logopt[4] = {false, false, false, false}; // data, error, warning, debug
+static bool logopt[4] = {true, true, true, true}; // data, error, warning, debug
 
 void logOutput(QtMsgType type, const QMessageLogContext &/*context*/, const QString &msg)
 {

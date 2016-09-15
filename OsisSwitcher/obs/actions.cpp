@@ -203,7 +203,7 @@ void Actions::AddAction(int action)
    }
 }
 
-void Actions::SaveToFile(const QString& fileName, const QString text)
+void Actions::SaveToFile(const QString& fileName, QString text)
 {
    QFileInfo info(fileName);
    if (!info.exists())
@@ -217,6 +217,7 @@ void Actions::SaveToFile(const QString& fileName, const QString text)
    if (file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
    {
       QTextStream stream(&file);
+      stream.setCodec("UTF-8");
       stream << text << endl;
    }
 }
@@ -225,7 +226,7 @@ void Actions::GenerateHtml(QMap<int, QList<QString> >& segmentStartList)
 {
    QString html;
    html = "<html>";
-   html +="<head> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\"> ";
+   html +="<head> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\"> ";
    html += "<script type=\"text/JavaScript\"> function timedRefresh(timeoutPeriod) { setTimeout(\"location.reload(true);\",timeoutPeriod);}</script>";
    html += "<link rel=\"stylesheet\" href=\"fs_info.css\"> </head>";
    html += "<body class=\"PageBody\"  onload=\"JavaScript:timedRefresh(3000);\">";
@@ -246,7 +247,7 @@ void Actions::GenerateSegmentResultListHtml(QMap<int, QList<QString> >& segmentR
 {
    QString html;
    html = "<html>";
-   html +="<head> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=iso-8859-1\"> ";
+   html +="<head> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\"> ";
    html += "<script type=\"text/JavaScript\"> function timedRefresh(timeoutPeriod) { setTimeout(\"location.reload(true);\",timeoutPeriod);}</script>";
    html += "<link rel=\"stylesheet\" href=\"fs_info.css\"> </head>";
    html += "<body class=\"PageBody\"  onload=\"JavaScript:timedRefresh(3000);\">";

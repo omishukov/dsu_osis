@@ -1,10 +1,8 @@
 #include <QSettings>
 #include <QStandardPaths>
 #include <QFileInfo>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QJsonArray>
 #include <QMetaEnum>
+#include <QFileDialog>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
@@ -77,8 +75,13 @@ void MainWindow::ReadSettings()
       ui->ObsConfigPathLabel->setText(settings.value("OBS_CONFIG", location).toString());
       OBS_Path = location;
    }
+   else
+   {
+      OBS_Path = QFileInfo(obs_settings.fileName()).absolutePath() + "/";
+   }
    settings.endGroup();
 
+   ui->ObsConfigPathLabel->setText(OBS_Path);
    ui->Connect_PB->setText(MetaCalLinkEnum.valueToKey(Connect));
    emit ChangedIsuCalcSettings(ui->IsuCalcIP_LE->text(),ui->IsuCalcPort_LE->text().toUShort(),ui->Reconnect_CB->checkState());
 }
@@ -184,6 +187,18 @@ void MainWindow::IsuCalcDisconnected()
 void MainWindow::SetLinkStatus(QString label, QString buttonText, bool buttonEnabled, bool ipAddrEnabled, bool ipPortEnabled)
 {
    ui->IsuCalcLinkStatus->setText(label);
+   if (!QString::compare(label, "Connected"))
+   {
+      ui->IsuCalcLinkStatus->setStyleSheet("QLabel { background-color : lightgreen; }");
+   }
+   else if (!QString::compare(label, "Connecting..."))
+   {
+      ui->IsuCalcLinkStatus->setStyleSheet("QLabel { background-color : lightyellow; }");
+   }
+   else if (!QString::compare(label, "Disconnected"))
+   {
+      ui->IsuCalcLinkStatus->setStyleSheet("QLabel { background-color : red; }");
+   }
    ui->Connect_PB->setText(buttonText);
    ui->Connect_PB->setEnabled(buttonEnabled);
    ui->IsuCalcIP_LE->setEnabled(ipAddrEnabled);
@@ -235,4 +250,14 @@ void MainWindow::InitActionSceneUi()
    }
    ui->ActionToSceneQTV->resizeColumnsToContents();
    ui->ActionToSceneQTV->show();
+}
+
+void MainWindow::on_ChangeObsConfigPathPB_clicked()
+{
+   QString file_name = QFileDialog::getOpenFileName(this, "Select OBS configuration file", OBS_Path, "OBS (global.ini)");
+   if (QFileInfo(file_name).exists())
+   {
+     OBS_Path = QFileInfo(file_name).absolutePath();
+     ui->ObsConfigPathLabel->setText(OBS_Path);
+   }
 }

@@ -51,6 +51,7 @@ void OsisParser::Handle(QByteArray& qba)
 {
    QByteArray osisData;
    osisData.swap(qba);
+   osisData.prepend("<?xml version=\"1.0\" encoding=\"windows-1252\" ?>");
 
    QDomDocument doc;
    QString errMsg;

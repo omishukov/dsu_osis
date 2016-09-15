@@ -45,6 +45,8 @@ private slots:
 
    void on_Reconnect_CB_stateChanged(int);
 
+   void on_ChangeObsConfigPathPB_clicked();
+
 signals:
    void ChangedIsuCalcSettings(const QString&, quint16, uint);
    void EstablishConnection();

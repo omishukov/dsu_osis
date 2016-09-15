@@ -9,6 +9,7 @@ SceneInfo::SceneInfo(QString name, QList<int> hKey, int delay, QObject *parent)
    , NextScene(0)
    , PreviousScene(0)
    , Delay(delay)
+   , ActionCompleted(false)
 {
    Timer.setSingleShot(true);
    connect(&Timer, SIGNAL(timeout()), this, SLOT(TimerExpired()));
@@ -16,6 +17,7 @@ SceneInfo::SceneInfo(QString name, QList<int> hKey, int delay, QObject *parent)
 
 SceneInfo::~SceneInfo()
 {
+   ActionCompleted = true;
    if (NextScene)
    {
       NextScene->Cancel();
@@ -33,6 +35,7 @@ void SceneInfo::SwitchScene()
 {
    if (Hotkeys.isEmpty())
    {
+      ActionCompleted = true;
       return;
    }
 
@@ -115,6 +118,7 @@ void SceneInfo::SendHotkey()
    {
       NextScene->SwitchScene();
    }
+   ActionCompleted = true;
 }
 
 void SceneInfo::Cancel()
@@ -130,4 +134,14 @@ void SceneInfo::Cancel()
    {
       PreviousScene->Cancel();
    }
+   ActionCompleted = true;
+}
+
+bool SceneInfo::Completed()
+{
+   if (ActionCompleted && (!NextScene || NextScene->Completed()))
+   {
+      return true;
+   }
+   return false;
 }

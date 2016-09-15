@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
    , Switcher(&Action2Scene)
 {
    ui->setupUi(this);
+
    InitIsuCalcLink();
    InitOsisParser();
    InitObsData();
@@ -43,6 +44,8 @@ MainWindow::~MainWindow()
    OsisDataParserThread.wait();
    ObsDataSaverThread.quit();
    ObsDataSaverThread.wait();
+   SwitcherThread.quit();
+   SwitcherThread.wait();
 
    delete CalcIpValidator;
    delete PortValidator;
@@ -139,13 +142,14 @@ void MainWindow::InitObsData()
 {
    ObsDataSaver.moveToThread(&ObsDataSaverThread);
 
-   connect(&ObsDataSaver, SIGNAL(SendOsisEvent(int)), &Switcher, SLOT(HandleEvent())); // on thread start
+   connect(&ObsDataSaver, SIGNAL(SendOsisEvent(int)), &Switcher, SLOT(HandleEvent(int))); // on thread start
    ObsDataSaverThread.start();
 }
 
 void MainWindow::InitSceneSwitcher()
 {
-
+   Switcher.moveToThread(&SwitcherThread);
+   SwitcherThread.start();
 }
 
 void MainWindow::on_Connect_PB_clicked()

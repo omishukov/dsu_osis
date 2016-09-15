@@ -24,10 +24,13 @@ public slots:
    void Initialize();
 
 private:
+   void RemoveCompletesActions();
+
    ActionToScene* Action2Scene;
    QMap<QString, QList<int>>* SceneHkeyMap;
    QMap<QString, QList<int>>* TransitionHkeyMap;
    ObsAction* CurrentAction;
+   QList<ObsAction*> ActiveActions;
 
 };
 

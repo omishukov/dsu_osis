@@ -24,3 +24,8 @@ void ObsAction::Execute()
 {
    Scene.SwitchScene();
 }
+
+bool ObsAction::Completed()
+{
+   return Scene.Completed();
+}

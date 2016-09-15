@@ -20,6 +20,7 @@ public:
    void SetNextScene(SceneInfo* nextScene);
    void SetPreviousScene(SceneInfo* previousScene) { PreviousScene = previousScene; }
    void Cancel();
+   bool Completed();
 
 private:
     void SendHotkey();
@@ -32,6 +33,7 @@ private:
    SceneInfo* PreviousScene;
    int Delay;
    QTimer Timer;
+   bool ActionCompleted;
 };
 
 #endif // SCENEINFO_H

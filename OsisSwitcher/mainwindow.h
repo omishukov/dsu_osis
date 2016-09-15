@@ -77,6 +77,7 @@ private:
    SceneTableUi TableGui;
    QStandardItemModel* TableModel;
    ObsSceneSwitcher Switcher;
+   QThread SwitcherThread;
    ActionToScene Action2Scene;
 
 };

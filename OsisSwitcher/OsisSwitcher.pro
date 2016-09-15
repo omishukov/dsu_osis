@@ -78,7 +78,8 @@ HEADERS  += mainwindow.h \
     obs/sceneswitcher.h \
     obs/scenetableui.h \
     obsosisif.h \
-    actiontoscene.h
+    actiontoscene.h \
+    trace.h
 
 FORMS    += mainwindow.ui
 

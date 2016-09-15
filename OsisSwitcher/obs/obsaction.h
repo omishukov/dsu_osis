@@ -16,6 +16,7 @@ public:
 public:
    void Execute();
    SceneInfo* GetScene() { return &Scene;}
+   bool Completed();
 
 public slots:
 

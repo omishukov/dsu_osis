@@ -87,10 +87,17 @@ INCLUDEPATH += \
     $$PWD/../OsisProxy \
     $$PWD/osis
 
+RC_ICONS = danskate.ico
+
 GIT_VERSION = $$system(git --git-dir $$PWD/../.git --work-tree $$PWD describe --always --tags)
 GIT_VERSION ~= s/v/""
+GIT_VERSION ~= s/g/""
+GIT_VERSION ~= s/b/""
 
 DEFINES += GIT_VERSION=\\\"$$GIT_VERSION\\\"
 
 VERSION = $$GIT_VERSION
 VERSION ~= s/\.\d+\.[a-f0-9]{6,}//
+
+DISTFILES += \
+    danskate.ico

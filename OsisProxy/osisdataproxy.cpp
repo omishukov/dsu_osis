@@ -204,7 +204,68 @@ bool OsisDataProxy::ProcessOsisElement(QDomNode& n)
          QString elementName = action->GetAttribute(OsisAction::Command);
          if (!QString::compare(elementName, "INI"))
          {
+            QString id = action->GetAttribute(OsisAction::Current_Participant_ID);
+            id.prepend("Current_Participant_ID=\"");
+            id.append("\"");
+            CurrentPaticipantId = id;
+
+            QString nid = action->GetAttribute(OsisAction::Next_Participant_ID);
+            nid.prepend("Next_Participant_ID=\"");
+            nid.append("\"");
+            NextPaticipantId = nid;
+
+            QString pid = action->GetAttribute(OsisAction::Prev_Participant_ID);
+            pid.prepend("Prev_Participant_ID=\"");
+            pid.append("\"");
+            PrevPaticipantId = pid;
+
+            QString npid = action->GetAttribute(OsisAction::Next_Participant_StNum);
+            npid.prepend("Next_Participant_StNum=\"");
+            npid.append("\"");
+            NextParticipantStNum = npid;
+
+            QString lpid = action->GetAttribute(OsisAction::LastScored_Participant_StNum);
+            lpid.prepend("LastScored_Participant_StNum=\"");
+            lpid.append("\"");
+            LastScoredParticipantStNum = lpid;
+
             Tag = xmlElementTag;
+         }
+         else if (!QString::compare(elementName, "STP"))
+         {
+            ActionIni.clear();
+         }
+         else if (!QString::compare(elementName, "NXT"))
+         {
+            QString id = action->GetAttribute(OsisAction::Current_Participant_ID);
+            id.prepend("Current_Participant_ID=\"");
+            id.append("\"");
+            ActionIni.replace(CurrentPaticipantId, id.toLocal8Bit().constData());
+            CurrentPaticipantId = id;
+
+            QString nid = action->GetAttribute(OsisAction::Next_Participant_ID);
+            nid.prepend("Next_Participant_ID=\"");
+            nid.append("\"");
+            ActionIni.replace(NextPaticipantId, nid.toLocal8Bit().constData());
+            NextPaticipantId = nid;
+
+            QString pid = action->GetAttribute(OsisAction::Prev_Participant_ID);
+            pid.prepend("Prev_Participant_ID=\"");
+            pid.append("\"");
+            ActionIni.replace(PrevPaticipantId, pid.toLocal8Bit().constData());
+            PrevPaticipantId = pid;
+
+            QString npid = action->GetAttribute(OsisAction::Next_Participant_StNum);
+            npid.prepend("Next_Participant_StNum=\"");
+            npid.append("\"");
+            ActionIni.replace(NextParticipantStNum, npid.toLocal8Bit().constData());
+            NextParticipantStNum = npid;
+
+            QString lpid = action->GetAttribute(OsisAction::LastScored_Participant_StNum);
+            lpid.prepend("LastScored_Participant_StNum=\"");
+            lpid.append("\"");
+            ActionIni.replace(LastScoredParticipantStNum, lpid.toLocal8Bit().constData());
+            LastScoredParticipantStNum = lpid;
          }
       }
          break;

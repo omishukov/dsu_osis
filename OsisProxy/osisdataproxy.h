@@ -81,6 +81,11 @@ private:
    QByteArray PrfRanking;
    QByteArray ActionIni;
    QMutex M;
+   QString CurrentPaticipantId;
+   QString NextPaticipantId;
+   QString PrevPaticipantId;
+   QString NextParticipantStNum;
+   QString LastScoredParticipantStNum;
 
 };
 

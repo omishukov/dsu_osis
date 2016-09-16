@@ -12,6 +12,10 @@ MainWindow::MainWindow(QWidget *parent)
     , MetaCalLinkEnum(QMetaEnum::fromType<IsuCalcLinkButton>())
 {
    ui->setupUi(this);
+
+   QString version(GIT_VERSION);
+   setWindowTitle("DSU IsuCalc Proxy Server " + version);
+
    InitIsuCalcLink();
    InitOsisDataProxy();
    InitProxyServer();

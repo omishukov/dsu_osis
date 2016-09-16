@@ -362,28 +362,26 @@ void ActionToScene::UpdateAction(int action, Action2SceneStruct& actionInfo)
       if (SceneHkeyMap.contains(actionInfo.Scene))
       {
          ActionToScenes[action].Scene = actionInfo.Scene;
-         ActionToScenes[action].Delay = actionInfo.Delay;
          ActionToScenes[action].Hkey = SceneHkeyMap.value(actionInfo.Scene);
       }
       else
       {
          ActionToScenes[action].Scene.clear();
          ActionToScenes[action].Hkey.clear();
-         ActionToScenes[action].Delay = 0;
       }
+      ActionToScenes[action].Delay = actionInfo.Delay;
 
       if (SceneHkeyMap.contains(actionInfo.NextScene))
       {
          ActionToScenes[action].NextScene = actionInfo.NextScene;
-         ActionToScenes[action].NextDelay = actionInfo.NextDelay;
          ActionToScenes[action].NextHkey = SceneHkeyMap.value(actionInfo.NextScene);
       }
       else
       {
          ActionToScenes[action].NextScene.clear();
-         ActionToScenes[action].NextHkey.clear();
          ActionToScenes[action].NextDelay = 0;
       }
+      ActionToScenes[action].NextDelay = actionInfo.NextDelay;
 
       if (TransitionHkeyMap.contains(actionInfo.Transition))
       {

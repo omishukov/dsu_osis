@@ -63,13 +63,16 @@ public:
    QString GetSegmentName();
    QString GetCategoryName();
    bool GetSegmentStartList(QMap<int, QList<QString> >& segmentStartList);
+   bool GetWarmUpStartList(QMap<int, QList<QString>>& warmUpStartList);
    bool GetSegmentResultList(QMap<int, QList<QString> >& segmentResultList);
+   void GetWarmUpGroupsList(QList<int>& WarmUpList);
    QString GetPoints();
    QString GetTES();
    QString GetTCS();
    QString GetBonus();
    QString GetDeduction();
    QString GetRank();
+   QString GetCurrentWarmUpGroupNumber();
 
 signals:
    void NewAction(int);
@@ -78,6 +81,8 @@ signals:
 public slots:
 
 private:
+   int CurrentStartNumber();
+
    int Current_DB_ID;
    OsisEvent* Current_Event;
    int Current_Category_Id;

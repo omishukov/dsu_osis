@@ -86,3 +86,11 @@ FORMS    += mainwindow.ui
 INCLUDEPATH += \
     $$PWD/../OsisProxy \
     $$PWD/osis
+
+GIT_VERSION = $$system(git --git-dir $$PWD/../.git --work-tree $$PWD describe --always --tags)
+GIT_VERSION ~= s/v/""
+
+DEFINES += GIT_VERSION=\\\"$$GIT_VERSION\\\"
+
+VERSION = $$GIT_VERSION
+VERSION ~= s/\.\d+\.[a-f0-9]{6,}//

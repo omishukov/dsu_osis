@@ -30,12 +30,14 @@ private:
    void SaveToFile(const QString& file, QString text);
    void GenerateHtml(QMap<int, QList<QString>>& segmentStartList);
    void GenerateSegmentResultListHtml(QMap<int, QList<QString>>& segmentResultList);
+   void GenerateWarmUpStartListHtml(QMap<int, QList<QString>>& warmUpGroupNameList);
 
 private:
    QList<int> ActionList;
    ObsOsisIf* OsisIf;
    QMutex* M;
    ActionToScene* ActionInfo;
+   QList<int> WarmUpList;
 };
 
 #endif // ACTIONS_H

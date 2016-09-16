@@ -19,7 +19,8 @@ MainWindow::MainWindow(QWidget *parent)
    , Switcher(&Action2Scene)
 {
    ui->setupUi(this);
-
+   QString version(GIT_VERSION);
+   setWindowTitle("DSU OBS Switcher " + version);
    InitIsuCalcLink();
    InitOsisParser();
    InitObsData();

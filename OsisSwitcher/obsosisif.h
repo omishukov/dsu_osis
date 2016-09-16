@@ -22,8 +22,11 @@ public:
    virtual QString GetBonus() = 0;
    virtual QString GetDeduction() = 0;
    virtual QString GetRank() = 0;
+   virtual QString GetCurrentWarmUpGroupNumber() = 0;
    virtual bool GetSegmentStartList(QMap<int, QList<QString>>& segmentStartList) = 0;
    virtual bool GetSegmentResultList(QMap<int, QList<QString>>& segmentResultList) = 0;
+   virtual bool GetWarmUpStartList(QMap<int, QList<QString>>& warmUpStartList) = 0;
+   virtual void GetWarmUpGroupsList(QList<int>& WarmUpList) = 0;
 };
 
 #endif // OBSOSISIF_H

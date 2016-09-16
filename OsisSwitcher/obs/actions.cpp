@@ -91,6 +91,11 @@ void Actions::DoActions()
                QMap<int, QList<QString>> SegmentStartList;
                OsisIf->GetSegmentStartList(SegmentStartList);
                GenerateHtml(SegmentStartList);
+
+               OsisIf->GetWarmUpGroupsList(WarmUpList);
+               QMap<int, QList<QString>> WarmUpGroupNameList;
+               OsisIf->GetWarmUpStartList(WarmUpGroupNameList);
+               GenerateWarmUpStartListHtml(WarmUpGroupNameList);
             }
             break;
          case ActionToScene::ACTION_IDT:
@@ -125,6 +130,21 @@ void Actions::DoActions()
             break;
          case ActionToScene::ACTION_NXT:
             {
+               int stnum = OsisIf->GetCurrentSkaterNumber().toInt();
+               if (stnum)
+               {
+                  QMap<int, QList<QString>> WarmUpGroupNameList;
+                  OsisIf->GetWarmUpStartList(WarmUpGroupNameList);
+                  GenerateWarmUpStartListHtml(WarmUpGroupNameList);
+                  SaveToFile("obs/current_warmup_group_number.txt", OsisIf->GetCurrentWarmUpGroupNumber());
+                  for (auto group:WarmUpList)
+                  {
+                     if (stnum == group+1)
+                     {
+                        action = ActionToScene::ACTION_WUP;
+                     }
+                  }
+               }
                SaveToFile("obs/current_skater.txt", OsisIf->GetCurrentSkaterName());
                SaveToFile("obs/current_start_number.txt", OsisIf->GetCurrentSkaterNumber());
                SaveToFile("obs/current_skater_club.txt", OsisIf->GetCurrentSkaterClub());
@@ -168,7 +188,9 @@ void Actions::DoActions()
             // Do nothing yet
             break;
          case ActionToScene::EVENT_OVERVIEW:
+         {
             SaveToFile("obs/event_name.txt", OsisIf->GetEventName());
+          }
             break;
          case ActionToScene::SEGMENT_START:
             {
@@ -263,4 +285,24 @@ void Actions::GenerateSegmentResultListHtml(QMap<int, QList<QString> >& segmentR
    }
    html += "</table></body></html>";
    SaveToFile("obs/segment_result_list.html", html);
+}
+
+void Actions::GenerateWarmUpStartListHtml(QMap<int, QList<QString> >& warmUpGroupNameList)
+{
+   QString html;
+   html = "<html>";
+   html +="<head> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\"> ";
+   html += "<link rel=\"stylesheet\" href=\"fs_info.css\"> </head>";
+   html += "<body class=\"PageBody\">";
+   html += "<table width=\"100%\" align=\"center\" border=\"0\" cellspacing=\"1\">";
+   for (auto key : warmUpGroupNameList.keys())
+   {
+      QList<QString> info = warmUpGroupNameList[key];
+      html += "<tr class=\"Line1White\">";
+      html += "<td>" + QString::number(key) + "</td>";
+      html += "<td class=\"CellLeft\"><a>" + info[0] + "</a></td>";
+      html += "<td>" + info[1] + "</td></tr>";
+   }
+   html += "</table></body></html>";
+   SaveToFile("obs/current_warmup_group.html", html);
 }

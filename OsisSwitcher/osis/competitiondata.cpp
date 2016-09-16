@@ -450,6 +450,89 @@ bool OsisCompetitionData::GetSegmentStartList(QMap<int, QList<QString> >& segmen
    return true;
 }
 
+int OsisCompetitionData::CurrentStartNumber()
+{
+   if (!Current_Action)
+   {
+      return false;
+   }
+   int id = Current_Action->Current_Participant_Id;
+   if (id == -1)
+   {
+      return false;
+   }
+   return Current_Action->GetAttribute(OsisAction::Current_Start_Number).toInt();
+}
+
+bool OsisCompetitionData::GetWarmUpStartList(QMap<int, QList<QString> >& warmUpStartList)
+{
+   int stnum = CurrentStartNumber();
+   if (!stnum)
+   {
+      return false;
+   }
+   QList<int> wupGroups;
+   GetWarmUpGroupsList(wupGroups);
+
+   int prev = 0;
+   for (auto wupNum:wupGroups)
+   {
+      if (stnum <= wupNum)
+      {
+         for( auto performance : Performances)
+         {
+            int StartNum = performance->GetAttributeInt(OsisPerformance::Start_Number);
+            if (StartNum == -1 || performance->Id == -1 || StartNum < prev || StartNum > wupNum || !Participants.contains(performance->Id))
+            {
+               continue;
+            }
+            QList<QString> NameAndClub;
+            NameAndClub << Participants[performance->Id]->GetAttribute(OsisParticipant::Short_Name) <<
+                           Participants[performance->Id]->GetAttribute(OsisParticipant::Nation);
+
+            warmUpStartList[StartNum] = NameAndClub;
+         }
+         break;
+      }
+      prev = wupNum;
+   }
+   return true;
+}
+
+QString OsisCompetitionData::GetCurrentWarmUpGroupNumber()
+{
+   int stnum = CurrentStartNumber();
+   if (!stnum)
+   {
+      return QString();
+   }
+
+   QList<int> wupGroups;
+   GetWarmUpGroupsList(wupGroups);
+
+   int i = 1;
+   for (auto wupNum:wupGroups)
+   {
+      if (stnum <= wupNum)
+      {
+         break;
+      }
+      i++;
+   }
+   return QString::number(i);
+}
+
+void OsisCompetitionData::GetWarmUpGroupsList(QList<int>& WarmUpList)
+{
+   WarmUpList.clear();
+   int pNum = 0;
+   for (auto wup:WarmupGroups)
+   {
+      pNum += wup->Num;
+      WarmUpList.append(pNum);
+   }
+}
+
 bool OsisCompetitionData::GetSegmentResultList(QMap<int, QList<QString> >& segmentResultList)
 {
    int Rank;

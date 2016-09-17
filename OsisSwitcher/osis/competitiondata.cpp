@@ -12,6 +12,7 @@ OsisCompetitionData::OsisCompetitionData(QObject *parent)
    , Last_Participant_Id(-1)
    , Current_Action(0)
    , Current_Performance_Result(0)
+   , CurrentParticipantId(-1)
 {
 
 }
@@ -261,6 +262,11 @@ void OsisCompetitionData::AddAction(OsisAction* newAction)
    delete Current_Action;
    Current_Action = newAction;
 
+   if (Current_Action->Current_Participant_Id != -1)
+   {
+      CurrentParticipantId = Current_Action->Current_Participant_Id;
+   }
+
    const QMetaObject &mo = ActionToScene::staticMetaObject;
    int index = mo.indexOfEnumerator("ObsAction");
    QMetaEnum metaEnum = mo.enumerator(index);
@@ -269,6 +275,12 @@ void OsisCompetitionData::AddAction(OsisAction* newAction)
    elementName.prepend("ACTION_");
    int xmlElementTag = metaEnum.keyToValue(&elementName.toStdString()[0]);
    emit NewAction(xmlElementTag);
+   if (xmlElementTag == ActionToScene::ACTION_STP)
+   {
+      delete Current_Action;
+      Current_Action = 0;
+      CurrentParticipantId = -1;
+   }
 }
 
 void OsisCompetitionData::AddPrfDetails(OsisPrfDetails* newPrfDetails)
@@ -351,30 +363,22 @@ void OsisCompetitionData::Uninit()
 
    delete Current_Performance_Result;
    Current_Performance_Result = 0;
+
+   CurrentParticipantId = -1;
 }
 
 QString OsisCompetitionData::GetCurrentSkaterName()
 {
-   if (!Current_Action)
+   if (CurrentParticipantId == -1 || !Participants.contains(CurrentParticipantId))
    {
       return QString();
    }
-   int id = Current_Action->Current_Participant_Id;
-   if (id == -1 || !Participants.contains(id))
-   {
-      return QString();
-   }
-   return Participants[id]->GetAttribute(OsisParticipant::Short_Name);
+   return Participants[CurrentParticipantId]->GetAttribute(OsisParticipant::Short_Name);
 }
 
 QString OsisCompetitionData::GetCurrentSkaterNumber()
 {
    if (!Current_Action)
-   {
-      return QString();
-   }
-   int id = Current_Action->Current_Participant_Id;
-   if (id == -1)
    {
       return QString();
    }
@@ -387,12 +391,11 @@ QString OsisCompetitionData::GetCurrentSkaterNation()
    {
       return QString();
    }
-   int id = Current_Action->Current_Participant_Id;
-   if ((id == -1) || !Participants.contains(id))
+   if (CurrentParticipantId == -1 || !Participants.contains(CurrentParticipantId))
    {
       return QString();
    }
-   return Participants[id]->GetAttribute(OsisParticipant::Nation);
+   return Participants[CurrentParticipantId]->GetAttribute(OsisParticipant::Nation);
 }
 
 QString OsisCompetitionData::GetCurrentSkaterClub()
@@ -401,17 +404,21 @@ QString OsisCompetitionData::GetCurrentSkaterClub()
    {
       return QString();
    }
-   int id = Current_Action->Current_Participant_Id;
-   if (id == -1 || !Participants.contains(id))
+   if (CurrentParticipantId == -1 || !Participants.contains(CurrentParticipantId))
    {
       return QString();
    }
-   return Participants[id]->GetAttribute(OsisParticipant::Club);
+   return Participants[CurrentParticipantId]->GetAttribute(OsisParticipant::Club);
 }
 
 QString OsisCompetitionData::GetEventName()
 {
    return Current_Event->GetAttribute(OsisEvent::Name);
+}
+
+QString OsisCompetitionData::GetEventAbbreviation()
+{
+   return Current_Event->GetAttribute(OsisEvent::Abbreviation);
 }
 
 QString OsisCompetitionData::GetSegmentName()
@@ -452,16 +459,12 @@ bool OsisCompetitionData::GetSegmentStartList(QMap<int, QList<QString> >& segmen
 
 int OsisCompetitionData::CurrentStartNumber()
 {
-   if (!Current_Action)
+   QString stNum = GetCurrentSkaterNumber();
+   if (stNum.isEmpty())
    {
-      return false;
+      return 0;
    }
-   int id = Current_Action->Current_Participant_Id;
-   if (id == -1)
-   {
-      return false;
-   }
-   return Current_Action->GetAttribute(OsisAction::Current_Start_Number).toInt();
+   return stNum.toInt();
 }
 
 bool OsisCompetitionData::GetWarmUpStartList(QMap<int, QList<QString> >& warmUpStartList)
@@ -482,7 +485,7 @@ bool OsisCompetitionData::GetWarmUpStartList(QMap<int, QList<QString> >& warmUpS
          for( auto performance : Performances)
          {
             int StartNum = performance->GetAttributeInt(OsisPerformance::Start_Number);
-            if (StartNum == -1 || performance->Id == -1 || StartNum < prev || StartNum > wupNum || !Participants.contains(performance->Id))
+            if (StartNum == -1 || performance->Id == -1 || StartNum <= prev || StartNum > wupNum || !Participants.contains(performance->Id))
             {
                continue;
             }
@@ -604,7 +607,7 @@ QString OsisCompetitionData::GetRank()
 
    for( auto performance : Performances)
    {
-      if (performance->Id == Current_Action->Current_Participant_Id)
+      if (performance->Id == CurrentParticipantId)
       {
          return performance->GetAttribute(OsisPerformance::Rank);
       }

@@ -33,10 +33,6 @@ void Actions::DoActions()
             break;
          case ActionToScene::ACTION_1S1:
             {
-               // Save results from OsisPrfDetails
-               // * points.txt
-               // * tes.txt (technical element score)
-               // * tcs.txt (program component score)
                SaveToFile("obs/points.txt", OsisIf->GetPoints());
                SaveToFile("obs/tes.txt", OsisIf->GetTES());
                SaveToFile("obs/tcs.txt", OsisIf->GetTCS());
@@ -46,10 +42,8 @@ void Actions::DoActions()
             break;
          case ActionToScene::ACTION_1S2:
             {
-               // Save rank from Performance
                SaveToFile("obs/current_participant_rank.txt", OsisIf->GetRank());
 
-               // Segment Result list
                QMap<int, QList<QString>> SegmentResultList;
                OsisIf->GetSegmentResultList(SegmentResultList);
                GenerateSegmentResultListHtml(SegmentResultList);
@@ -81,8 +75,6 @@ void Actions::DoActions()
             break;
          case ActionToScene::ACTION_INI:
             {
-               // Generate Starting order from Performances (list) and Participants.
-               // starting_list.csv
                SaveToFile("obs/current_skater.txt", OsisIf->GetCurrentSkaterName());
                SaveToFile("obs/current_start_number.txt", OsisIf->GetCurrentSkaterNumber());
                SaveToFile("obs/current_skater_club.txt", OsisIf->GetCurrentSkaterClub());
@@ -126,7 +118,18 @@ void Actions::DoActions()
             // Do nothing yet
             break;
          case ActionToScene::ACTION_STP:
-            // Do nothing yet
+            {
+               SaveToFile("obs/current_skater.txt", "");
+               SaveToFile("obs/current_start_number.txt", "");
+               SaveToFile("obs/current_skater_club.txt", "");
+               SaveToFile("obs/current_skater_nation.txt", "");
+               SaveToFile("obs/points.txt", "");
+               SaveToFile("obs/tes.txt", "");
+               SaveToFile("obs/tcs.txt", "");
+               SaveToFile("obs/bonus.txt", "");
+               SaveToFile("obs/deduction.txt", "");
+               SaveToFile("obs/current_warmup_group_number.txt", "");
+            }
             break;
          case ActionToScene::ACTION_NXT:
             {
@@ -190,6 +193,7 @@ void Actions::DoActions()
          case ActionToScene::EVENT_OVERVIEW:
          {
             SaveToFile("obs/event_name.txt", OsisIf->GetEventName());
+            SaveToFile("obs/event_abbreviation.txt", OsisIf->GetEventAbbreviation());
           }
             break;
          case ActionToScene::SEGMENT_START:
@@ -201,7 +205,15 @@ void Actions::DoActions()
          case ActionToScene::PRF_RANKING:
             break;
          case ActionToScene::SEGMENT_RESULT_LIST:
-            // Generate HTML Table with Segment result
+            {
+               QMap<int, QList<QString>> SegmentResultList;
+               OsisIf->GetSegmentResultList(SegmentResultList);
+               if (SegmentResultList.isEmpty())
+               {
+                  passToObs = false;
+               }
+               GenerateSegmentResultListHtml(SegmentResultList);
+            }
             break;
          case ActionToScene::CATEGORY_RESULT_LIST:
             break;
@@ -249,9 +261,8 @@ void Actions::GenerateHtml(QMap<int, QList<QString> >& segmentStartList)
    QString html;
    html = "<html>";
    html +="<head> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\"> ";
-   html += "<script type=\"text/JavaScript\"> function timedRefresh(timeoutPeriod) { setTimeout(\"location.reload(true);\",timeoutPeriod);}</script>";
    html += "<link rel=\"stylesheet\" href=\"fs_info.css\"> </head>";
-   html += "<body class=\"PageBody\"  onload=\"JavaScript:timedRefresh(3000);\">";
+   html += "<body class=\"PageBody\">";
    html += "<table width=\"100%\" align=\"center\" border=\"0\" cellspacing=\"1\">";
    for (auto startNum : segmentStartList.keys())
    {
@@ -270,9 +281,8 @@ void Actions::GenerateSegmentResultListHtml(QMap<int, QList<QString> >& segmentR
    QString html;
    html = "<html>";
    html +="<head> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\"> ";
-   html += "<script type=\"text/JavaScript\"> function timedRefresh(timeoutPeriod) { setTimeout(\"location.reload(true);\",timeoutPeriod);}</script>";
    html += "<link rel=\"stylesheet\" href=\"fs_info.css\"> </head>";
-   html += "<body class=\"PageBody\"  onload=\"JavaScript:timedRefresh(3000);\">";
+   html += "<body class=\"PageBody\">";
    html += "<table width=\"100%\" align=\"center\" border=\"0\" cellspacing=\"1\">";
    for (auto rank : segmentResultList.keys())
    {
@@ -291,7 +301,8 @@ void Actions::GenerateWarmUpStartListHtml(QMap<int, QList<QString> >& warmUpGrou
 {
    QString html;
    html = "<html>";
-   html +="<head> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\"> ";
+   html += "<head> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\"> ";
+   html += "<META HTTP-EQUIV=\"refresh\" CONTENT=\"5\"; URL=http://localhost:8080/current_warmup_group.html\">";
    html += "<link rel=\"stylesheet\" href=\"fs_info.css\"> </head>";
    html += "<body class=\"PageBody\">";
    html += "<table width=\"100%\" align=\"center\" border=\"0\" cellspacing=\"1\">";

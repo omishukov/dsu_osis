@@ -60,6 +60,7 @@ public:
    QString GetCurrentSkaterNation();
    QString GetCurrentSkaterClub();
    QString GetEventName();
+   QString GetEventAbbreviation();
    QString GetSegmentName();
    QString GetCategoryName();
    bool GetSegmentStartList(QMap<int, QList<QString> >& segmentStartList);
@@ -96,6 +97,7 @@ private:
    OsisWarmupGroupMap WarmupGroups;
    OsisAction* Current_Action;
    OsisPrfDetails* Current_Performance_Result;
+   int CurrentParticipantId;
 };
 
 #endif // OSISCOMPETITIONDATA_H

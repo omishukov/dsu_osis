@@ -14,6 +14,7 @@ public:
    virtual QString GetCurrentSkaterNation() = 0;
    virtual QString GetCurrentSkaterClub() = 0;
    virtual QString GetEventName() = 0;
+   virtual QString GetEventAbbreviation() = 0;
    virtual QString GetSegmentName() = 0;
    virtual QString GetCategoryName() = 0;
    virtual QString GetPoints() = 0;

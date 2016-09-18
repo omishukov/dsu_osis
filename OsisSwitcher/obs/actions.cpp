@@ -261,6 +261,7 @@ void Actions::GenerateHtml(QMap<int, QList<QString> >& segmentStartList)
    QString html;
    html = "<html>";
    html +="<head> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\"> ";
+   html += "<META HTTP-EQUIV=\"refresh\" CONTENT=\"5\"; URL=http://localhost:8080/starting_order.html\">";
    html += "<link rel=\"stylesheet\" href=\"fs_info.css\"> </head>";
    html += "<body class=\"PageBody\">";
    html += "<table width=\"100%\" align=\"center\" border=\"0\" cellspacing=\"1\">";
@@ -281,6 +282,7 @@ void Actions::GenerateSegmentResultListHtml(QMap<int, QList<QString> >& segmentR
    QString html;
    html = "<html>";
    html +="<head> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\"> ";
+   html += "<META HTTP-EQUIV=\"refresh\" CONTENT=\"5\"; URL=http://localhost:8080/segment_result_list.html\">";
    html += "<link rel=\"stylesheet\" href=\"fs_info.css\"> </head>";
    html += "<body class=\"PageBody\">";
    html += "<table width=\"100%\" align=\"center\" border=\"0\" cellspacing=\"1\">";

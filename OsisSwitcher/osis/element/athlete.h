@@ -24,6 +24,7 @@ public:
    enum OsisElementAttributes
    {
       ID, //  Identifier
+      Index,
       Type,
       Nation,
       Full_Name, // 60

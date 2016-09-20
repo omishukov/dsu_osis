@@ -101,7 +101,10 @@ void ActionToScene::LoadActionConfiguration(QString& inifile)
       if (!SceneHkeyMap.contains(sceneName))
       {
          sceneName.clear();
-         qWarning() << "Scene [" << sceneName << "] from config file doesn't exist in OBS configuration";
+         if (!sceneName.isEmpty())
+         {
+            qWarning() << "Scene [" << sceneName << "] from config file doesn't exist in OBS configuration";
+         }
       }
       else
       {
@@ -114,7 +117,10 @@ void ActionToScene::LoadActionConfiguration(QString& inifile)
       if (!SceneHkeyMap.contains(sceneName))
       {
          sceneName.clear();
-         qWarning() << "Scene [" << sceneName << "] from config file doesn't exist in OBS configuration";
+         if (!sceneName.isEmpty())
+         {
+            qWarning() << "Scene [" << sceneName << "] from config file doesn't exist in OBS configuration";
+         }
       }
       else
       {
@@ -127,7 +133,10 @@ void ActionToScene::LoadActionConfiguration(QString& inifile)
       if (!TransitionHkeyMap.contains(sceneName))
       {
          sceneName.clear();
-         qWarning() << "Transition [" << sceneName << "] from config file doesn't exist in OBS configuration";
+         if (!sceneName.isEmpty())
+         {
+            qWarning() << "Transition [" << sceneName << "] from config file doesn't exist in OBS configuration";
+         }
       }
       else
       {

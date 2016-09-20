@@ -28,7 +28,8 @@ signals:
 
 private:
    void SaveToFile(const QString& file, QString text);
-   void GenerateHtml(QMap<int, QList<QString>>& segmentStartList);
+   void GenerateHtml(const QString& fileName, QMap<int, QList<QString> >& outputList);
+   void GenerateHtml(const QString& fileName, const QString& text);
    void GenerateSegmentResultListHtml(QMap<int, QList<QString>>& segmentResultList);
    void GenerateWarmUpStartListHtml(QMap<int, QList<QString>>& warmUpGroupNameList);
 

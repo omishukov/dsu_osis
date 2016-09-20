@@ -24,7 +24,7 @@ void Actions::DoActions()
    bool passToObs;
    foreach(int action, ActionList)
    {
-      SaveToFile("obs/current_action.txt", ActionInfo->GetActionName(action));
+      GenerateHtml("obs/current_action.html", ActionInfo->GetActionName(action));
 
       passToObs = true;
       switch (action)
@@ -33,20 +33,20 @@ void Actions::DoActions()
             break;
          case ActionToScene::ACTION_1S1:
             {
-               SaveToFile("obs/points.txt", OsisIf->GetPoints());
-               SaveToFile("obs/tes.txt", OsisIf->GetTES());
-               SaveToFile("obs/tcs.txt", OsisIf->GetTCS());
-               SaveToFile("obs/bonus.txt", OsisIf->GetBonus());
-               SaveToFile("obs/deduction.txt", OsisIf->GetDeduction());
+               GenerateHtml("obs/points.html", OsisIf->GetPoints());
+               GenerateHtml("obs/tes.html", OsisIf->GetTES());
+               GenerateHtml("obs/tcs.html", OsisIf->GetTCS());
+               GenerateHtml("obs/bonus.html", OsisIf->GetBonus());
+               GenerateHtml("obs/deduction.html", OsisIf->GetDeduction());
             }
             break;
          case ActionToScene::ACTION_1S2:
             {
-               SaveToFile("obs/current_participant_rank.txt", OsisIf->GetRank());
+               GenerateHtml("obs/current_participant_rank.html", OsisIf->GetRank());
 
                QMap<int, QList<QString>> SegmentResultList;
                OsisIf->GetSegmentResultList(SegmentResultList);
-               GenerateSegmentResultListHtml(SegmentResultList);
+               GenerateHtml("obs/segment_result_list.html", SegmentResultList);
             }
             break;
          case ActionToScene::ACTION_1S3:
@@ -75,19 +75,19 @@ void Actions::DoActions()
             break;
          case ActionToScene::ACTION_INI:
             {
-               SaveToFile("obs/current_skater.txt", OsisIf->GetCurrentSkaterName());
-               SaveToFile("obs/current_start_number.txt", OsisIf->GetCurrentSkaterNumber());
-               SaveToFile("obs/current_skater_club.txt", OsisIf->GetCurrentSkaterClub());
-               SaveToFile("obs/current_skater_nation.txt", OsisIf->GetCurrentSkaterNation());
+               GenerateHtml("obs/current_skater.html", OsisIf->GetCurrentSkaterName());
+               GenerateHtml("obs/current_start_number.html", OsisIf->GetCurrentSkaterNumber());
+               GenerateHtml("obs/current_skater_club.html", OsisIf->GetCurrentSkaterClub());
+               GenerateHtml("obs/current_skater_nation.html", OsisIf->GetCurrentSkaterNation());
 
                QMap<int, QList<QString>> SegmentStartList;
                OsisIf->GetSegmentStartList(SegmentStartList);
-               GenerateHtml(SegmentStartList);
+               GenerateHtml("obs/starting_order.html", SegmentStartList);
 
                OsisIf->GetWarmUpGroupsList(WarmUpList);
                QMap<int, QList<QString>> WarmUpGroupNameList;
                OsisIf->GetWarmUpStartList(WarmUpGroupNameList);
-               GenerateWarmUpStartListHtml(WarmUpGroupNameList);
+               GenerateHtml("obs/current_warmup_group.html", WarmUpGroupNameList);
             }
             break;
          case ActionToScene::ACTION_IDT:
@@ -119,16 +119,20 @@ void Actions::DoActions()
             break;
          case ActionToScene::ACTION_STP:
             {
-               SaveToFile("obs/current_skater.txt", "");
-               SaveToFile("obs/current_start_number.txt", "");
-               SaveToFile("obs/current_skater_club.txt", "");
-               SaveToFile("obs/current_skater_nation.txt", "");
-               SaveToFile("obs/points.txt", "");
-               SaveToFile("obs/tes.txt", "");
-               SaveToFile("obs/tcs.txt", "");
-               SaveToFile("obs/bonus.txt", "");
-               SaveToFile("obs/deduction.txt", "");
-               SaveToFile("obs/current_warmup_group_number.txt", "");
+               GenerateHtml("obs/current_skater.html", "");
+               GenerateHtml("obs/current_start_number.html", "");
+               GenerateHtml("obs/current_skater_club.html", "");
+               GenerateHtml("obs/current_skater_nation.html", "");
+               GenerateHtml("obs/points.html", "");
+               GenerateHtml("obs/tes.html", "");
+               GenerateHtml("obs/tcs.html", "");
+               GenerateHtml("obs/bonus.html", "");
+               GenerateHtml("obs/deduction.html", "");
+               GenerateHtml("obs/current_warmup_group_number.html", "");
+               QMap<int, QList<QString>> SegmentStartList;
+               GenerateHtml("obs/starting_order.html", SegmentStartList);
+               QMap<int, QList<QString>> WarmUpGroupNameList;
+               GenerateHtml("obs/current_warmup_group.html", WarmUpGroupNameList);
             }
             break;
          case ActionToScene::ACTION_NXT:
@@ -138,8 +142,8 @@ void Actions::DoActions()
                {
                   QMap<int, QList<QString>> WarmUpGroupNameList;
                   OsisIf->GetWarmUpStartList(WarmUpGroupNameList);
-                  GenerateWarmUpStartListHtml(WarmUpGroupNameList);
-                  SaveToFile("obs/current_warmup_group_number.txt", OsisIf->GetCurrentWarmUpGroupNumber());
+                  GenerateHtml("obs/current_warmup_group.html", WarmUpGroupNameList);
+                  GenerateHtml("obs/current_warmup_group_number.html", OsisIf->GetCurrentWarmUpGroupNumber());
                   for (auto group:WarmUpList)
                   {
                      if (stnum == group+1)
@@ -148,10 +152,10 @@ void Actions::DoActions()
                      }
                   }
                }
-               SaveToFile("obs/current_skater.txt", OsisIf->GetCurrentSkaterName());
-               SaveToFile("obs/current_start_number.txt", OsisIf->GetCurrentSkaterNumber());
-               SaveToFile("obs/current_skater_club.txt", OsisIf->GetCurrentSkaterClub());
-               SaveToFile("obs/current_skater_nation.txt", OsisIf->GetCurrentSkaterNation());
+               GenerateHtml("obs/current_skater.html", OsisIf->GetCurrentSkaterName());
+               GenerateHtml("obs/current_start_number.html", OsisIf->GetCurrentSkaterNumber());
+               GenerateHtml("obs/current_skater_club.html", OsisIf->GetCurrentSkaterClub());
+               GenerateHtml("obs/current_skater_nation.html", OsisIf->GetCurrentSkaterNation());
             }
             break;
          case ActionToScene::ACTION_PRV:
@@ -191,15 +195,15 @@ void Actions::DoActions()
             // Do nothing yet
             break;
          case ActionToScene::EVENT_OVERVIEW:
-         {
-            SaveToFile("obs/event_name.txt", OsisIf->GetEventName());
-            SaveToFile("obs/event_abbreviation.txt", OsisIf->GetEventAbbreviation());
-          }
+            {
+               GenerateHtml("obs/event_name.html", OsisIf->GetEventName());
+               GenerateHtml("obs/event_abbreviation.html", OsisIf->GetEventAbbreviation());
+            }
             break;
          case ActionToScene::SEGMENT_START:
             {
-            SaveToFile("obs/segment_name.txt", OsisIf->GetSegmentName());
-            SaveToFile("obs/category_name.txt", OsisIf->GetCategoryName());
+               GenerateHtml("obs/segment_name.html", OsisIf->GetSegmentName());
+               GenerateHtml("obs/category_name.html", OsisIf->GetCategoryName());
             }
             break;
          case ActionToScene::PRF_RANKING:
@@ -212,7 +216,7 @@ void Actions::DoActions()
                {
                   passToObs = false;
                }
-               GenerateSegmentResultListHtml(SegmentResultList);
+               GenerateHtml("obs/segment_result_list.html", SegmentResultList);
             }
             break;
          case ActionToScene::CATEGORY_RESULT_LIST:
@@ -251,71 +255,58 @@ void Actions::SaveToFile(const QString& fileName, QString text)
    if (file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
    {
       QTextStream stream(&file);
-      stream.setCodec("UTF-8");
+//      stream.setCodec("UTF-8");
       stream << text << endl;
    }
 }
 
-void Actions::GenerateHtml(QMap<int, QList<QString> >& segmentStartList)
+void Actions::GenerateHtml(const QString& fileName, QMap<int, QList<QString> >& outputList)
 {
+   int i;
+   QFileInfo fileInfo(fileName);
+   QString outputFile = fileInfo.fileName();
    QString html;
    html = "<html>";
-   html +="<head> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\"> ";
-   html += "<META HTTP-EQUIV=\"refresh\" CONTENT=\"5\"; URL=http://localhost:8080/starting_order.html\">";
+   html +="<head> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=\"UTF-8\"\"> ";
+   html += "<META HTTP-EQUIV=\"refresh\" CONTENT=\"5\"; URL=http://localhost:8080/" + outputFile + "\">";
    html += "<link rel=\"stylesheet\" href=\"fs_info.css\"> </head>";
    html += "<body class=\"PageBody\">";
    html += "<table width=\"100%\" align=\"center\" border=\"0\" cellspacing=\"1\">";
-   for (auto startNum : segmentStartList.keys())
+   for (auto startNum : outputList.keys())
    {
-      QList<QString> info = segmentStartList[startNum];
+      QList<QString> info = outputList[startNum];
+      int columns = info.size();
+      if (columns == 0)
+      {
+         continue;
+      }
+
       html += "<tr class=\"Line1White\">";
       html += "<td>" + QString::number(startNum) + "</td>";
-      html += "<td class=\"CellLeft\"><a>" + info[0] + "</a></td>";
-      html += "<td>" + info[1] + "</td></tr>";
+      html += "<td class=\"CellLeft\"><a>" + info[0].toUtf8() + "</a></td>";
+      for (i = 1; i < columns; i++)
+      {
+         html += "<td>" + info[i].toUtf8() + "</td>";
+      }
+      html += "</tr>";
    }
    html += "</table></body></html>";
-   SaveToFile("obs/starting_order.html", html);
+   SaveToFile(fileName, html);
 }
 
-void Actions::GenerateSegmentResultListHtml(QMap<int, QList<QString> >& segmentResultList)
+void Actions::GenerateHtml(const QString& fileName, const QString& text)
 {
+   QFileInfo fileInfo(fileName);
+   QString outputFile = fileInfo.fileName();
    QString html;
    html = "<html>";
-   html +="<head> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\"> ";
-   html += "<META HTTP-EQUIV=\"refresh\" CONTENT=\"5\"; URL=http://localhost:8080/segment_result_list.html\">";
+   html +="<head> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=\"UTF-8\"\"> ";
+   html += "<META HTTP-EQUIV=\"refresh\" CONTENT=\"5\"; URL=http://localhost:8080/" + outputFile + "\">";
    html += "<link rel=\"stylesheet\" href=\"fs_info.css\"> </head>";
    html += "<body class=\"PageBody\">";
    html += "<table width=\"100%\" align=\"center\" border=\"0\" cellspacing=\"1\">";
-   for (auto rank : segmentResultList.keys())
-   {
-      QList<QString> info = segmentResultList[rank];
-      html += "<tr class=\"Line1White\">";
-      html += "<td>" + QString::number(rank) + "</td>";
-      html += "<td class=\"CellLeft\"><a>" + info[0] + "</a></td>";
-      html += "<td class=\"CellLeft\"><a>" + info[1] + "</a></td>";
-      html += "<td>" + info[2] + "</td></tr>";
-   }
-   html += "</table></body></html>";
-   SaveToFile("obs/segment_result_list.html", html);
-}
-
-void Actions::GenerateWarmUpStartListHtml(QMap<int, QList<QString> >& warmUpGroupNameList)
-{
-   QString html;
-   html = "<html>";
-   html += "<head> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1252\"> ";
-   html += "<META HTTP-EQUIV=\"refresh\" CONTENT=\"5\"; URL=http://localhost:8080/current_warmup_group.html\">";
-   html += "<link rel=\"stylesheet\" href=\"fs_info.css\"> </head>";
-   html += "<body class=\"PageBody\">";
-   html += "<table width=\"100%\" align=\"center\" border=\"0\" cellspacing=\"1\">";
-   for (auto key : warmUpGroupNameList.keys())
-   {
-      QList<QString> info = warmUpGroupNameList[key];
-      html += "<tr class=\"Line1White\">";
-      html += "<td>" + QString::number(key) + "</td>";
-      html += "<td class=\"CellLeft\"><a>" + info[0] + "</a></td>";
-      html += "<td>" + info[1] + "</td></tr>";
-   }
-   html += "</table></body></html>";
-   SaveToFile("obs/current_warmup_group.html", html);
+   html += "<tr class=\"Line1White\">";
+   html += "<td class=\"CellLeft\"><a>" + text.toUtf8() + "</a></td>";
+   html += "</tr></table></body></html>";
+   SaveToFile(fileName, html);
 }

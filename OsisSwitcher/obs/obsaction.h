@@ -19,6 +19,7 @@ public:
    bool Completed();
 
 public slots:
+   void SceneCompleted();
 
 private:
    QString ActionName;

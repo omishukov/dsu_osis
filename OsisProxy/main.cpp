@@ -3,11 +3,14 @@
 #include <QDateTime>
 #include <QFile>
 
-QTextStream *out = 0;
-QFile *logfile = 0;
+static QTextStream *out = 0;
+static QFile *logfile = 0;
+static QMutex M;
 
 void logOutput(QtMsgType type, const QMessageLogContext &/*context*/, const QString &msg)
 {
+   QMutexLocker lock(&M);
+
    bool enablePrint = false;
    QString debugdate = QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss.zzz");
    switch (type)
@@ -42,7 +45,7 @@ void logOutput(QtMsgType type, const QMessageLogContext &/*context*/, const QStr
          break;
    }
 
-//   if (enablePrint && out && logfile)
+   if (enablePrint && out && logfile)
    {
       (*out) << debugdate << " [" << msg << "]" << endl;
       out->flush();

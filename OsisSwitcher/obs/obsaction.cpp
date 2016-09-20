@@ -13,6 +13,7 @@ ObsAction::ObsAction(Action2SceneStruct& actionInfo, ObsAction *previousAction, 
    {
       Scene.SetPreviousScene(previousAction->GetScene());
    }
+   connect(&Scene, SIGNAL(ActionDone()), this, SLOT(SceneCompleted()));
 }
 
 ObsAction::~ObsAction()
@@ -28,4 +29,9 @@ void ObsAction::Execute()
 bool ObsAction::Completed()
 {
    return Scene.Completed();
+}
+
+void ObsAction::SceneCompleted()
+{
+
 }

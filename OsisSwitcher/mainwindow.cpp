@@ -250,6 +250,7 @@ void MainWindow::InitActionSceneUi()
       row++;
    }
    ui->ActionToSceneQTV->resizeColumnsToContents();
+//   ui->ActionToSceneQTV->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
    ui->ActionToSceneQTV->show();
 }
 

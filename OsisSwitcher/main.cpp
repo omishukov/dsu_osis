@@ -14,9 +14,12 @@ static QTextStream *out = 0;
 static QFile *logfile = 0;
 
 static bool logopt[4] = {true, true, true, true}; // data, error, warning, debug
+static QMutex Mutex;
 
 void logOutput(QtMsgType type, const QMessageLogContext &/*context*/, const QString &msg)
 {
+   QMutexLocker lock(&Mutex);
+
    bool enablePrint = false;
    QString debugdate = QDateTime::currentDateTime().toString("yyyy.MM.dd hh:mm:ss.zzz");
    switch (type)

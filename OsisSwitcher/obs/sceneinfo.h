@@ -14,6 +14,9 @@ public:
 public slots:
    void TimerExpired();
 
+signals:
+   void ActionDone();
+
 public:
    void SwitchScene();
    void SetTransition(SceneInfo* transition);

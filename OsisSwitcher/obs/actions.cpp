@@ -266,8 +266,8 @@ void Actions::GenerateHtml(const QString& fileName, QMap<int, QList<QString> >& 
    QFileInfo fileInfo(fileName);
    QString outputFile = fileInfo.fileName();
    QString html;
-   html = "<html>";
-   html +="<head> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=\"UTF-8\"\"> ";
+   html  = "<html>";
+   html += "<head> <meta http-equiv=\"Content-Type\" content=\"text/html\"> ";
    html += "<META HTTP-EQUIV=\"refresh\" CONTENT=\"5\"; URL=http://localhost:8080/" + outputFile + "\">";
    html += "<link rel=\"stylesheet\" href=\"fs_info.css\"> </head>";
    html += "<body class=\"PageBody\">";
@@ -300,7 +300,7 @@ void Actions::GenerateHtml(const QString& fileName, const QString& text)
    QString outputFile = fileInfo.fileName();
    QString html;
    html = "<html>";
-   html +="<head> <meta http-equiv=\"Content-Type\" content=\"text/html; charset=\"UTF-8\"\"> ";
+   html +="<head> <meta http-equiv=\"Content-Type\" content=\"text/html\"> ";
    html += "<META HTTP-EQUIV=\"refresh\" CONTENT=\"5\"; URL=http://localhost:8080/" + outputFile + "\">";
    html += "<link rel=\"stylesheet\" href=\"fs_info.css\"> </head>";
    html += "<body class=\"PageBody\">";

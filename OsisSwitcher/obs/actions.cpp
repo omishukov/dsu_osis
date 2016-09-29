@@ -24,7 +24,7 @@ void Actions::DoActions()
    bool passToObs;
    foreach(int action, ActionList)
    {
-      GenerateHtml("obs/current_action.html", ActionInfo->GetActionName(action));
+      GenerateHtml("obs/current_action", ActionInfo->GetActionName(action));
 
       passToObs = true;
       switch (action)

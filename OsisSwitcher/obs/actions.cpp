@@ -33,16 +33,16 @@ void Actions::DoActions()
             break;
          case ActionToScene::ACTION_1S1:
             {
-               GenerateHtml("obs/points.html", OsisIf->GetPoints());
-               GenerateHtml("obs/tes.html", OsisIf->GetTES());
-               GenerateHtml("obs/tcs.html", OsisIf->GetTCS());
-               GenerateHtml("obs/bonus.html", OsisIf->GetBonus());
-               GenerateHtml("obs/deduction.html", OsisIf->GetDeduction());
+               GenerateHtml("obs/points", OsisIf->GetPoints());
+               GenerateHtml("obs/tes", OsisIf->GetTES());
+               GenerateHtml("obs/tcs", OsisIf->GetTCS());
+               GenerateHtml("obs/bonus", OsisIf->GetBonus());
+               GenerateHtml("obs/deduction", OsisIf->GetDeduction());
             }
             break;
          case ActionToScene::ACTION_1S2:
             {
-               GenerateHtml("obs/current_participant_rank.html", OsisIf->GetRank());
+               GenerateHtml("obs/current_participant_rank", OsisIf->GetRank());
 
                QMap<int, QList<QString>> SegmentResultList;
                OsisIf->GetSegmentResultList(SegmentResultList);
@@ -75,10 +75,10 @@ void Actions::DoActions()
             break;
          case ActionToScene::ACTION_INI:
             {
-               GenerateHtml("obs/current_skater.html", OsisIf->GetCurrentSkaterName());
-               GenerateHtml("obs/current_start_number.html", OsisIf->GetCurrentSkaterNumber());
-               GenerateHtml("obs/current_skater_club.html", OsisIf->GetCurrentSkaterClub());
-               GenerateHtml("obs/current_skater_nation.html", OsisIf->GetCurrentSkaterNation());
+               GenerateHtml("obs/current_skater", OsisIf->GetCurrentSkaterName());
+               GenerateHtml("obs/current_start_number", OsisIf->GetCurrentSkaterNumber());
+               GenerateHtml("obs/current_skater_club", OsisIf->GetCurrentSkaterClub());
+               GenerateHtml("obs/current_skater_nation", OsisIf->GetCurrentSkaterNation());
 
                QMap<int, QList<QString>> SegmentStartList;
                OsisIf->GetSegmentStartList(SegmentStartList);
@@ -88,6 +88,7 @@ void Actions::DoActions()
                QMap<int, QList<QString>> WarmUpGroupNameList;
                OsisIf->GetWarmUpStartList(WarmUpGroupNameList);
                GenerateHtml("obs/current_warmup_group.html", WarmUpGroupNameList);
+               GenerateHtml("obs/current_warmup_group_number", OsisIf->GetCurrentWarmUpGroupNumber());
             }
             break;
          case ActionToScene::ACTION_IDT:
@@ -119,16 +120,16 @@ void Actions::DoActions()
             break;
          case ActionToScene::ACTION_STP:
             {
-               GenerateHtml("obs/current_skater.html", "");
-               GenerateHtml("obs/current_start_number.html", "");
-               GenerateHtml("obs/current_skater_club.html", "");
-               GenerateHtml("obs/current_skater_nation.html", "");
-               GenerateHtml("obs/points.html", "");
-               GenerateHtml("obs/tes.html", "");
-               GenerateHtml("obs/tcs.html", "");
-               GenerateHtml("obs/bonus.html", "");
-               GenerateHtml("obs/deduction.html", "");
-               GenerateHtml("obs/current_warmup_group_number.html", "");
+               GenerateHtml("obs/current_skater", "");
+               GenerateHtml("obs/current_start_number", "");
+               GenerateHtml("obs/current_skater_club", "");
+               GenerateHtml("obs/current_skater_nation", "");
+               GenerateHtml("obs/points", "");
+               GenerateHtml("obs/tes", "");
+               GenerateHtml("obs/tcs", "");
+               GenerateHtml("obs/bonus", "");
+               GenerateHtml("obs/deduction", "");
+               GenerateHtml("obs/current_warmup_group_number", "");
                QMap<int, QList<QString>> SegmentStartList;
                GenerateHtml("obs/starting_order.html", SegmentStartList);
                QMap<int, QList<QString>> WarmUpGroupNameList;
@@ -143,7 +144,7 @@ void Actions::DoActions()
                   QMap<int, QList<QString>> WarmUpGroupNameList;
                   OsisIf->GetWarmUpStartList(WarmUpGroupNameList);
                   GenerateHtml("obs/current_warmup_group.html", WarmUpGroupNameList);
-                  GenerateHtml("obs/current_warmup_group_number.html", OsisIf->GetCurrentWarmUpGroupNumber());
+                  GenerateHtml("obs/current_warmup_group_number", OsisIf->GetCurrentWarmUpGroupNumber());
                   for (auto group:WarmUpList)
                   {
                      if (stnum == group+1)
@@ -152,10 +153,10 @@ void Actions::DoActions()
                      }
                   }
                }
-               GenerateHtml("obs/current_skater.html", OsisIf->GetCurrentSkaterName());
-               GenerateHtml("obs/current_start_number.html", OsisIf->GetCurrentSkaterNumber());
-               GenerateHtml("obs/current_skater_club.html", OsisIf->GetCurrentSkaterClub());
-               GenerateHtml("obs/current_skater_nation.html", OsisIf->GetCurrentSkaterNation());
+               GenerateHtml("obs/current_skater", OsisIf->GetCurrentSkaterName());
+               GenerateHtml("obs/current_start_number", OsisIf->GetCurrentSkaterNumber());
+               GenerateHtml("obs/current_skater_club", OsisIf->GetCurrentSkaterClub());
+               GenerateHtml("obs/current_skater_nation", OsisIf->GetCurrentSkaterNation());
             }
             break;
          case ActionToScene::ACTION_PRV:
@@ -196,14 +197,14 @@ void Actions::DoActions()
             break;
          case ActionToScene::EVENT_OVERVIEW:
             {
-               GenerateHtml("obs/event_name.html", OsisIf->GetEventName());
-               GenerateHtml("obs/event_abbreviation.html", OsisIf->GetEventAbbreviation());
+               GenerateHtml("obs/event_name", OsisIf->GetEventName());
+               GenerateHtml("obs/event_abbreviation", OsisIf->GetEventAbbreviation());
             }
             break;
          case ActionToScene::SEGMENT_START:
             {
-               GenerateHtml("obs/segment_name.html", OsisIf->GetSegmentName());
-               GenerateHtml("obs/category_name.html", OsisIf->GetCategoryName());
+               GenerateHtml("obs/segment_name", OsisIf->GetSegmentName());
+               GenerateHtml("obs/category_name", OsisIf->GetCategoryName());
             }
             break;
          case ActionToScene::PRF_RANKING:
@@ -255,7 +256,9 @@ void Actions::SaveToFile(const QString& fileName, QString text)
    if (file.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
    {
       QTextStream stream(&file);
-//      stream.setCodec("UTF-8");
+      QString ext = info.completeSuffix();
+      if (info.completeSuffix() == "txt")
+         stream.setCodec("UTF-8");
       stream << text << endl;
    }
 }
@@ -294,9 +297,11 @@ void Actions::GenerateHtml(const QString& fileName, QMap<int, QList<QString> >& 
    SaveToFile(fileName, html);
 }
 
-void Actions::GenerateHtml(const QString& fileName, const QString& text)
+void Actions::GenerateHtml(const QString& fName, const QString& text)
 {
-   QFileInfo fileInfo(fileName);
+   SaveToFile(fName + ".txt", text.toUtf8());
+
+   QFileInfo fileInfo(fName + ".html");
    QString outputFile = fileInfo.fileName();
    QString html;
    html = "<html>";
@@ -308,5 +313,5 @@ void Actions::GenerateHtml(const QString& fileName, const QString& text)
    html += "<tr class=\"Line1White\">";
    html += "<td class=\"CellLeft\"><a>" + text.toUtf8() + "</a></td>";
    html += "</tr></table></body></html>";
-   SaveToFile(fileName, html);
+   SaveToFile(fName + ".html", html);
 }

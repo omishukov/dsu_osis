@@ -258,7 +258,9 @@ void Actions::SaveToFile(const QString& fileName, QString text)
       QTextStream stream(&file);
       QString ext = info.completeSuffix();
       if (info.completeSuffix() == "txt")
+      {
          stream.setCodec("UTF-8");
+      }
       stream << text << endl;
    }
 }

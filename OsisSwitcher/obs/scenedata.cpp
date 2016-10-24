@@ -1,6 +1,6 @@
 #include "scenedata.h"
 
-SceneData::SceneData(QObject *parent) : QObject(parent)
+SceneData::SceneData(ObsOsisIf *ObsIf, QObject *parent) : QObject(parent)
 {
 
 }

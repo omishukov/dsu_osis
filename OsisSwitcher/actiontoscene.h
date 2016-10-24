@@ -34,7 +34,7 @@ public:
    QList<QString> GetTransitionList();
    void UpdateAction(int action, Action2SceneStruct& actionInfo);
 
-   enum ObsAction
+   enum OsisAction
    {
       NO_ACTIONS,
       EVENT_OVERVIEW, // <Event_Overview>: Create
@@ -89,7 +89,7 @@ public:
 
       LAST_ACTION
    };
-   Q_ENUM(ObsAction)
+   Q_ENUM(OsisAction)
 
 signals:
 

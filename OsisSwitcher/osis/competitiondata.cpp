@@ -268,7 +268,7 @@ void OsisCompetitionData::AddAction(OsisAction* newAction)
    }
 
    const QMetaObject &mo = ActionToScene::staticMetaObject;
-   int index = mo.indexOfEnumerator("ObsAction");
+   int index = mo.indexOfEnumerator("OsisAction");
    QMetaEnum metaEnum = mo.enumerator(index);
    QString elementName = newAction->GetAttribute(OsisAction::Command);
    elementName = elementName.toUpper();

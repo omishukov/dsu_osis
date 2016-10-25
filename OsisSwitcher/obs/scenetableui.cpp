@@ -6,7 +6,6 @@
 
 SceneTableUi::SceneTableUi()
    : ObsActions(0)
-   , ObsSwitcher(0)
 {
 }
 

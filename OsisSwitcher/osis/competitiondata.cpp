@@ -79,7 +79,6 @@ void OsisCompetitionData::AddSegmentStart(OsisSegmentStart* newSegmentStart)
 
    Current_Category_Id = newSegmentStart->CategoryId;
    Current_Segment_Id = newSegmentStart->SegmentId;
-   emit NewAction(ActionToScene::SEGMENT_START);
 
    delete newSegmentStart;
 }
@@ -243,7 +242,6 @@ void OsisCompetitionData::AddWarmupGroup(OsisWarmupGroup* newWarmupGroup)
 void OsisCompetitionData::AddPrfRanking(OsisPrfRanking* newPrfRanking)
 {
    delete newPrfRanking;
-   emit NewAction(ActionToScene::PRF_RANKING);
 }
 
 void OsisCompetitionData::AddSegmentRunning(OsisSegmentRunning* newSegmentRunning)
@@ -300,11 +298,6 @@ void OsisCompetitionData::AddPrfDetails(OsisPrfDetails* newPrfDetails)
 void OsisCompetitionData::AddElementList(OsisElementList* newElementList)
 {
    delete newElementList;
-}
-
-void OsisCompetitionData::ProcessAction(int action)
-{
-   emit NewAction(action);
 }
 
 void OsisCompetitionData::ProcessingDone()

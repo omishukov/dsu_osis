@@ -30,39 +30,18 @@ void Actions::DoActions()
       switch (action)
       {
          case ActionToScene::ACTION_1SC:
-            break;
-         case ActionToScene::ACTION_1S1:
             {
                GenerateHtml("obs/points", OsisIf->GetPoints());
                GenerateHtml("obs/tes", OsisIf->GetTES());
                GenerateHtml("obs/tcs", OsisIf->GetTCS());
                GenerateHtml("obs/bonus", OsisIf->GetBonus());
                GenerateHtml("obs/deduction", OsisIf->GetDeduction());
-            }
-            break;
-         case ActionToScene::ACTION_1S2:
-            {
                GenerateHtml("obs/current_participant_rank", OsisIf->GetRank());
 
                QMap<int, QList<QString>> SegmentResultList;
                OsisIf->GetSegmentResultList(SegmentResultList);
                GenerateHtml("obs/segment_result_list.html", SegmentResultList);
             }
-            break;
-         case ActionToScene::ACTION_1S3:
-            // Do nothing yet
-            break;
-         case ActionToScene::ACTION_1S4:
-            // Do nothing yet
-            break;
-         case ActionToScene::ACTION_1S5:
-            // Do nothing yet
-            break;
-         case ActionToScene::ACTION_2SC:
-            // Do nothing yet
-            break;
-         case ActionToScene::ACTION_3SC:
-            // Do nothing yet
             break;
          case ActionToScene::ACTION_CLR:
             // Do nothing yet
@@ -75,6 +54,12 @@ void Actions::DoActions()
             break;
          case ActionToScene::ACTION_INI:
             {
+               GenerateHtml("obs/event_name", OsisIf->GetEventName());
+               GenerateHtml("obs/event_abbreviation", OsisIf->GetEventAbbreviation());
+
+               GenerateHtml("obs/segment_name", OsisIf->GetSegmentName());
+               GenerateHtml("obs/category_name", OsisIf->GetCategoryName());
+
                GenerateHtml("obs/current_skater", OsisIf->GetCurrentSkaterName());
                GenerateHtml("obs/current_start_number", OsisIf->GetCurrentSkaterNumber());
                GenerateHtml("obs/current_skater_club", OsisIf->GetCurrentSkaterClub());
@@ -89,6 +74,14 @@ void Actions::DoActions()
                OsisIf->GetWarmUpStartList(WarmUpGroupNameList);
                GenerateHtml("obs/current_warmup_group.html", WarmUpGroupNameList);
                GenerateHtml("obs/current_warmup_group_number", OsisIf->GetCurrentWarmUpGroupNumber());
+
+               QMap<int, QList<QString>> SegmentResultList;
+               OsisIf->GetSegmentResultList(SegmentResultList);
+               if (SegmentResultList.isEmpty())
+               {
+                  passToObs = false;
+               }
+               GenerateHtml("obs/segment_result_list.html", SegmentResultList);
             }
             break;
          case ActionToScene::ACTION_IDT:
@@ -194,33 +187,6 @@ void Actions::DoActions()
             break;
          case ActionToScene::ACTION_WUP:
             // Do nothing yet
-            break;
-         case ActionToScene::EVENT_OVERVIEW:
-            {
-               GenerateHtml("obs/event_name", OsisIf->GetEventName());
-               GenerateHtml("obs/event_abbreviation", OsisIf->GetEventAbbreviation());
-            }
-            break;
-         case ActionToScene::SEGMENT_START:
-            {
-               GenerateHtml("obs/segment_name", OsisIf->GetSegmentName());
-               GenerateHtml("obs/category_name", OsisIf->GetCategoryName());
-            }
-            break;
-         case ActionToScene::PRF_RANKING:
-            break;
-         case ActionToScene::SEGMENT_RESULT_LIST:
-            {
-               QMap<int, QList<QString>> SegmentResultList;
-               OsisIf->GetSegmentResultList(SegmentResultList);
-               if (SegmentResultList.isEmpty())
-               {
-                  passToObs = false;
-               }
-               GenerateHtml("obs/segment_result_list.html", SegmentResultList);
-            }
-            break;
-         case ActionToScene::CATEGORY_RESULT_LIST:
             break;
          default:
             passToObs = false;

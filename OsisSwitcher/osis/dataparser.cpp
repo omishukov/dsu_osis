@@ -176,11 +176,8 @@ bool OsisParser::ProcessOsisElement(QDomNode& n)
          break;
       case Event_Overview:
          Competition.Uninit();
-         Competition.ProcessAction(ActionToScene::EVENT_OVERVIEW);
          break;
       case Segment_Result_List:
-         Competition.ProcessAction(ActionToScene::SEGMENT_RESULT_LIST);
-         break;
       case Prf:
       case Participant_List:
       case Category_List:

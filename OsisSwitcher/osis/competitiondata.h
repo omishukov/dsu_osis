@@ -50,11 +50,10 @@ public:
    void AddPrfDetails(OsisPrfDetails* newPrfDetails);
    void AddElementList(OsisElementList* newElementList);
 
-   void ProcessAction(int action);
    void ProcessingDone();
-
    void Uninit();
 
+public: // ObsOsisIf
    QString GetCurrentSkaterName();
    QString GetCurrentSkaterNumber();
    QString GetCurrentSkaterNation();

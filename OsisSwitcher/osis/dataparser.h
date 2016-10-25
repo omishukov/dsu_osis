@@ -72,7 +72,6 @@ public slots:
 
 private:
    void Handle(QByteArray& qba);
-   void ProcessOsisData(QDomNode& n);
    bool ProcessOsisTree(QDomNode& n);
    bool ProcessOsisElement(QDomNode& n);
 

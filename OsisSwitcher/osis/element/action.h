@@ -36,47 +36,6 @@ public:
    };
    Q_ENUM(OsisElementAttributes)
 
-   QString OsisActionCodes[35]
-   {
-      "1SC", // Send Technical Element score Note: A message with 1SC action code is sent after the calculation of a performance result.
-             // Due to the big size of the message, it was split into several messages.
-             // Instead of one message with 1SC action code a sequence of 6 messages is sent in the following order: 1S1, 1S2, 1S3, 1S4, (1S5,) 1SC.
-      "1S1", // Result of current performance
-      "1S2", // Segment ranking
-      "1S3", // Category standing
-      "1S4", // Remaining start list
-      "1S5", // Team Standing
-      "2SC", // Send Program Components score
-      "3SC", // Send total score
-      "CLR", // Clear scoreboard
-      "ELM", // Executed elements of current performer
-      "ELS", // Live calculation of current Skater
-      "INI", // Initialise
-      "IDT", // Send logo
-      "IRS", // Send intermediate result
-      "JDG", // Send judge
-      "LTV", // Live Technical Element Score (TES)
-      "NAM", // send name of active performer
-      "NXP", // send next page (result or start list page)
-      "RES", // Send result
-      "SEG", // Send segment name
-      "STL", // Send start list
-      "STP", // Stop
-      "NXT", // Next performer
-      "PRV", // Previous performer
-      "TBW", // Time count backward
-      "TFW", // Time count forward
-      "TR1", // Overall team standing
-      "TR2", // Overall team standing
-      "TST", // Time stopped
-      "TPA", // Time pause
-      "TCL", // Clear time
-      "TIM", // Time value
-      "URK", // Ranking Update
-      "VTR", // Victory Ceremony
-      "WUP"  // send warm up group
-   };
-
 public:
    explicit OsisAction(QDomElement& osisElement, QString& elementName, QObject *parent = 0);
 

@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QJsonArray>
 #include <QMetaEnum>
-//#include "obs/actions.h"
 
 struct Action2SceneStruct
 {

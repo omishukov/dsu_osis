@@ -4,29 +4,52 @@
 #include "scenetableui.h"
 #include "sceneswitcher.h"
 
-SceneTableUi::SceneTableUi()
-   : ObsActions(0)
+SceneTableUi::SceneTableUi(ActionToScene *obsActions)
+   : ObsActions(obsActions)
+   , TableModel(new QStandardItemModel(ActionToScene::LAST_ACTION - 1, 6))
 {
-}
-
-void SceneTableUi::SetObsActions(ActionToScene* obsActions)
-{
-    ObsActions = obsActions;
-
-    QList<QString> obsScenesList = ObsActions->GetSceneList();
-    Scenes.clear();
-    Scenes << "";
-    for (auto scene:obsScenesList)
-    {
-       Scenes << scene;
-    }
+   QList<QString> obsScenesList = ObsActions->GetSceneList();
+   Scenes.clear();
+   Scenes << "";
+   for (auto scene:obsScenesList)
+   {
+      Scenes << scene;
+   }
 
    QList<QString> obsTransitionList = ObsActions->GetTransitionList();
    Transitions.clear();
    for (auto transition:obsTransitionList)
    {
-    Transitions << transition;
+      Transitions << transition;
    }
+
+  TableModel->setHorizontalHeaderLabels(QString("Event;Delay;Scene1;Delay;Scene2;Transition").split(";"));
+   int row = 0;
+   Action2SceneStruct Action;
+   for(int i = ActionToScene::NO_ACTIONS + 1; i < ActionToScene::LAST_ACTION; i++)
+   {
+      Action = ObsActions->GetActionSceneInfo(i);
+      QModelIndex index0 = TableModel->index(row, 0, QModelIndex());
+      QModelIndex index1 = TableModel->index(row, 1, QModelIndex());
+      QModelIndex index2 = TableModel->index(row, 2, QModelIndex());
+      QModelIndex index3 = TableModel->index(row, 3, QModelIndex());
+      QModelIndex index4 = TableModel->index(row, 4, QModelIndex());
+      QModelIndex index5 = TableModel->index(row, 5, QModelIndex());
+
+      TableModel->setData(index0, QVariant(Action.ActionName));
+      TableModel->setData(index1, QVariant(Action.Delay));
+      TableModel->setData(index2, QVariant(Action.Scene));
+      TableModel->setData(index3, QVariant(Action.NextDelay));
+      TableModel->setData(index4, QVariant(Action.NextScene));
+      TableModel->setData(index5, QVariant(Action.Transition));
+
+      row++;
+   }
+}
+
+SceneTableUi::~SceneTableUi()
+{
+   delete TableModel;
 }
 
 QWidget* SceneTableUi::createEditor(QWidget* parent, const QStyleOptionViewItem& /*option*/, const QModelIndex& index) const

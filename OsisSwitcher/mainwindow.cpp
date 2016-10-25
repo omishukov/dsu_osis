@@ -15,7 +15,7 @@ MainWindow::MainWindow(QWidget *parent)
    , CalcIpValidator(0)
    , PortValidator(0)
    , ObsDataSaver(&Action2Scene)
-   , TableModel(0)
+   , TableGui(0)
    , Switcher(&Action2Scene)
 {
    ui->setupUi(this);
@@ -48,7 +48,7 @@ MainWindow::~MainWindow()
 
    delete CalcIpValidator;
    delete PortValidator;
-   delete TableModel;
+   delete TableGui;
    delete ui;
 }
 
@@ -221,36 +221,10 @@ QString MainWindow::GetObsSceneFile()
 
 void MainWindow::InitActionSceneUi()
 {
-   TableGui.SetObsActions(&Action2Scene);
-
-   TableModel = new QStandardItemModel(ActionToScene::LAST_ACTION - 1, 6);
-   ui->ActionToSceneQTV->setModel(TableModel);
-   TableModel->setHorizontalHeaderLabels(QString("Event;Delay;Scene1;Delay;Scene2;Transition").split(";"));
-   ui->ActionToSceneQTV->setItemDelegate(&TableGui);
-
-   int row = 0;
-   Action2SceneStruct Action;
-   for(int i = ActionToScene::NO_ACTIONS + 1; i < ActionToScene::LAST_ACTION; i++)
-   {
-      Action = Action2Scene.GetActionSceneInfo(i);
-      QModelIndex index0 = TableModel->index(row, 0, QModelIndex());
-      QModelIndex index1 = TableModel->index(row, 1, QModelIndex());
-      QModelIndex index2 = TableModel->index(row, 2, QModelIndex());
-      QModelIndex index3 = TableModel->index(row, 3, QModelIndex());
-      QModelIndex index4 = TableModel->index(row, 4, QModelIndex());
-      QModelIndex index5 = TableModel->index(row, 5, QModelIndex());
-
-      TableModel->setData(index0, QVariant(Action.ActionName));
-      TableModel->setData(index1, QVariant(Action.Delay));
-      TableModel->setData(index2, QVariant(Action.Scene));
-      TableModel->setData(index3, QVariant(Action.NextDelay));
-      TableModel->setData(index4, QVariant(Action.NextScene));
-      TableModel->setData(index5, QVariant(Action.Transition));
-
-      row++;
-   }
+   TableGui = new SceneTableUi(&Action2Scene);
+   ui->ActionToSceneQTV->setModel(TableGui->GetModel());
+   ui->ActionToSceneQTV->setItemDelegate(TableGui);
    ui->ActionToSceneQTV->resizeColumnsToContents();
-//   ui->ActionToSceneQTV->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
    ui->ActionToSceneQTV->show();
 }
 

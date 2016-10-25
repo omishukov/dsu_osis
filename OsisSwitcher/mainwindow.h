@@ -6,7 +6,6 @@
 #include <QMetaEnum>
 #include <QValidator>
 #include <QMap>
-#include <QStandardItemModel>
 #include "isucalclink.h"
 #include "osis/dataparser.h"
 #include "obs/actions.h"
@@ -76,8 +75,7 @@ private:
    Actions ObsDataSaver;
    QThread ObsDataSaverThread;
    QString OBS_Path;
-   SceneTableUi TableGui;
-   QStandardItemModel* TableModel;
+   SceneTableUi* TableGui;
    ObsSceneSwitcher Switcher;
    QThread SwitcherThread;
    ActionToScene Action2Scene;

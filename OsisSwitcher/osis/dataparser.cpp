@@ -26,6 +26,7 @@ void OsisParser::ProcessData()
       if (data)
       {
          Handle(*data);
+         Competition.ProcessingDone();
          delete data;
       }
    }
@@ -39,7 +40,6 @@ void OsisParser::Initialize()
       connect(&Competition, SIGNAL(NewAction(int)), ObsDataSaver, SLOT(AddAction(int))); // Update UI
       connect(&Competition, SIGNAL(DoActions()), ObsDataSaver, SLOT(DoActions())); // Update UI
    }
-
 }
 
 void OsisParser::Uninit()
@@ -71,13 +71,7 @@ void OsisParser::Handle(QByteArray& qba)
    }
 
    QDomNode n = docElem.firstChild();
-   ProcessOsisData(n);
-}
-
-void OsisParser::ProcessOsisData(QDomNode& n)
-{
    ProcessOsisTree(n);
-   Competition.ProcessingDone();
 }
 
 bool OsisParser::ProcessOsisTree(QDomNode& n)
@@ -195,6 +189,7 @@ bool OsisParser::ProcessOsisElement(QDomNode& n)
       case Segment_Statistic:
          break;
       default:
+         qCritical() << "Unknown OSIS tag: " << "<" << elementName << ">" << endl;
          break;
    }
 

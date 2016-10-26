@@ -33,7 +33,7 @@ public:
    QList<QString> GetTransitionList();
    void UpdateAction(int action, Action2SceneStruct& actionInfo);
 
-   enum OsisAction
+   enum OsisActionCommand
    {
       NO_ACTIONS,
       ACTION_1SC, // Send Technical Element score Note: A message with 1SC action code is sent after the calculation of a performance result.
@@ -76,7 +76,7 @@ public:
 
       LAST_ACTION
    };
-   Q_ENUM(OsisAction)
+   Q_ENUM(OsisActionCommand)
 
 signals:
 

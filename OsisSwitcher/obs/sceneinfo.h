@@ -29,6 +29,8 @@ private:
     void SendHotkey();
 
 private:
+   QMap<QString, int> SceneDelay;
+   QMap<QString, int>::iterator CurrentScene;
    QString SceneName;
    QList<int> Hotkeys;
    SceneInfo* Transition;

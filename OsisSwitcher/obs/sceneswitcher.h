@@ -31,6 +31,7 @@ private:
    QMap<QString, QList<int>>* TransitionHkeyMap;
    ObsAction* CurrentAction;
    QList<ObsAction*> ActiveActions;
+   QMap<int, ObsAction*> ObsActions;
 
 };
 

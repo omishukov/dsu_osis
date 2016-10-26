@@ -9,7 +9,7 @@
 ActionToScene::ActionToScene(QObject *parent)
    : QObject(parent)
    , MetaObsKeyEnum(QMetaEnum::fromType<obs_key>())
-   , MetaActionsEnum(QMetaEnum::fromType<OsisAction>())
+   , MetaActionsEnum(QMetaEnum::fromType<OsisActionCommand>())
 {
 
 }

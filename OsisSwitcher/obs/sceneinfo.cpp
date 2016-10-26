@@ -13,6 +13,7 @@ SceneInfo::SceneInfo(QString name, QList<int> hKey, int delay, QObject *parent)
 {
    Timer.setSingleShot(true);
    connect(&Timer, SIGNAL(timeout()), this, SLOT(TimerExpired()));
+   CurrentScene = SceneDelay.begin();
 }
 
 SceneInfo::~SceneInfo()

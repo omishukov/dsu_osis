@@ -46,7 +46,8 @@ SOURCES += main.cpp\
     obs/sceneswitcher.cpp \
     obs/scenetableui.cpp \
     actiontoscene.cpp \
-    obs/scenedata.cpp
+    obs/scenedata.cpp \
+    obs/obsscenes.cpp
 
 HEADERS  += mainwindow.h \
     ../OsisProxy/isucalclink.h \
@@ -81,7 +82,8 @@ HEADERS  += mainwindow.h \
     obsosisif.h \
     actiontoscene.h \
     trace.h \
-    obs/scenedata.h
+    obs/scenedata.h \
+    obs/obsscenes.h
 
 FORMS    += mainwindow.ui
 

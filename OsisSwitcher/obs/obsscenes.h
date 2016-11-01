@@ -28,6 +28,8 @@ private:
    QMap<QString, QList<int>> TransitionHkeyMap;
    QMetaEnum MetaObsKeyEnum;
    int GetVirtualKey(int key);
+   QMap<QString, QString> ObsSourceFile;
+   QMap<QString, QStringList> SceneFiles;
 
 public:
    enum obs_key {

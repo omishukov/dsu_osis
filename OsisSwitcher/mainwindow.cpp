@@ -26,6 +26,8 @@ MainWindow::MainWindow(QWidget *parent)
    InitObsData();
    ReadSettings();
 
+   Obs.LoadScenes(GetObsSceneFile());
+
    Action2Scene.LoadSceneConfiguration(GetObsSceneFile());
    Action2Scene.LoadActionConfiguration(inifile);
    InitActionSceneUi();

@@ -2,6 +2,7 @@
 #include <QJsonObject>
 #include <QFile>
 #include <QDebug>
+#include <QFileInfo>
 #include <windows.h>
 #include "obsscenes.h"
 
@@ -35,7 +36,30 @@ void ObsScenes::LoadScenes(QString obsconfig)
 
    // Find scenes and associate with hotkeys
    QJsonArray jSources = jroot["sources"].toArray();
+
    foreach (const QJsonValue & jvSource, jSources)
+   {
+      QJsonObject jScource = jvSource.toObject();
+      if (!QString::compare("text_ft2_source",jScource["id"].toString()) || !QString::compare("browser_source",jScource["id"].toString()))
+      {
+         QString FileAliasName = jScource["name"].toString();
+         QJsonObject jSettings = jScource["settings"].toObject();
+         if (!jSettings["text_file"].isNull())
+         {
+            QString SourceFile = jSettings["text_file"].toString();
+            SourceFile = QFileInfo(SourceFile).fileName();
+            ObsSourceFile.insert(FileAliasName, SourceFile);
+         }
+         else if(!jSettings["url"].isNull())
+         {
+            QString SourceFile = jSettings["url"].toString();
+            SourceFile = QFileInfo(SourceFile).fileName();
+            ObsSourceFile.insert(FileAliasName, SourceFile);
+         }
+      }
+   }
+
+   foreach (const QJsonValue& jvSource, jSources)
    {
       QJsonObject jScource = jvSource.toObject();
       if (ActiveScenes.contains(jScource["name"].toString()))
@@ -53,9 +77,24 @@ void ObsScenes::LoadScenes(QString obsconfig)
          else
          {
             qWarning() << SceneName << " scene doesn't have hotkeys";
+            continue;
          }
+         QJsonObject jSettings = jScource["settings"].toObject();
+         QJsonArray jItemsArray = jSettings["items"].toArray();
+         QStringList FileList;
+         foreach (const QJsonValue& jItem, jItemsArray)
+         {
+             QJsonObject jItemSource = jItem.toObject();
+             QString SourceFileAlias = jItemSource["name"].toString();
+             if (ObsSourceFile.contains(SourceFileAlias))
+             {
+                FileList << ObsSourceFile[SourceFileAlias];
+             }
+         }
+         SceneFiles.insert(SceneName, FileList);
       }
    }
+
    // Find transitions and associate with hotkeys
    QJsonArray jTtransitions = jroot["quick_transitions"].toArray();
    foreach (const QJsonValue& jvTransition, jTtransitions)
@@ -77,6 +116,7 @@ void ObsScenes::LoadScenes(QString obsconfig)
          qWarning() << TransitionName << " transition doesn't have hotkeys";
       }
    }
+
    if (SceneHkeyMap.isEmpty() || TransitionHkeyMap.isEmpty())
    {
       qCritical() << "There is no Active Scenes or Transitions congigured. Scene Switch will not work";

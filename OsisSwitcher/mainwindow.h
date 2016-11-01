@@ -12,6 +12,7 @@
 #include "obs/obsaction.h"
 #include "obs/scenetableui.h"
 #include "obs/sceneswitcher.h"
+#include "obs/obsscenes.h"
 #include "actiontoscene.h"
 
 namespace Ui {
@@ -79,6 +80,7 @@ private:
    ObsSceneSwitcher Switcher;
    QThread SwitcherThread;
    ActionToScene Action2Scene;
+   ObsScenes Obs;
 
 };
 

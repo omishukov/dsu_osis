@@ -82,6 +82,9 @@ void MainWindow::ReadSettings()
    {
       OBS_Path = QFileInfo(obs_settings.fileName()).absolutePath() + "/";
    }
+
+   CurrentTransition = settings.value("OBS_TRANSITION", "").toString();
+
    settings.endGroup();
 
    ui->ObsConfigPathLabel->setText(OBS_Path);
@@ -100,6 +103,7 @@ void MainWindow::SaveSettings()
     settings.endGroup();
     settings.beginGroup("OBS");
     settings.setValue("OBS_CONFIG", OBS_Path);
+    settings.setValue("OBS_TRANSITION", CurrentTransition);
     settings.endGroup();
 }
 
@@ -223,6 +227,15 @@ QString MainWindow::GetObsSceneFile()
 
 void MainWindow::InitActionSceneUi()
 {
+   QStringList transitionList = Obs.GetTransitions();
+   ui->TransitionCB->addItems(transitionList);
+   int index = ui->TransitionCB->findText(CurrentTransition);
+   if ( index != -1 )
+   {
+      ui->TransitionCB->setCurrentIndex(index);
+   }
+   Obs.SetTransition(CurrentTransition);
+
    TableGui = new SceneTableUi(&Action2Scene);
    ui->ActionToSceneQTV->setModel(TableGui->GetModel());
    ui->ActionToSceneQTV->setItemDelegate(TableGui);
@@ -238,4 +251,10 @@ void MainWindow::on_ChangeObsConfigPathPB_clicked()
      OBS_Path = QFileInfo(file_name).absolutePath();
      ui->ObsConfigPathLabel->setText(OBS_Path);
    }
+}
+
+void MainWindow::on_TransitionCB_currentIndexChanged(const QString &arg1)
+{
+    CurrentTransition = arg1;
+    Obs.SetTransition(CurrentTransition);
 }

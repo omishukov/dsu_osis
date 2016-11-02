@@ -13,13 +13,15 @@ public:
    explicit ObsScenes(QObject *parent = 0);
 
    void LoadScenes(QString obsconfig);
+   QStringList GetTransitions();
+   void SetTransition(QString& newTransition);
 
 signals:
 
 public slots:
 
 private:
-   QString ReadConfigurationFile(QString& sceneFile);
+   QString ReadObsConfiguration(QString& sceneFile);
    QList<int> GetHotkeys(QJsonArray& jHotkeyArray);
 
 
@@ -30,6 +32,7 @@ private:
    int GetVirtualKey(int key);
    QMap<QString, QString> ObsSourceFile;
    QMap<QString, QStringList> SceneFiles;
+   QString CurrentTransition;
 
 public:
    enum obs_key {

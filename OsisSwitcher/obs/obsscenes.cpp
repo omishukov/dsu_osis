@@ -15,7 +15,7 @@ ObsScenes::ObsScenes(QObject *parent)
 
 void ObsScenes::LoadScenes(QString obsconfig)
 {
-   QString obsJson = ReadConfigurationFile(obsconfig);
+   QString obsJson = ReadObsConfiguration(obsconfig);
    if (obsJson.isEmpty())
    {
       qCritical() << "Can't read from OBS Scene file " << obsconfig; return;
@@ -123,7 +123,17 @@ void ObsScenes::LoadScenes(QString obsconfig)
    }
 }
 
-QString ObsScenes::ReadConfigurationFile(QString& sceneFile)
+QStringList ObsScenes::GetTransitions()
+{
+   return TransitionHkeyMap.uniqueKeys();
+}
+
+void ObsScenes::SetTransition(QString& newTransition)
+{
+   CurrentTransition = newTransition;
+}
+
+QString ObsScenes::ReadObsConfiguration(QString& sceneFile)
 {
    QFile file(sceneFile);
    file.open(QIODevice::ReadOnly | QIODevice::Text);

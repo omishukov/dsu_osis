@@ -47,6 +47,8 @@ private slots:
 
    void on_ChangeObsConfigPathPB_clicked();
 
+   void on_TransitionCB_currentIndexChanged(const QString &arg1);
+
 signals:
    void ChangedIsuCalcSettings(const QString&, quint16, uint);
    void EstablishConnection();
@@ -81,6 +83,7 @@ private:
    QThread SwitcherThread;
    ActionToScene Action2Scene;
    ObsScenes Obs;
+   QString CurrentTransition;
 
 };
 

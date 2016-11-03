@@ -5,7 +5,7 @@
 #include <QList>
 #include <QMetaEnum>
 #include <QMutex>
-#include <obsosisif.h>
+#include <osisif.h>
 #include "actiontoscene.h"
 
 class Actions : public QObject
@@ -15,7 +15,7 @@ class Actions : public QObject
 public:
    Actions(ActionToScene* actionInfo, QObject *parent = 0);
 
-   inline void SetOsisInfoIf(ObsOsisIf* obsOsisIf) { OsisIf = obsOsisIf; }
+   inline void SetOsisInfoIf(SwitcherOsisIf* obsOsisIf) { OsisIf = obsOsisIf; }
 
    void SetLock(QMutex* m) {M = m;}
 
@@ -35,7 +35,7 @@ private:
 
 private:
    QList<int> ActionList;
-   ObsOsisIf* OsisIf;
+   SwitcherOsisIf* OsisIf;
    QMutex* M;
    ActionToScene* ActionInfo;
    QList<int> WarmUpList;

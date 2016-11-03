@@ -10,7 +10,6 @@ ObsScenes::ObsScenes(QObject *parent)
    : QObject(parent)
    , MetaObsKeyEnum(QMetaEnum::fromType<obs_key>())
 {
-
 }
 
 void ObsScenes::LoadScenes(QString obsconfig)
@@ -133,6 +132,19 @@ void ObsScenes::SetTransition(QString& newTransition)
    CurrentTransition = newTransition;
 }
 
+void ObsScenes::Switch(QString& scene)
+{
+   if (!SceneHkeyMap.contains(scene))
+   {
+      return;
+   }
+   SendHKey(SceneHkeyMap[scene]);
+   if (TransitionHkeyMap.contains(CurrentTransition))
+   {
+      SendHKey(TransitionHkeyMap[CurrentTransition]);
+   }
+}
+
 QString ObsScenes::ReadObsConfiguration(QString& sceneFile)
 {
    QFile file(sceneFile);
@@ -183,6 +195,36 @@ QList<int> ObsScenes::GetHotkeys(QJsonArray& jHotkeyArray)
       }
    }
    return hotkeys;
+}
+
+void ObsScenes::SendHKey(QList<int>& hkey)
+{
+   INPUT ip;
+   ip.type = INPUT_KEYBOARD;
+   ip.ki.wScan = 0;
+   ip.ki.time = 0;
+   ip.ki.dwExtraInfo = 0;
+
+   // Press keys
+   QList<int>::ConstIterator it = hkey.constBegin();
+   for ( ; it != hkey.constEnd(); ++it )
+   {
+       ip.ki.wVk = static_cast<uint16_t>(*it);
+       ip.ki.dwFlags = 0; // 0 for key press
+       SendInput(1, &ip, sizeof(INPUT));
+   }
+   Sleep(100);
+   // Release the keys in reverse order
+   it--;
+   for ( ; it != hkey.constBegin(); --it )
+   {
+       ip.ki.wVk = static_cast<uint16_t>(*it);
+       ip.ki.dwFlags = KEYEVENTF_KEYUP;
+       SendInput(1, &ip, sizeof(INPUT));
+   }
+   ip.ki.wVk = static_cast<uint16_t>(*it);
+   ip.ki.dwFlags = KEYEVENTF_KEYUP;
+   SendInput(1, &ip, sizeof(INPUT));
 }
 
 int ObsScenes::GetVirtualKey(int key)

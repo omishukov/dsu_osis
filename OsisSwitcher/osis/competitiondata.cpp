@@ -2,9 +2,8 @@
 #include "competitiondata.h"
 #include "actiontoscene.h"
 
-OsisCompetitionData::OsisCompetitionData(QObject *parent)
-   : QObject(parent)
-   , Current_DB_ID(-1)
+OsisCompetitionData::OsisCompetitionData()
+   : Current_DB_ID(-1)
    , Current_Event(0)
    , Current_Category_Id(-1)
    , Current_Segment_Id(-1)
@@ -14,7 +13,6 @@ OsisCompetitionData::OsisCompetitionData(QObject *parent)
    , Current_Performance_Result(0)
    , CurrentParticipantId(-1)
 {
-
 }
 
 OsisCompetitionData::~OsisCompetitionData()

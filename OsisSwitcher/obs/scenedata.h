@@ -2,13 +2,13 @@
 #define SCENEDATA_H
 
 #include <QObject>
-#include <obsosisif.h>
+#include <osisif.h>
 
 class SceneData : public QObject
 {
    Q_OBJECT
 public:
-   explicit SceneData(ObsOsisIf* ObsIf, QObject *parent = 0);
+   explicit SceneData(SwitcherOsisIf* ObsIf, QObject *parent = 0);
 
    enum ObsSceneData
    {
@@ -35,9 +35,10 @@ public:
       scene_name,
       scene_score,
       scene_event,
+      scene_starting_order,
       scene_standings,
       scene_result,
-      scene_warmup
+      scene_warm_up
    };
    Q_ENUM(ObsSceneData)
 
@@ -49,8 +50,7 @@ signals:
 public slots:
 
 private:
-   ObsOsisIf* obsIf;
-   
+   SwitcherOsisIf* obsIf;
 };
 
 #endif // SCENEDATA_H

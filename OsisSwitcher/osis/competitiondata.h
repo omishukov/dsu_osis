@@ -21,13 +21,12 @@
 #include "element/prfdetails.h"
 #include "element/event.h"
 #include "element/isuosis.h"
-#include "obsosisif.h"
+#include "osisif.h"
 
-class OsisCompetitionData : public QObject, public ObsOsisIf
+class OsisCompetitionData : public SwitcherOsisIf
 {
-   Q_OBJECT
 public:
-   explicit OsisCompetitionData(QObject *parent = 0);
+   OsisCompetitionData();
    ~OsisCompetitionData();
 
    void AddIsuOsis(IsuOsis *newIsuOsis);

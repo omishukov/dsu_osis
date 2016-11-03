@@ -79,11 +79,11 @@ HEADERS  += mainwindow.h \
     obs/sceneinfo.h \
     obs/sceneswitcher.h \
     obs/scenetableui.h \
-    obsosisif.h \
     actiontoscene.h \
     trace.h \
     obs/scenedata.h \
-    obs/obsscenes.h
+    obs/obsscenes.h \
+    osis/osisif.h
 
 FORMS    += mainwindow.ui
 

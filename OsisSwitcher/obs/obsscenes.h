@@ -15,6 +15,7 @@ public:
    void LoadScenes(QString obsconfig);
    QStringList GetTransitions();
    void SetTransition(QString& newTransition);
+   void Switch(QString& scene);
 
 signals:
 
@@ -23,6 +24,7 @@ public slots:
 private:
    QString ReadObsConfiguration(QString& sceneFile);
    QList<int> GetHotkeys(QJsonArray& jHotkeyArray);
+   void SendHKey(QList<int>& hkey);
 
 
 private:

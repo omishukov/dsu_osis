@@ -9,6 +9,7 @@
 #include "sceneinfo.h"
 #include "scenetableui.h"
 #include "actiontoscene.h"
+#include "osisif.h"
 
 class ObsSceneSwitcher : public QObject
 {
@@ -16,6 +17,8 @@ class ObsSceneSwitcher : public QObject
 public:
    explicit ObsSceneSwitcher(ActionToScene* actions, QObject *parent = 0);
    ~ObsSceneSwitcher();
+
+   void LoadActions(QString& inifile, SwitcherOsisIf* osisIf);
 
 signals:
 
@@ -32,6 +35,7 @@ private:
    ObsAction* CurrentAction;
    QList<ObsAction*> ActiveActions;
    QMap<int, ObsAction*> ObsActions;
+   QString Inifile;
 
 };
 

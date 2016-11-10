@@ -12,7 +12,7 @@ class ObsSceneSwitcher;
 class SceneTableUi : public QStyledItemDelegate
 {
 public:
-   SceneTableUi(ObsScenes* obs, ObsSceneSwitcher *switcher);
+   SceneTableUi(QStringList &scenes, ObsSceneSwitcher *switcher);
    ~SceneTableUi();
 
    enum COLUMN_ENUM
@@ -37,6 +37,7 @@ public slots:
 
 private:
    COLUMN_ENUM Column(int c);
+   int SceneIndex(int c);
 
    QStringList Scenes;
 

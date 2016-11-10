@@ -90,7 +90,8 @@ FORMS    += mainwindow.ui
 
 INCLUDEPATH += \
     $$PWD/../OsisProxy \
-    $$PWD/osis
+    $$PWD/osis \
+    $$PWD/stream
 
 RC_ICONS = danskate.ico
 

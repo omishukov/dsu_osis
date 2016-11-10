@@ -84,31 +84,17 @@ QStringList ObsSceneSwitcher::GetRow(int row)
 
 void ObsSceneSwitcher::HandleEvent(int act)
 {
-   RemoveCompletesActions();
-
-   Action2SceneStruct info = Action2Scene->GetActionSceneInfo(act);
-   if (info.Hkey.isEmpty() || info.TransitionHkey.isEmpty())
+   if (ObsActions.contains(act))
    {
-      return;
+      ObsAction *action = ObsActions[act];
+      if (action->Executable())
+      {
+         action->Execute(CurrentAction);
+         CurrentAction = action;
+      }
    }
-
-   ObsAction* newAction = new ObsAction(info, !CurrentAction || CurrentAction->Completed()?0:CurrentAction);
-   CurrentAction = newAction;
-   newAction->Execute();
 }
 
 void ObsSceneSwitcher::Initialize()
 {
-}
-
-void ObsSceneSwitcher::RemoveCompletesActions()
-{
-   QMutableListIterator<ObsAction*> i(ActiveActions);
-   while (i.hasNext())
-   {
-      if (i.next()->Completed())
-      {
-        i.remove();
-      }
-   }
 }

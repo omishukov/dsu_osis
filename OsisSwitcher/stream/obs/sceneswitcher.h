@@ -20,7 +20,7 @@ public:
    void LoadActions(QString& inifile, SwitcherOsisIf* osisIf);
    QMap<int, ObsAction*>* GetActions() { return &ObsActions; }
    int GetRowCount() { return RowActionMap.size(); }
-   int GetColumnCount() { return NUM_SCENES_PER_ACTION; }
+   int GetNumOfScenes() { return NUM_SCENES_PER_ACTION; }
    QStringList GetRow(int row);
 
 signals:
@@ -30,8 +30,6 @@ public slots:
    void Initialize();
 
 private:
-   void RemoveCompletesActions();
-
    QMap<QString, QList<int>>* SceneHkeyMap;
    QMap<QString, QList<int>>* TransitionHkeyMap;
    ObsAction* CurrentAction;

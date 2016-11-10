@@ -40,14 +40,14 @@ SOURCES += main.cpp\
     osis/element/segmentstart.cpp \
     osis/element/warmupgroup.cpp \
     osis/osisdata.cpp \
-    obs/actions.cpp \
-    obs/obsaction.cpp \
-    obs/sceneinfo.cpp \
-    obs/sceneswitcher.cpp \
-    obs/scenetableui.cpp \
+    stream/obs/actions.cpp \
+    stream/obs/obsaction.cpp \
+    stream/obs/sceneinfo.cpp \
+    stream/obs/sceneswitcher.cpp \
+    stream/obs/scenetableui.cpp \
     actiontoscene.cpp \
-    obs/scenedata.cpp \
-    obs/obsscenes.cpp
+    stream/obs/scenedata.cpp \
+    stream/obs/obsscenes.cpp
 
 HEADERS  += mainwindow.h \
     ../OsisProxy/isucalclink.h \
@@ -74,16 +74,17 @@ HEADERS  += mainwindow.h \
     osis/element/segmentstart.h \
     osis/element/warmupgroup.h \
     osis/osisdata.h \
-    obs/actions.h \
-    obs/obsaction.h \
-    obs/sceneinfo.h \
-    obs/sceneswitcher.h \
-    obs/scenetableui.h \
+    stream/obs/actions.h \
+    stream/obs/obsaction.h \
+    stream/obs/sceneinfo.h \
+    stream/obs/sceneswitcher.h \
+    stream/obs/scenetableui.h \
     actiontoscene.h \
     trace.h \
-    obs/scenedata.h \
-    obs/obsscenes.h \
-    osis/osisif.h
+    stream/obs/scenedata.h \
+    stream/obs/obsscenes.h \
+    osis/osisif.h \
+    stream/streamif.h
 
 FORMS    += mainwindow.ui
 

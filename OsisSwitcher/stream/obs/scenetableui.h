@@ -38,7 +38,6 @@ public slots:
 private:
    COLUMN_ENUM Column(int c);
 
-   ActionToScene* ObsActions;
    QStringList Scenes;
 
    QStandardItemModel* TableModel;

@@ -62,6 +62,7 @@ public:
 
    void SetDataIf(DataQueue* dataIf) { DataIf = dataIf; }
    void SetObsDataSaver(Actions* obsData);
+   OsisIf* GetOsisIf() { return &Competition; }
 
 signals:
 

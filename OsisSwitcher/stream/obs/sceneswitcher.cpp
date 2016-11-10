@@ -10,9 +10,8 @@
 
 const int NUM_SCENES_PER_ACTION = 2;
 
-ObsSceneSwitcher::ObsSceneSwitcher(ActionToScene* actions, QObject *parent)
+ObsSceneSwitcher::ObsSceneSwitcher(QObject *parent)
    : QObject(parent)
-   , Action2Scene(actions)
    , CurrentAction(0)
 {
 }

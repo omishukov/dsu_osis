@@ -8,14 +8,13 @@
 #include "actions.h"
 #include "sceneinfo.h"
 #include "scenetableui.h"
-#include "actiontoscene.h"
 #include "osisif.h"
 
 class ObsSceneSwitcher : public QObject
 {
    Q_OBJECT
 public:
-   explicit ObsSceneSwitcher(ActionToScene* actions, QObject *parent = 0);
+   explicit ObsSceneSwitcher(QObject *parent = 0);
    ~ObsSceneSwitcher();
 
    void LoadActions(QString& inifile, SwitcherOsisIf* osisIf);
@@ -33,7 +32,6 @@ public slots:
 private:
    void RemoveCompletesActions();
 
-   ActionToScene* Action2Scene;
    QMap<QString, QList<int>>* SceneHkeyMap;
    QMap<QString, QList<int>>* TransitionHkeyMap;
    ObsAction* CurrentAction;

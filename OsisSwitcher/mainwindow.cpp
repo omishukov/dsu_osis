@@ -16,7 +16,6 @@ MainWindow::MainWindow(QWidget *parent)
    , PortValidator(0)
    , ObsDataSaver(&Action2Scene)
    , TableGui(0)
-   , Switcher(&Action2Scene)
 {
    ui->setupUi(this);
    QString version(GIT_VERSION);
@@ -27,6 +26,8 @@ MainWindow::MainWindow(QWidget *parent)
    ReadSettings();
 
    Obs.LoadScenes(GetObsSceneFile());
+   QStringList SceneNames = Obs.GetScenes();
+   Switcher.LoadActions(inifile, OsisDataParser.GetOsisIf(), SceneNames);
 
    Action2Scene.LoadSceneConfiguration(GetObsSceneFile());
    Action2Scene.LoadActionConfiguration(inifile);
@@ -227,8 +228,8 @@ QString MainWindow::GetObsSceneFile()
 
 void MainWindow::InitActionSceneUi()
 {
-   QStringList transitionList = Obs.GetTransitions();
-   ui->TransitionCB->addItems(transitionList);
+   QStringList NameList = Obs.GetTransitions();
+   ui->TransitionCB->addItems(NameList);
    int index = ui->TransitionCB->findText(CurrentTransition);
    if ( index != -1 )
    {
@@ -236,7 +237,8 @@ void MainWindow::InitActionSceneUi()
    }
    Obs.SetTransition(CurrentTransition);
 
-   TableGui = new SceneTableUi(&Action2Scene);
+   NameList = Obs.GetScenes();
+   TableGui = new SceneTableUi(NameList);
    ui->ActionToSceneQTV->setModel(TableGui->GetModel());
    ui->ActionToSceneQTV->setItemDelegate(TableGui);
    ui->ActionToSceneQTV->resizeColumnsToContents();

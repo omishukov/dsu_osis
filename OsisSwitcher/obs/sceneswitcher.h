@@ -19,6 +19,10 @@ public:
    ~ObsSceneSwitcher();
 
    void LoadActions(QString& inifile, SwitcherOsisIf* osisIf);
+   QMap<int, ObsAction*>* GetActions() { return &ObsActions; }
+   int GetRowCount() { return RowActionMap.size(); }
+   int GetColumnCount() { return NUM_SCENES_PER_ACTION; }
+   QStringList GetRow(int row);
 
 signals:
 
@@ -35,6 +39,7 @@ private:
    ObsAction* CurrentAction;
    QList<ObsAction*> ActiveActions;
    QMap<int, ObsAction*> ObsActions;
+   QMap<int, int> RowActionMap;
    QString Inifile;
 
 };

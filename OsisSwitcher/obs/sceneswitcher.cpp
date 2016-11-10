@@ -8,6 +8,8 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
+const int NUM_SCENES_PER_ACTION = 2;
+
 ObsSceneSwitcher::ObsSceneSwitcher(ActionToScene* actions, QObject *parent)
    : QObject(parent)
    , Action2Scene(actions)
@@ -17,6 +19,10 @@ ObsSceneSwitcher::ObsSceneSwitcher(ActionToScene* actions, QObject *parent)
 
 ObsSceneSwitcher::~ObsSceneSwitcher()
 {
+   foreach (ObsAction* action, ObsActions)
+   {
+      delete action;
+   }
 }
 
 void ObsSceneSwitcher::LoadActions(QString& inifile, SwitcherOsisIf* osisIf)
@@ -27,55 +33,53 @@ void ObsSceneSwitcher::LoadActions(QString& inifile, SwitcherOsisIf* osisIf)
    int sceneDelay;
 
    QMetaEnum metaEnum = QMetaEnum::fromType<SwitcherOsisIf::OSIS_ACTIONS_ENUM>();
-   for(int i = SwitcherOsisIf::NO_ACTIONS + 1; i < SwitcherOsisIf::LAST_ACTION; i++)
+   int row = 0;
+   for(int i = SwitcherOsisIf::NO_ACTIONS + 1; i < SwitcherOsisIf::LAST_ACTION; i++, row++)
    {
+      switch (i)
+      {
+      case ACTION_1S1:
+      case ACTION_1S2:
+      case ACTION_1S3:
+      case ACTION_1S4:
+      case ACTION_1S5:
+      case ACTION_2SC:
+      case ACTION_3SC:
+         continue; // skip these
+         break;
+      default:
+         break;
+      }
       QString ActionName = metaEnum.valueToKey(i);
-      settings.beginGroup(ActionName);
       QMap<QString, int> SceneDelayMap;
 
-      for (int sc = 1; sc < 3; sc++)
+      settings.beginGroup(ActionName);
+      for (int sc = 0; sc < NUM_SCENES_PER_ACTION; sc++)
       {
-         QString Scene = QString("SCENE%s").arg(sc);
-         QString Delay = QString("DELAY%s").arg(sc);
+         QString Scene = QString("SCENE%s").arg(sc + 1);
+         QString Delay = QString("DELAY%s").arg(sc + 1);
          sceneName = settings.value(Scene, "").toString();
          sceneDelay = settings.value(Delay, "0").toInt();
          SceneDelayMap.insert(sceneName, sceneDelay);
       }
-      ObsAction* action = new ObsAction(i, SceneDelayMap, osisIf);
-      if (!SceneHkeyMap.contains(sceneName))
-      {
-         sceneName.clear();
-         if (!sceneName.isEmpty())
-         {
-            qWarning() << "Scene [" << sceneName << "] from config file doesn't exist in OBS configuration";
-         }
-      }
-      else
-      {
-         ActionToScenes[i].Hkey = SceneHkeyMap.value(sceneName);
-      }
-      ActionToScenes[i].Scene = sceneName;
-      ActionToScenes[i].Delay = settings.value("DELAY1", "0").toInt();
-
-      sceneName = settings.value("SCENE2").toString();
-      if (!SceneHkeyMap.contains(sceneName))
-      {
-         sceneName.clear();
-         if (!sceneName.isEmpty())
-         {
-            qWarning() << "Scene [" << sceneName << "] from config file doesn't exist in OBS configuration";
-         }
-      }
-      else
-      {
-         ActionToScenes[i].NextHkey = SceneHkeyMap.value(sceneName);
-      }
-      ActionToScenes[i].NextScene = sceneName;
-      ActionToScenes[i].NextDelay = settings.value("DELAY2", "0").toInt();
-
       settings.endGroup();
-   }
 
+      ObsActions.insert(i, new ObsAction(ActionName, SceneDelayMap, osisIf));
+      RowActionMap.insert(row, i);
+   }
+}
+
+QStringList ObsSceneSwitcher::GetRow(int row)
+{
+   if (RowActionMap.contains(row))
+   {
+      int action = RowActionMap[row];
+      if (ObsActions.contains(action))
+      {
+         return ObsActions[action]->GetTableRow();
+      }
+   }
+   return QStringList();
 }
 
 

@@ -4,46 +4,30 @@
 #include "scenetableui.h"
 #include "sceneswitcher.h"
 
-SceneTableUi::SceneTableUi(ActionToScene *obsActions)
-   : ObsActions(obsActions)
-   , TableModel(new QStandardItemModel(ActionToScene::LAST_ACTION - 1, 6))
+SceneTableUi::SceneTableUi(ObsScenes *obs, ObsSceneSwitcher* switcher)
+   : Switcher(switcher)
 {
-   QList<QString> obsScenesList = ObsActions->GetSceneList();
+   TableModel = new QStandardItemModel(switcher->GetRowCount(), switcher->GetColumnCount() * 2 + 1);
+
    Scenes.clear();
-   Scenes << "";
-   for (auto scene:obsScenesList)
+   Scenes << "" << obs->GetScenes();
+
+   QStringList TableHeader;
+   TableHeader << "Action";
+   for (int i = 0; i < switcher->GetColumnCount(); i++)
    {
-      Scenes << scene;
+      TableHeader << "Delay" << "Scene";
    }
+   TableModel->setHorizontalHeaderLabels(TableHeader);
 
-   QList<QString> obsTransitionList = ObsActions->GetTransitionList();
-   Transitions.clear();
-   for (auto transition:obsTransitionList)
+   for (int r = 0; r < switcher->GetRowCount(); r++)
    {
-      Transitions << transition;
-   }
-
-  TableModel->setHorizontalHeaderLabels(QString("Event;Delay;Scene1;Delay;Scene2;Transition").split(";"));
-   int row = 0;
-   Action2SceneStruct Action;
-   for(int i = ActionToScene::NO_ACTIONS + 1; i < ActionToScene::LAST_ACTION; i++)
-   {
-      Action = ObsActions->GetActionSceneInfo(i);
-      QModelIndex index0 = TableModel->index(row, 0, QModelIndex());
-      QModelIndex index1 = TableModel->index(row, 1, QModelIndex());
-      QModelIndex index2 = TableModel->index(row, 2, QModelIndex());
-      QModelIndex index3 = TableModel->index(row, 3, QModelIndex());
-      QModelIndex index4 = TableModel->index(row, 4, QModelIndex());
-      QModelIndex index5 = TableModel->index(row, 5, QModelIndex());
-
-      TableModel->setData(index0, QVariant(Action.ActionName));
-      TableModel->setData(index1, QVariant(Action.Delay));
-      TableModel->setData(index2, QVariant(Action.Scene));
-      TableModel->setData(index3, QVariant(Action.NextDelay));
-      TableModel->setData(index4, QVariant(Action.NextScene));
-      TableModel->setData(index5, QVariant(Action.Transition));
-
-      row++;
+      QStringList row = switcher->GetRow(r);
+      for (int c = 0; c < row.size(); c++)
+      {
+         QModelIndex index = TableModel->index(r, c, QModelIndex());
+         TableModel->setData(index, QVariant(row.at(c).toLocal8Bit().constData()));
+      }
    }
 }
 
@@ -54,58 +38,27 @@ SceneTableUi::~SceneTableUi()
 
 QWidget* SceneTableUi::createEditor(QWidget* parent, const QStyleOptionViewItem& /*option*/, const QModelIndex& index) const
 {
-   int action = index.row()+1;
-   if (!ObsActions)
-   {
-      return 0;
-   }
+   int row = index.row();
 
-   int delay = 0;
-   QString currentSceneOrTransition;
-   Action2SceneStruct Action = ObsActions->GetActionSceneInfo(action);
-   switch (index.column())
-   {
-      case QTV_DELAY1:
-         delay = Action.Delay;
-         break;
-      case QTV_DELAY2:
-         delay = Action.NextDelay;
-         break;
-      case QTV_SCENE1:
-         currentSceneOrTransition = Action.Scene;
-         break;
-      case QTV_SCENE2:
-         currentSceneOrTransition = Action.NextScene;
-         break;
-      case QTV_TRANSITION:
-         currentSceneOrTransition = Action.Transition;
-         break;
-   }
-
-   switch (index.column())
+   QStringList rowList = Switcher->GetRow(row);
+   switch (Column(index.column()))
    {
       case QTV_ACTION:
-      {
-         return new QLabel(Action.ActionName);
-      }
-      case QTV_DELAY1:
-      case QTV_DELAY2:
+         return new QLabel(rowList.at(index.column()).toLocal8Bit().constData());
+      case QTV_DELAY:
       {
          QSpinBox *editor = new QSpinBox(parent);
          editor->setFrame(false);
-         editor->setValue(delay);
+         editor->setValue(rowList.at(index.column()).toInt());
          editor->setMinimum(0);
          editor->setMaximum(100);
-
          return editor;
       }
-      case QTV_SCENE1:
-      case QTV_SCENE2:
-      case QTV_TRANSITION:
+      case QTV_SCENE:
       {
          QComboBox* comboBox = new QComboBox(parent);
-         comboBox->addItems(index.column() == QTV_TRANSITION?Transitions:Scenes);
-         int index = comboBox->findText(currentSceneOrTransition);
+         comboBox->addItems(Scenes);
+         int index = comboBox->findText(rowList.at(index.column()).toLocal8Bit().constData());
          if ( index != -1 )
          {
             comboBox->setCurrentIndex(index);
@@ -134,7 +87,6 @@ void SceneTableUi::setEditorData(QWidget* editor, const QModelIndex& index) cons
       break;
       case QTV_SCENE1:
       case QTV_SCENE2:
-      case QTV_TRANSITION:
       {
          currentSceneOrTransition = index.model()->data(index, Qt::EditRole).toString();
          QComboBox *comboBox = static_cast<QComboBox*>(editor);
@@ -183,13 +135,6 @@ void SceneTableUi::setEditorData(QWidget* editor, const QModelIndex& index) cons
             changed = true;
          }
          break;
-      case QTV_TRANSITION:
-         if (QString::compare(Action.Transition, currentSceneOrTransition))
-         {
-            Action.Transition = currentSceneOrTransition;
-            changed = true;
-         }
-         break;
    }
    if (changed)
    {
@@ -214,7 +159,6 @@ void SceneTableUi::setModelData(QWidget* editor, QAbstractItemModel* model, cons
       break;
       case QTV_SCENE1:
       case QTV_SCENE2:
-      case QTV_TRANSITION:
       {
          QComboBox *comboBox = static_cast<QComboBox*>(editor);
          value = comboBox->currentText();
@@ -266,13 +210,6 @@ void SceneTableUi::setModelData(QWidget* editor, QAbstractItemModel* model, cons
                changed = true;
             }
             break;
-         case QTV_TRANSITION:
-            if (QString::compare(ActionInfo.Transition, value.toString()))
-            {
-               ActionInfo.Transition = value.toString();
-               changed = true;
-            }
-            break;
       }
       if (changed)
       {
@@ -284,4 +221,13 @@ void SceneTableUi::setModelData(QWidget* editor, QAbstractItemModel* model, cons
 void SceneTableUi::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& /*index*/) const
 {
    editor->setGeometry(option.rect);
+}
+
+SceneTableUi::COLUMN_ENUM SceneTableUi::Column(int c)
+{
+   if (c == 0)
+   {
+      return QTV_ACTION;
+   }
+   return c%2 == 0 ? QTV_SCENE : QTV_DELAY;
 }

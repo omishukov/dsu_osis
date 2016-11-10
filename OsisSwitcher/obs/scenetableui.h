@@ -5,24 +5,21 @@
 #include <QStandardItemModel>
 #include "obsaction.h"
 #include "sceneinfo.h"
-#include "actiontoscene.h"
+#include "obsscenes.h"
 
 class ObsSceneSwitcher;
 
 class SceneTableUi : public QStyledItemDelegate
 {
 public:
-   SceneTableUi(ActionToScene* obsActions);
+   SceneTableUi(ObsScenes* obs, ObsSceneSwitcher *switcher);
    ~SceneTableUi();
 
-   enum
+   enum COLUMN_ENUM
    {
       QTV_ACTION,
-      QTV_DELAY1,
-      QTV_SCENE1,
-      QTV_DELAY2,
-      QTV_SCENE2,
-      QTV_TRANSITION
+      QTV_DELAY,
+      QTV_SCENE,
    };
 
 public: // QStyledItemDelegate
@@ -39,11 +36,13 @@ signals:
 public slots:
 
 private:
+   COLUMN_ENUM Column(int c);
+
    ActionToScene* ObsActions;
    QStringList Scenes;
-   QStringList Transitions;
 
    QStandardItemModel* TableModel;
+   ObsSceneSwitcher* Switcher;
 
 
 };

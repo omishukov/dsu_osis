@@ -16,8 +16,9 @@
 //   connect(&Scene, SIGNAL(ActionDone()), this, SLOT(SceneCompleted()));
 //}
 
-ObsAction::ObsAction(int action, QMap<QString, int>& sceneDelay, SwitcherOsisIf* osisIf, QObject* parent)
+ObsAction::ObsAction(QString& actionName, QMap<QString, int>& sceneDelay, SwitcherOsisIf* osisIf, QObject* parent)
    : QObject(parent)
+   , ActionName(actionName)
 {
 
 }
@@ -35,6 +36,17 @@ void ObsAction::Execute()
 bool ObsAction::Completed()
 {
    return Scene.Completed();
+}
+
+QStringList ObsAction::GetTableRow()
+{
+   QStringList row;
+   row << ActionName;
+   for(auto scene : SceneDelayMap->keys())
+   {
+      row << QString::number(SceneDelayMap.value(scene)) << scene;
+   }
+   return row;
 }
 
 void ObsAction::SceneCompleted()

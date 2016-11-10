@@ -38,13 +38,13 @@ public:
       ACTION_1SC, // Send Technical Element score Note: A message with 1SC action code is sent after the calculation of a performance result.
                   // Due to the big size of the message, it was split into several messages.
                   // Instead of one message with 1SC action code a sequence of 6 messages is sent in the following order: 1S1, 1S2, 1S3, 1S4, (1S5,) 1SC.
-//      ACTION_1S1, // Result of current performance
-//      ACTION_1S2, // Segment ranking
-//      ACTION_1S3, // Category standing
-//      ACTION_1S4, // Remaining start list
-//      ACTION_1S5, // Team Standing
-//      ACTION_2SC, // Send Program Components score
-//      ACTION_3SC, // Send total score
+      ACTION_1S1, // Result of current performance
+      ACTION_1S2, // Segment ranking
+      ACTION_1S3, // Category standing
+      ACTION_1S4, // Remaining start list
+      ACTION_1S5, // Team Standing
+      ACTION_2SC, // Send Program Components score
+      ACTION_3SC, // Send total score
       ACTION_CLR, // Clear scoreboard
       ACTION_ELM, // Executed elements of current performer
       ACTION_ELS, // Live calculation of current Skater

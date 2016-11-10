@@ -122,6 +122,11 @@ void ObsScenes::LoadScenes(QString obsconfig)
    }
 }
 
+QStringList ObsScenes::GetScenes()
+{
+   return SceneHkeyMap.uniqueKeys();
+}
+
 QStringList ObsScenes::GetTransitions()
 {
    return TransitionHkeyMap.uniqueKeys();

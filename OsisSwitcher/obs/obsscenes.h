@@ -13,6 +13,7 @@ public:
    explicit ObsScenes(QObject *parent = 0);
 
    void LoadScenes(QString obsconfig);
+   QStringList GetScenes();
    QStringList GetTransitions();
    void SetTransition(QString& newTransition);
    void Switch(QString& scene);

@@ -12,7 +12,7 @@ class ObsAction : public QObject
    Q_OBJECT
 public:
 //   ObsAction(Action2SceneStruct& actionInfo, ObsAction* previousAction, QObject *parent = 0);
-   ObsAction(QString &actionName, QMap<QString, int>& sceneDelay, SwitcherOsisIf* osisIf, QObject *parent = 0);
+   ObsAction(QString &actionName, QMap<QString, int>& sceneDelay, OsisIf* osisIf, QObject *parent = 0);
    ~ObsAction();
 
 public:
@@ -32,7 +32,7 @@ private:
 //   SceneInfo NextScene;
 //   SceneInfo Transition;
    QMap<QString, int> SceneDelayMap;
-   SwitcherOsisIf* OsisIf;
+   OsisIf* OsisIf;
    bool Repeat;
    SceneData* ObsSceneFiles;
 };

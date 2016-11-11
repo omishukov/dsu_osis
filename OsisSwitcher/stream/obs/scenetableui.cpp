@@ -134,7 +134,7 @@ void SceneTableUi::updateEditorGeometry(QWidget* editor, const QStyleOptionViewI
    editor->setGeometry(option.rect);
 }
 
-SceneTableUi::COLUMN_ENUM SceneTableUi::Column(int c)
+SceneTableUi::COLUMN_ENUM SceneTableUi::Column(int c) const
 {
    if (c == 0)
    {

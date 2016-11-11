@@ -7,14 +7,14 @@
 
 Actions::Actions(ActionToScene* actionInfo, QObject* parent)
    : QObject(parent)
-   , OsisIf(0)
+   , OsisDataIf(0)
    , ActionInfo(actionInfo)
 {
 }
 
 void Actions::DoActions()
 {
-   if (!OsisIf)
+   if (!OsisDataIf)
    {
       return;
    }
@@ -31,15 +31,15 @@ void Actions::DoActions()
       {
          case ActionToScene::ACTION_1SC:
             {
-               GenerateHtml("obs/points", OsisIf->GetPoints());
-               GenerateHtml("obs/tes", OsisIf->GetTES());
-               GenerateHtml("obs/tcs", OsisIf->GetTCS());
-               GenerateHtml("obs/bonus", OsisIf->GetBonus());
-               GenerateHtml("obs/deduction", OsisIf->GetDeduction());
-               GenerateHtml("obs/current_participant_rank", OsisIf->GetRank());
+               GenerateHtml("obs/points", OsisDataIf->GetPoints());
+               GenerateHtml("obs/tes", OsisDataIf->GetTES());
+               GenerateHtml("obs/tcs", OsisDataIf->GetTCS());
+               GenerateHtml("obs/bonus", OsisDataIf->GetBonus());
+               GenerateHtml("obs/deduction", OsisDataIf->GetDeduction());
+               GenerateHtml("obs/current_participant_rank", OsisDataIf->GetRank());
 
                QMap<int, QList<QString>> SegmentResultList;
-               OsisIf->GetSegmentResultList(SegmentResultList);
+               OsisDataIf->GetSegmentResultList(SegmentResultList);
                GenerateHtml("obs/segment_result_list.html", SegmentResultList);
             }
             break;
@@ -54,29 +54,29 @@ void Actions::DoActions()
             break;
          case ActionToScene::ACTION_INI:
             {
-               GenerateHtml("obs/event_name", OsisIf->GetEventName());
-               GenerateHtml("obs/event_abbreviation", OsisIf->GetEventAbbreviation());
+               GenerateHtml("obs/event_name", OsisDataIf->GetEventName());
+               GenerateHtml("obs/event_abbreviation", OsisDataIf->GetEventAbbreviation());
 
-               GenerateHtml("obs/segment_name", OsisIf->GetSegmentName());
-               GenerateHtml("obs/category_name", OsisIf->GetCategoryName());
+               GenerateHtml("obs/segment_name", OsisDataIf->GetSegmentName());
+               GenerateHtml("obs/category_name", OsisDataIf->GetCategoryName());
 
-               GenerateHtml("obs/current_skater", OsisIf->GetCurrentSkaterName());
-               GenerateHtml("obs/current_start_number", OsisIf->GetCurrentSkaterNumber());
-               GenerateHtml("obs/current_skater_club", OsisIf->GetCurrentSkaterClub());
-               GenerateHtml("obs/current_skater_nation", OsisIf->GetCurrentSkaterNation());
+               GenerateHtml("obs/current_skater", OsisDataIf->GetCurrentSkaterName());
+               GenerateHtml("obs/current_start_number", OsisDataIf->GetCurrentSkaterNumber());
+               GenerateHtml("obs/current_skater_club", OsisDataIf->GetCurrentSkaterClub());
+               GenerateHtml("obs/current_skater_nation", OsisDataIf->GetCurrentSkaterNation());
 
                QMap<int, QList<QString>> SegmentStartList;
-               OsisIf->GetSegmentStartList(SegmentStartList);
+               OsisDataIf->GetSegmentStartList(SegmentStartList);
                GenerateHtml("obs/starting_order.html", SegmentStartList);
 
-               OsisIf->GetWarmUpGroupsList(WarmUpList);
+               OsisDataIf->GetWarmUpGroupsList(WarmUpList);
                QMap<int, QList<QString>> WarmUpGroupNameList;
-               OsisIf->GetWarmUpStartList(WarmUpGroupNameList);
+               OsisDataIf->GetWarmUpStartList(WarmUpGroupNameList);
                GenerateHtml("obs/current_warmup_group.html", WarmUpGroupNameList);
-               GenerateHtml("obs/current_warmup_group_number", OsisIf->GetCurrentWarmUpGroupNumber());
+               GenerateHtml("obs/current_warmup_group_number", OsisDataIf->GetCurrentWarmUpGroupNumber());
 
                QMap<int, QList<QString>> SegmentResultList;
-               OsisIf->GetSegmentResultList(SegmentResultList);
+               OsisDataIf->GetSegmentResultList(SegmentResultList);
                if (SegmentResultList.isEmpty())
                {
                   passToObs = false;
@@ -131,13 +131,13 @@ void Actions::DoActions()
             break;
          case ActionToScene::ACTION_NXT:
             {
-               int stnum = OsisIf->GetCurrentSkaterNumber().toInt();
+               int stnum = OsisDataIf->GetCurrentSkaterNumber().toInt();
                if (stnum)
                {
                   QMap<int, QList<QString>> WarmUpGroupNameList;
-                  OsisIf->GetWarmUpStartList(WarmUpGroupNameList);
+                  OsisDataIf->GetWarmUpStartList(WarmUpGroupNameList);
                   GenerateHtml("obs/current_warmup_group.html", WarmUpGroupNameList);
-                  GenerateHtml("obs/current_warmup_group_number", OsisIf->GetCurrentWarmUpGroupNumber());
+                  GenerateHtml("obs/current_warmup_group_number", OsisDataIf->GetCurrentWarmUpGroupNumber());
                   for (auto group:WarmUpList)
                   {
                      if (stnum == group+1)
@@ -146,10 +146,10 @@ void Actions::DoActions()
                      }
                   }
                }
-               GenerateHtml("obs/current_skater", OsisIf->GetCurrentSkaterName());
-               GenerateHtml("obs/current_start_number", OsisIf->GetCurrentSkaterNumber());
-               GenerateHtml("obs/current_skater_club", OsisIf->GetCurrentSkaterClub());
-               GenerateHtml("obs/current_skater_nation", OsisIf->GetCurrentSkaterNation());
+               GenerateHtml("obs/current_skater", OsisDataIf->GetCurrentSkaterName());
+               GenerateHtml("obs/current_start_number", OsisDataIf->GetCurrentSkaterNumber());
+               GenerateHtml("obs/current_skater_club", OsisDataIf->GetCurrentSkaterClub());
+               GenerateHtml("obs/current_skater_nation", OsisDataIf->GetCurrentSkaterNation());
             }
             break;
          case ActionToScene::ACTION_PRV:

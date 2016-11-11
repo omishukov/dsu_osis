@@ -10,6 +10,8 @@
 #include "scenetableui.h"
 #include "osisif.h"
 
+const int NUM_SCENES_PER_ACTION = 2;
+
 class ObsSceneSwitcher : public QObject
 {
    Q_OBJECT
@@ -17,7 +19,7 @@ public:
    explicit ObsSceneSwitcher(QObject *parent = 0);
    ~ObsSceneSwitcher();
 
-   void LoadActions(QString& inifile, SwitcherOsisIf* osisIf);
+   void LoadActions(QString& inifile, OsisIf* osisIf);
    QMap<int, ObsAction*>* GetActions() { return &ObsActions; }
    int GetRowCount() { return RowActionMap.size(); }
    int GetNumOfScenes() { return NUM_SCENES_PER_ACTION; }

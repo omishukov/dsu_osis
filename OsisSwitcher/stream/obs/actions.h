@@ -15,7 +15,7 @@ class Actions : public QObject
 public:
    Actions(ActionToScene* actionInfo, QObject *parent = 0);
 
-   inline void SetOsisInfoIf(SwitcherOsisIf* obsOsisIf) { OsisIf = obsOsisIf; }
+   inline void SetOsisInfoIf(OsisIf* obsOsisIf) { OsisDataIf = obsOsisIf; }
 
    void SetLock(QMutex* m) {M = m;}
 
@@ -35,7 +35,7 @@ private:
 
 private:
    QList<int> ActionList;
-   SwitcherOsisIf* OsisIf;
+   OsisIf* OsisDataIf;
    QMutex* M;
    ActionToScene* ActionInfo;
    QList<int> WarmUpList;

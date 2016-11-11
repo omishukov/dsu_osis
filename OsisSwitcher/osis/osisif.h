@@ -5,12 +5,12 @@
 #include <QString>
 #include <QMap>
 
-class SwitcherOsisIf : public QObject
+class OsisIf : public QObject
 {
    Q_OBJECT
 public:
-   explicit SwitcherOsisIf(QObject *parent = 0) : QObject(parent) {}
-   virtual ~SwitcherOsisIf() {}
+   explicit OsisIf(QObject *parent = 0) : QObject(parent) {}
+   virtual ~OsisIf() {}
 
    virtual QString GetCurrentSkaterName() = 0;
    virtual QString GetCurrentSkaterNumber() = 0;

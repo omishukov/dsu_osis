@@ -8,8 +8,6 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-const int NUM_SCENES_PER_ACTION = 2;
-
 ObsSceneSwitcher::ObsSceneSwitcher(QObject *parent)
    : QObject(parent)
    , CurrentAction(0)
@@ -24,26 +22,26 @@ ObsSceneSwitcher::~ObsSceneSwitcher()
    }
 }
 
-void ObsSceneSwitcher::LoadActions(QString& inifile, SwitcherOsisIf* osisIf)
+void ObsSceneSwitcher::LoadActions(QString& inifile, OsisIf* osisIf)
 {
    Inifile = inifile;
    QSettings settings(Inifile, QSettings::IniFormat);
    QString sceneName;
    int sceneDelay;
 
-   QMetaEnum metaEnum = QMetaEnum::fromType<SwitcherOsisIf::OSIS_ACTIONS_ENUM>();
+   QMetaEnum metaEnum = QMetaEnum::fromType<OsisIf::OSIS_ACTIONS_ENUM>();
    int row = 0;
-   for(int i = SwitcherOsisIf::NO_ACTIONS + 1; i < SwitcherOsisIf::LAST_ACTION; i++, row++)
+   for(int i = OsisIf::NO_ACTIONS + 1; i < OsisIf::LAST_ACTION; i++, row++)
    {
       switch (i)
       {
-      case ACTION_1S1:
-      case ACTION_1S2:
-      case ACTION_1S3:
-      case ACTION_1S4:
-      case ACTION_1S5:
-      case ACTION_2SC:
-      case ACTION_3SC:
+      case OsisIf::ACTION_1S1:
+      case OsisIf::ACTION_1S2:
+      case OsisIf::ACTION_1S3:
+      case OsisIf::ACTION_1S4:
+      case OsisIf::ACTION_1S5:
+      case OsisIf::ACTION_2SC:
+      case OsisIf::ACTION_3SC:
          continue; // skip these
          break;
       default:

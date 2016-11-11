@@ -23,7 +23,7 @@
 #include "element/isuosis.h"
 #include "osisif.h"
 
-class OsisCompetitionData : public SwitcherOsisIf
+class OsisCompetitionData : public OsisIf
 {
 public:
    OsisCompetitionData();

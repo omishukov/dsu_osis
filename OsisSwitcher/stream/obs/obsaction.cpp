@@ -16,7 +16,7 @@
 //   connect(&Scene, SIGNAL(ActionDone()), this, SLOT(SceneCompleted()));
 //}
 
-ObsAction::ObsAction(QString& actionName, QMap<QString, int>& sceneDelay, SwitcherOsisIf* osisIf, QObject* parent)
+ObsAction::ObsAction(QString& actionName, QMap<QString, int>& sceneDelay, OsisIf* osisIf, QObject* parent)
    : QObject(parent)
    , ActionName(actionName)
 {

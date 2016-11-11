@@ -36,7 +36,7 @@ signals:
 public slots:
 
 private:
-   COLUMN_ENUM Column(int c);
+   COLUMN_ENUM Column(int c) const;
    int SceneIndex(int c);
 
    QStringList Scenes;

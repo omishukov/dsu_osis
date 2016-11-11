@@ -8,7 +8,7 @@ class SceneData : public QObject
 {
    Q_OBJECT
 public:
-   explicit SceneData(SwitcherOsisIf* ObsIf, QObject *parent = 0);
+   explicit SceneData(OsisIf* ObsIf, QObject *parent = 0);
 
    enum ObsSceneData
    {
@@ -50,7 +50,7 @@ signals:
 public slots:
 
 private:
-   SwitcherOsisIf* obsIf;
+   OsisIf* obsIf;
 };
 
 #endif // SCENEDATA_H

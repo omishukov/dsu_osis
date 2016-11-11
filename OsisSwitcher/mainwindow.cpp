@@ -18,11 +18,14 @@ MainWindow::MainWindow(QWidget *parent)
    , TableGui(0)
 {
    ui->setupUi(this);
+
    QString version(GIT_VERSION);
    setWindowTitle("DSU OBS Switcher " + version);
+
    InitIsuCalcLink();
    InitOsisParser();
    InitObsData();
+
    ReadSettings();
 
    Obs.LoadScenes(GetObsSceneFile());

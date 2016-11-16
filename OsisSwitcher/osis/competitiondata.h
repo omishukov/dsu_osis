@@ -72,10 +72,10 @@ public: // ObsOsisIf
    QString GetDeduction();
    QString GetRank();
    QString GetCurrentWarmUpGroupNumber();
+   void NewAction(int action);
 
 signals:
-   void NewAction(int);
-   void DoActions();
+   void DoActions(int);
 
 public slots:
 
@@ -96,6 +96,7 @@ private:
    OsisAction* Current_Action;
    OsisPrfDetails* Current_Performance_Result;
    int CurrentParticipantId;
+   int CurrentAction;
 };
 
 #endif // OSISCOMPETITIONDATA_H

@@ -37,8 +37,8 @@ void OsisParser::Initialize()
    if (ObsDataSaver)
    {
       ObsDataSaver->SetLock(&M);
-      connect(&Competition, SIGNAL(NewAction(int)), ObsDataSaver, SLOT(AddAction(int))); // Update UI
-      connect(&Competition, SIGNAL(DoActions()), ObsDataSaver, SLOT(DoActions())); // Update UI
+//      connect(&Competition, SIGNAL(NewAction(int)), ObsDataSaver, SLOT(AddAction(int))); // Update UI
+      connect(&Competition, SIGNAL(DoActions(int)), ObsDataSaver, SLOT(DoActions(int))); // Update UI
    }
 }
 

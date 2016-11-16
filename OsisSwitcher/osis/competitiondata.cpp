@@ -12,6 +12,7 @@ OsisCompetitionData::OsisCompetitionData()
    , Current_Action(0)
    , Current_Performance_Result(0)
    , CurrentParticipantId(-1)
+   , CurrentAction(-1)
 {
 }
 
@@ -270,7 +271,7 @@ void OsisCompetitionData::AddAction(OsisAction* newAction)
    elementName = elementName.toUpper();
    elementName.prepend("ACTION_");
    int xmlElementTag = metaEnum.keyToValue(&elementName.toStdString()[0]);
-   emit NewAction(xmlElementTag);
+   NewAction(xmlElementTag);
    if (xmlElementTag == ActionToScene::ACTION_STP)
    {
       delete Current_Action;
@@ -300,7 +301,11 @@ void OsisCompetitionData::AddElementList(OsisElementList* newElementList)
 
 void OsisCompetitionData::ProcessingDone()
 {
-   emit DoActions();
+   if (CurrentAction != -1)
+   {
+      emit DoActions(CurrentAction);
+      CurrentAction = -1;
+   }
 }
 
 void OsisCompetitionData::Uninit()
@@ -514,6 +519,11 @@ QString OsisCompetitionData::GetCurrentWarmUpGroupNumber()
       i++;
    }
    return QString::number(i);
+}
+
+void OsisCompetitionData::NewAction(int action)
+{
+   CurrentAction = action;
 }
 
 void OsisCompetitionData::GetWarmUpGroupsList(QList<int>& WarmUpList)

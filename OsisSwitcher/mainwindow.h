@@ -71,12 +71,10 @@ private:
    IsuCalcLink CalcLink;
    QThread CalcLinkThread;
    QMetaEnum MetaCalLinkEnum;
-   QValidator* CalcIpValidator;
-   QValidator* PortValidator;
    OsisParser OsisDataParser;
    QThread OsisDataParserThread;
-   Actions ObsDataSaver;
-   QThread ObsDataSaverThread;
+//   Actions ObsDataSaver;
+//   QThread ObsDataSaverThread;
    QString OBS_Path;
    SceneTableUi* TableGui;
    ObsSceneSwitcher Switcher;

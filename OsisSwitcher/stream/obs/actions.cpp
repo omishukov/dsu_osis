@@ -12,7 +12,7 @@ Actions::Actions(ActionToScene* actionInfo, QObject* parent)
 {
 }
 
-void Actions::DoActions()
+void Actions::DoActions(int action)
 {
    if (!OsisDataIf)
    {

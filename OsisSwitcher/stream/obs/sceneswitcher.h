@@ -9,10 +9,11 @@
 #include "sceneinfo.h"
 #include "scenetableui.h"
 #include "osisif.h"
+#include "streamif.h"
 
 const int NUM_SCENES_PER_ACTION = 2;
 
-class ObsSceneSwitcher : public QObject
+class ObsSceneSwitcher : public QObject, public StreamIf
 {
    Q_OBJECT
 public:

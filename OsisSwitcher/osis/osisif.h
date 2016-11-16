@@ -12,6 +12,8 @@ public:
    explicit OsisIf(QObject *parent = 0) : QObject(parent) {}
    virtual ~OsisIf() {}
 
+   virtual const QMap<int, QString>* GetActions() const;
+
    virtual QString GetCurrentSkaterName() = 0;
    virtual QString GetCurrentSkaterNumber() = 0;
    virtual QString GetCurrentSkaterNation() = 0;

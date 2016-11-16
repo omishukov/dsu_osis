@@ -12,9 +12,7 @@ MainWindow::MainWindow(QWidget *parent)
    : QMainWindow(parent)
    , ui(new Ui::MainWindow)
    , MetaCalLinkEnum(QMetaEnum::fromType<IsuCalcLinkButton>())
-   , CalcIpValidator(0)
-   , PortValidator(0)
-   , ObsDataSaver(&Action2Scene)
+//   , ObsDataSaver(&Action2Scene)
    , TableGui(0)
 {
    ui->setupUi(this);
@@ -22,21 +20,22 @@ MainWindow::MainWindow(QWidget *parent)
    QString version(GIT_VERSION);
    setWindowTitle("DSU OBS Switcher " + version);
 
-   InitIsuCalcLink();
-   InitOsisParser();
-   InitObsData();
-
    ReadSettings();
 
-   Obs.LoadScenes(GetObsSceneFile());
-   QStringList SceneNames = Obs.GetScenes();
-   Switcher.LoadActions(inifile, OsisDataParser.GetOsisIf(), SceneNames);
+   InitIsuCalcLink();
+   InitOsisParser();
+//   InitObsData();
 
-   Action2Scene.LoadSceneConfiguration(GetObsSceneFile());
-   Action2Scene.LoadActionConfiguration(inifile);
-   InitActionSceneUi();
 
-   InitSceneSwitcher();
+//   Obs.LoadScenes(GetObsSceneFile());
+//   QStringList SceneNames = Obs.GetScenes();
+//   Switcher.LoadActions(inifile, OsisDataParser.GetOsisIf(), SceneNames);
+
+//   Action2Scene.LoadSceneConfiguration(GetObsSceneFile());
+//   Action2Scene.LoadActionConfiguration(inifile);
+//   InitActionSceneUi();
+
+//   InitSceneSwitcher();
 }
 
 MainWindow::~MainWindow()
@@ -52,8 +51,6 @@ MainWindow::~MainWindow()
    SwitcherThread.quit();
    SwitcherThread.wait();
 
-   delete CalcIpValidator;
-   delete PortValidator;
    delete TableGui;
    delete ui;
 }
@@ -116,11 +113,8 @@ void MainWindow::setIpValitation()
    // Setup validating for the IP-address input
    QString ipRange = "(?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])";
    QRegExp ipRegex ("^" + ipRange + "\\." + ipRange + "\\." + ipRange + "\\." + ipRange + "$");
-   CalcIpValidator = new QRegExpValidator(ipRegex, this);
-   ui->IsuCalcIP_LE->setValidator(CalcIpValidator);
-
-   PortValidator = new QIntValidator(6,65535,this);// 0 to 65535
-   ui->IsuCalcPort_LE->setValidator(PortValidator);//ports
+   ui->IsuCalcIP_LE->setValidator(new QRegExpValidator(ipRegex, this));
+   ui->IsuCalcPort_LE->setValidator(new QIntValidator(6,65535,this););//ports
 }
 
 void MainWindow::InitIsuCalcLink()
@@ -152,13 +146,13 @@ void MainWindow::InitOsisParser()
    OsisDataParserThread.start();
 }
 
-void MainWindow::InitObsData()
-{
-   ObsDataSaver.moveToThread(&ObsDataSaverThread);
+//void MainWindow::InitObsData()
+//{
+//   ObsDataSaver.moveToThread(&ObsDataSaverThread);
 
-   connect(&ObsDataSaver, SIGNAL(SendOsisEvent(int)), &Switcher, SLOT(HandleEvent(int))); // on thread start
-   ObsDataSaverThread.start();
-}
+//   connect(&ObsDataSaver, SIGNAL(SendOsisEvent(int)), &Switcher, SLOT(HandleEvent(int))); // on thread start
+//   ObsDataSaverThread.start();
+//}
 
 void MainWindow::InitSceneSwitcher()
 {

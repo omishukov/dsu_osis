@@ -21,7 +21,7 @@ public:
 
 public slots:
    void AddAction(int action);
-   void DoActions();
+   void DoActions(int action);
 
 signals:
    void SendOsisEvent(int);

@@ -13,7 +13,7 @@
 
 const int NUM_SCENES_PER_ACTION = 2;
 
-class ObsSceneSwitcher : public QObject, public StreamIf
+class ObsSceneSwitcher : public StreamIf
 {
    Q_OBJECT
 public:
@@ -25,6 +25,8 @@ public:
    int GetRowCount() { return RowActionMap.size(); }
    int GetNumOfScenes() { return NUM_SCENES_PER_ACTION; }
    QStringList GetRow(int row);
+
+   void Action(int action) Q_DECL_OVERRIDE;
 
 signals:
 

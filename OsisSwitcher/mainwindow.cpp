@@ -12,7 +12,6 @@ MainWindow::MainWindow(QWidget *parent)
    : QMainWindow(parent)
    , ui(new Ui::MainWindow)
    , MetaCalLinkEnum(QMetaEnum::fromType<IsuCalcLinkButton>())
-//   , ObsDataSaver(&Action2Scene)
    , TableGui(0)
 {
    ui->setupUi(this);
@@ -46,11 +45,10 @@ MainWindow::~MainWindow()
    CalcLinkThread.wait();
    OsisDataParserThread.quit();
    OsisDataParserThread.wait();
-   ObsDataSaverThread.quit();
-   ObsDataSaverThread.wait();
    SwitcherThread.quit();
    SwitcherThread.wait();
 
+   delete ObsStreamIf;
    delete TableGui;
    delete ui;
 }
@@ -138,7 +136,6 @@ void MainWindow::InitIsuCalcLink()
 void MainWindow::InitOsisParser()
 {
    OsisDataParser.SetDataIf(&DataIf);
-   OsisDataParser.SetObsDataSaver(&ObsDataSaver);
    OsisDataParser.moveToThread(&OsisDataParserThread);
    connect(&DataIf, SIGNAL(NewData()), &OsisDataParser, SLOT(ProcessData())); // Update UI
    connect(&OsisDataParserThread, SIGNAL(started()), &OsisDataParser, SLOT(Initialize())); // on thread start
@@ -146,18 +143,12 @@ void MainWindow::InitOsisParser()
    OsisDataParserThread.start();
 }
 
-//void MainWindow::InitObsData()
-//{
-//   ObsDataSaver.moveToThread(&ObsDataSaverThread);
-
-//   connect(&ObsDataSaver, SIGNAL(SendOsisEvent(int)), &Switcher, SLOT(HandleEvent(int))); // on thread start
-//   ObsDataSaverThread.start();
-//}
-
-void MainWindow::InitSceneSwitcher()
+void MainWindow::InitStreamIf()
 {
-   Switcher.moveToThread(&SwitcherThread);
+   ObsStreamIf = new ObsSceneSwitcher(inifile, OsisDataParser.GetOsisIf());
+   ObsStreamIf->moveToThread(&SwitcherThread);
    SwitcherThread.start();
+   OsisDataParser.SetStreamIf(ObsStreamIf);
 }
 
 void MainWindow::on_Connect_PB_clicked()

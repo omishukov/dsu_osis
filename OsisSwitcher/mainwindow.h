@@ -57,8 +57,7 @@ signals:
 private:
    void InitIsuCalcLink();
    void InitOsisParser();
-   void InitObsData();
-   void InitSceneSwitcher();
+   void InitStreamIf();
    void SetLinkStatus(QString label, QString buttonText, bool buttonEnabled, bool ipAddrEnabled, bool ipPortEnabled);
    void ReadSettings();
    void setIpValitation();
@@ -73,11 +72,9 @@ private:
    QMetaEnum MetaCalLinkEnum;
    OsisParser OsisDataParser;
    QThread OsisDataParserThread;
-//   Actions ObsDataSaver;
-//   QThread ObsDataSaverThread;
    QString OBS_Path;
    SceneTableUi* TableGui;
-   ObsSceneSwitcher Switcher;
+   ObsSceneSwitcher *ObsStreamIf;
    QThread SwitcherThread;
    ActionToScene Action2Scene;
    ObsScenes Obs;

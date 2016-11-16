@@ -5,15 +5,13 @@
 OsisParser::OsisParser(QObject *parent)
    : QObject(parent)
    , DataIf(0)
-   , ObsDataSaver(0)
 {
 
 }
 
-void OsisParser::SetObsDataSaver(Actions* obsData)
+void OsisParser::SetStreamIf(StreamIf *streamIf)
 {
-    ObsDataSaver = obsData;
-    ObsDataSaver->SetOsisInfoIf(&Competition);
+   Competition.SetStreamIf(streamIf);
 }
 
 void OsisParser::ProcessData()
@@ -34,12 +32,6 @@ void OsisParser::ProcessData()
 
 void OsisParser::Initialize()
 {
-   if (ObsDataSaver)
-   {
-      ObsDataSaver->SetLock(&M);
-//      connect(&Competition, SIGNAL(NewAction(int)), ObsDataSaver, SLOT(AddAction(int))); // Update UI
-      connect(&Competition, SIGNAL(DoActions(int)), ObsDataSaver, SLOT(DoActions(int))); // Update UI
-   }
 }
 
 void OsisParser::Uninit()

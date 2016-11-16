@@ -61,7 +61,7 @@ public:
    Q_ENUM(OsisXmlElements)
 
    void SetDataIf(DataQueue* dataIf) { DataIf = dataIf; }
-   void SetObsDataSaver(Actions* obsData);
+   void SetStreamIf(StreamIf* streamIf);
    OsisIf* GetOsisIf() { return &Competition; }
 
 signals:

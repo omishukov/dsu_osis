@@ -1,10 +1,12 @@
 #ifndef STREAMIF_H
 #define STREAMIF_H
 
+#include <QObject>
 #include <QStringList>
 
-class StreamIf
+class StreamIf : public QObject
 {
+   Q_OBJECT
 public:
    virtual ~StreamIf() {}
 
@@ -15,6 +17,8 @@ public:
 
    virtual void SetTransition(QString currentTransition) = 0;
 
+public slots:
+   void Action(int action);
 };
 
 #endif // STREAMIF_H

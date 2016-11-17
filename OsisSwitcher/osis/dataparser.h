@@ -8,6 +8,7 @@
 #include "dataqueue.h"
 #include "competitiondata.h"
 #include "obs/actions.h"
+#include "streamif.h"
 
 class OsisParser : public QObject
 {
@@ -68,8 +69,8 @@ signals:
 
 public slots:
    void ProcessData();
-   void Initialize();
-   void Uninit();
+//   void Initialize();
+//   void Uninit();
 
 private:
    void Handle(QByteArray& qba);

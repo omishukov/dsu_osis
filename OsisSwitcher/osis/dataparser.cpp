@@ -12,6 +12,7 @@ OsisParser::OsisParser(QObject *parent)
 void OsisParser::SetStreamIf(StreamIf *streamIf)
 {
    Competition.SetStreamIf(streamIf);
+   streamIf->SetDataLocker(&M);
 }
 
 void OsisParser::ProcessData()
@@ -30,14 +31,14 @@ void OsisParser::ProcessData()
    }
 }
 
-void OsisParser::Initialize()
-{
-}
+//void OsisParser::Initialize()
+//{
+//}
 
-void OsisParser::Uninit()
-{
+//void OsisParser::Uninit()
+//{
 
-}
+//}
 
 void OsisParser::Handle(QByteArray& qba)
 {

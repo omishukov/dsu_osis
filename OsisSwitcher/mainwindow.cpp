@@ -23,18 +23,12 @@ MainWindow::MainWindow(QWidget *parent)
 
    InitIsuCalcLink();
    InitOsisParser();
-//   InitObsData();
+   InitStreamIf();
 
+   SwitcherThread.start();
+   OsisDataParserThread.start();
 
-//   Obs.LoadScenes(GetObsSceneFile());
-//   QStringList SceneNames = Obs.GetScenes();
-//   Switcher.LoadActions(inifile, OsisDataParser.GetOsisIf(), SceneNames);
-
-//   Action2Scene.LoadSceneConfiguration(GetObsSceneFile());
-//   Action2Scene.LoadActionConfiguration(inifile);
-//   InitActionSceneUi();
-
-//   InitSceneSwitcher();
+   InitActionSceneUi();
 }
 
 MainWindow::~MainWindow()
@@ -112,7 +106,7 @@ void MainWindow::setIpValitation()
    QString ipRange = "(?:[0-1]?[0-9]?[0-9]|2[0-4][0-9]|25[0-5])";
    QRegExp ipRegex ("^" + ipRange + "\\." + ipRange + "\\." + ipRange + "\\." + ipRange + "$");
    ui->IsuCalcIP_LE->setValidator(new QRegExpValidator(ipRegex, this));
-   ui->IsuCalcPort_LE->setValidator(new QIntValidator(6,65535,this););//ports
+   ui->IsuCalcPort_LE->setValidator(new QIntValidator(6,65535,this));//ports
 }
 
 void MainWindow::InitIsuCalcLink()
@@ -120,15 +114,15 @@ void MainWindow::InitIsuCalcLink()
    CalcLink.SetDataIf(&DataIf);
    CalcLink.moveToThread(&CalcLinkThread);
 
-   connect(this, SIGNAL(EstablishConnection()), &CalcLink, SLOT(Establish())); // Connect to the IsuCalc
-   connect(this, SIGNAL(StopConnection()), &CalcLink, SLOT(StopConnection())); // Disconnect from the IsuCalc
-   connect(&CalcLink, SIGNAL(Established()), this, SLOT(IsuCalcConnected())); // Update UI
-   connect(&CalcLink, SIGNAL(IsuCalcDisconnected()), this, SLOT(IsuCalcDisconnected())); // Update UI
-   connect(&CalcLink, SIGNAL(Reconnecting()), this, SLOT(IsuCalcReconnecting())); // Update UI
+   connect(this, SIGNAL(EstablishConnection()), &CalcLink, SLOT(Establish()), Qt::QueuedConnection); // Connect to the IsuCalc
+   connect(this, SIGNAL(StopConnection()), &CalcLink, SLOT(StopConnection()), Qt::QueuedConnection); // Disconnect from the IsuCalc
+   connect(&CalcLink, SIGNAL(Established()), this, SLOT(IsuCalcConnected()), Qt::QueuedConnection); // Update UI
+   connect(&CalcLink, SIGNAL(IsuCalcDisconnected()), this, SLOT(IsuCalcDisconnected()), Qt::QueuedConnection); // Update UI
+   connect(&CalcLink, SIGNAL(Reconnecting()), this, SLOT(IsuCalcReconnecting()), Qt::QueuedConnection); // Update UI
    connect(this, SIGNAL(ChangedIsuCalcSettings(const QString&, quint16, uint)),
-           &CalcLink, SLOT(ChangedSettings(const QString&, quint16, uint))); // on settings change
-   connect(&CalcLinkThread, SIGNAL(started()), &CalcLink, SLOT(Initialize())); // on thread start
-   connect(&CalcLinkThread, SIGNAL(finished()), &CalcLink, SLOT(Uninit())); // on thread stop
+           &CalcLink, SLOT(ChangedSettings(const QString&, quint16, uint)), Qt::QueuedConnection); // on settings change
+   connect(&CalcLinkThread, SIGNAL(started()), &CalcLink, SLOT(Initialize()), Qt::QueuedConnection); // on thread start
+   connect(&CalcLinkThread, SIGNAL(finished()), &CalcLink, SLOT(Uninit()), Qt::QueuedConnection); // on thread stop
 
    CalcLinkThread.start();
 }
@@ -137,17 +131,13 @@ void MainWindow::InitOsisParser()
 {
    OsisDataParser.SetDataIf(&DataIf);
    OsisDataParser.moveToThread(&OsisDataParserThread);
-   connect(&DataIf, SIGNAL(NewData()), &OsisDataParser, SLOT(ProcessData())); // Update UI
-   connect(&OsisDataParserThread, SIGNAL(started()), &OsisDataParser, SLOT(Initialize())); // on thread start
-   connect(&OsisDataParserThread, SIGNAL(finished()), &OsisDataParser, SLOT(Uninit())); // on thread stop
-   OsisDataParserThread.start();
+   connect(&DataIf, SIGNAL(NewData()), &OsisDataParser, SLOT(ProcessData()), Qt::QueuedConnection); // Update UI
 }
 
 void MainWindow::InitStreamIf()
 {
    ObsStreamIf = new ObsSceneSwitcher(inifile, OsisDataParser.GetOsisIf());
    ObsStreamIf->moveToThread(&SwitcherThread);
-   SwitcherThread.start();
    OsisDataParser.SetStreamIf(ObsStreamIf);
 }
 

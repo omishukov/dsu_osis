@@ -22,6 +22,7 @@
 #include "element/event.h"
 #include "element/isuosis.h"
 #include "osisif.h"
+#include "streamif.h"
 
 class OsisCompetitionData : public OsisIf
 {
@@ -73,11 +74,9 @@ public: // ObsOsisIf
    QString GetRank();
    QString GetCurrentWarmUpGroupNumber();
    void NewAction(int action);
+   void SetStreamIf(StreamIf* streamIf);
 
-signals:
-   void DoActions(int);
-
-public slots:
+   virtual const QMap<int, QString>* GetActions() const;
 
 private:
    int CurrentStartNumber();
@@ -97,6 +96,8 @@ private:
    OsisPrfDetails* Current_Performance_Result;
    int CurrentParticipantId;
    int CurrentAction;
+   StreamIf* Stream;
+   QMap<int, QString> ActionMap;
 };
 
 #endif // OSISCOMPETITIONDATA_H

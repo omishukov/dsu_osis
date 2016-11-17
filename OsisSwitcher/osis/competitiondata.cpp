@@ -13,7 +13,13 @@ OsisCompetitionData::OsisCompetitionData()
    , Current_Performance_Result(0)
    , CurrentParticipantId(-1)
    , CurrentAction(-1)
+   , Stream(0)
 {
+   QMetaEnum metaEnum = QMetaEnum::fromType<OsisIf::OSIS_ACTIONS_ENUM>();
+   for(int i = OsisIf::NO_ACTIONS + 1; i < OsisIf::LAST_ACTION; i++)
+   {
+      ActionMap.insert(i, metaEnum.valueToKey(i));
+   }
 }
 
 OsisCompetitionData::~OsisCompetitionData()
@@ -301,9 +307,9 @@ void OsisCompetitionData::AddElementList(OsisElementList* newElementList)
 
 void OsisCompetitionData::ProcessingDone()
 {
-   if (CurrentAction != -1)
+   if (CurrentAction != -1 && Stream)
    {
-      emit DoActions(CurrentAction);
+      Stream->Action(CurrentAction);
       CurrentAction = -1;
    }
 }
@@ -524,6 +530,16 @@ QString OsisCompetitionData::GetCurrentWarmUpGroupNumber()
 void OsisCompetitionData::NewAction(int action)
 {
    CurrentAction = action;
+}
+
+void OsisCompetitionData::SetStreamIf(StreamIf* streamIf)
+{
+   Stream = streamIf;
+}
+
+const QMap<int, QString>* OsisCompetitionData::GetActions() const
+{
+   return &ActionMap;
 }
 
 void OsisCompetitionData::GetWarmUpGroupsList(QList<int>& WarmUpList)

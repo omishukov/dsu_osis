@@ -8,10 +8,12 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-ObsSceneSwitcher::ObsSceneSwitcher(QObject *parent)
+ObsSceneSwitcher::ObsSceneSwitcher(QString& inifile, OsisIf* osisIf, QObject *parent)
    : QObject(parent)
    , CurrentAction(0)
 {
+   connect(this, SIGNAL(NewAction(int)), this, SLOT(HandleEvent(int)), Qt::QueuedConnection);
+   LoadActions(inifile, osisIf);
 }
 
 ObsSceneSwitcher::~ObsSceneSwitcher()
@@ -29,25 +31,13 @@ void ObsSceneSwitcher::LoadActions(QString& inifile, OsisIf* osisIf)
    QString sceneName;
    int sceneDelay;
 
-   QMetaEnum metaEnum = QMetaEnum::fromType<OsisIf::OSIS_ACTIONS_ENUM>();
+   const QMap<int, QString>* actionList = osisIf->GetActions();
+   QMapIterator<int, QString> i(*actionList);
    int row = 0;
-   for(int i = OsisIf::NO_ACTIONS + 1; i < OsisIf::LAST_ACTION; i++, row++)
+   while (i.hasNext())
    {
-      switch (i)
-      {
-      case OsisIf::ACTION_1S1:
-      case OsisIf::ACTION_1S2:
-      case OsisIf::ACTION_1S3:
-      case OsisIf::ACTION_1S4:
-      case OsisIf::ACTION_1S5:
-      case OsisIf::ACTION_2SC:
-      case OsisIf::ACTION_3SC:
-         continue; // skip these
-         break;
-      default:
-         break;
-      }
-      QString ActionName = metaEnum.valueToKey(i);
+      i.next();
+      QString ActionName = i.value();
       QMap<QString, int> SceneDelayMap;
 
       settings.beginGroup(ActionName);
@@ -61,8 +51,8 @@ void ObsSceneSwitcher::LoadActions(QString& inifile, OsisIf* osisIf)
       }
       settings.endGroup();
 
-      ObsActions.insert(i, new ObsAction(ActionName, SceneDelayMap, osisIf));
-      RowActionMap.insert(row, i);
+      ObsActions.insert(i.key(), new ObsAction(ActionName, SceneDelayMap, osisIf));
+      RowActionMap.insert(row++, i.key());
    }
 }
 
@@ -79,6 +69,10 @@ QStringList ObsSceneSwitcher::GetRow(int row)
    return QStringList();
 }
 
+void ObsSceneSwitcher::Action(int action)
+{
+   emit NewAction(action);
+}
 
 void ObsSceneSwitcher::HandleEvent(int act)
 {

@@ -3,10 +3,10 @@
 
 #include <QObject>
 #include <QStringList>
+#include <QMutex>
 
-class StreamIf : public QObject
+class StreamIf
 {
-   Q_OBJECT
 public:
    virtual ~StreamIf() {}
 
@@ -17,8 +17,7 @@ public:
 
    virtual void SetTransition(QString currentTransition) = 0;
 
-public slots:
-   void Action(int action);
+   virtual void SetDataLocker(QMutex* m) = 0;
 };
 
 #endif // STREAMIF_H

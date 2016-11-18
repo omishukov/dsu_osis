@@ -6,13 +6,14 @@
 #include "obsaction.h"
 #include "sceneinfo.h"
 #include "obsscenes.h"
+#include "streamif.h"
 
 class ObsSceneSwitcher;
 
 class SceneTableUi : public QStyledItemDelegate
 {
 public:
-   SceneTableUi(QStringList &scenes, ObsSceneSwitcher *switcher);
+   SceneTableUi(QStringList &scenes, StreamIf *switcher);
    ~SceneTableUi();
 
    enum COLUMN_ENUM
@@ -42,9 +43,7 @@ private:
    QStringList Scenes;
 
    QStandardItemModel* TableModel;
-   ObsSceneSwitcher* Switcher;
-
-
+   StreamIf* Switcher;
 };
 
 #endif // SCENETABLEUI_H

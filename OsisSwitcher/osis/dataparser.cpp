@@ -9,6 +9,12 @@ OsisParser::OsisParser(QObject *parent)
 
 }
 
+void OsisParser::SetDataIf(DataQueue* dataIf)
+{
+   DataIf = dataIf;
+   connect(DataIf, SIGNAL(NewData()), this, SLOT(ProcessData()), Qt::QueuedConnection); // Update UI
+}
+
 void OsisParser::SetStreamIf(StreamIf *streamIf)
 {
    Competition.SetStreamIf(streamIf);

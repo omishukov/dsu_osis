@@ -22,11 +22,16 @@ MainWindow::MainWindow(QWidget *parent)
    ReadSettings();
 
    InitIsuCalcLink();
-   InitOsisParser();
-   InitStreamIf();
 
-   SwitcherThread.start();
-   OsisDataParserThread.start();
+   OsisDataParser.SetDataIf(&OsisDataQueue);
+   OsisDataParser.moveToThread(&OsisIfThread);
+
+   ObsStreamIf = new ObsSceneSwitcher(inifile, OsisDataParser.GetOsisIf());
+   ObsStreamIf->moveToThread(&StreamIfThread);
+   OsisDataParser.SetStreamIf(ObsStreamIf);
+
+   StreamIfThread.start();
+   OsisIfThread.start();
 
    InitActionSceneUi();
 }
@@ -37,10 +42,10 @@ MainWindow::~MainWindow()
 
    CalcLinkThread.quit();
    CalcLinkThread.wait();
-   OsisDataParserThread.quit();
-   OsisDataParserThread.wait();
-   SwitcherThread.quit();
-   SwitcherThread.wait();
+   OsisIfThread.quit();
+   OsisIfThread.wait();
+   StreamIfThread.quit();
+   StreamIfThread.wait();
 
    delete ObsStreamIf;
    delete TableGui;
@@ -111,7 +116,7 @@ void MainWindow::setIpValitation()
 
 void MainWindow::InitIsuCalcLink()
 {
-   CalcLink.SetDataIf(&DataIf);
+   CalcLink.SetDataIf(&OsisDataQueue);
    CalcLink.moveToThread(&CalcLinkThread);
 
    connect(this, SIGNAL(EstablishConnection()), &CalcLink, SLOT(Establish()), Qt::QueuedConnection); // Connect to the IsuCalc
@@ -125,20 +130,6 @@ void MainWindow::InitIsuCalcLink()
    connect(&CalcLinkThread, SIGNAL(finished()), &CalcLink, SLOT(Uninit()), Qt::QueuedConnection); // on thread stop
 
    CalcLinkThread.start();
-}
-
-void MainWindow::InitOsisParser()
-{
-   OsisDataParser.SetDataIf(&DataIf);
-   OsisDataParser.moveToThread(&OsisDataParserThread);
-   connect(&DataIf, SIGNAL(NewData()), &OsisDataParser, SLOT(ProcessData()), Qt::QueuedConnection); // Update UI
-}
-
-void MainWindow::InitStreamIf()
-{
-   ObsStreamIf = new ObsSceneSwitcher(inifile, OsisDataParser.GetOsisIf());
-   ObsStreamIf->moveToThread(&SwitcherThread);
-   OsisDataParser.SetStreamIf(ObsStreamIf);
 }
 
 void MainWindow::on_Connect_PB_clicked()
@@ -206,16 +197,16 @@ QString MainWindow::GetObsSceneFile()
 
 void MainWindow::InitActionSceneUi()
 {
-   QStringList NameList = Obs.GetTransitions();
+   QStringList NameList = ObsStreamIf->GetTransitions();
    ui->TransitionCB->addItems(NameList);
    int index = ui->TransitionCB->findText(CurrentTransition);
    if ( index != -1 )
    {
       ui->TransitionCB->setCurrentIndex(index);
    }
-   Obs.SetTransition(CurrentTransition);
+   ObsStreamIf->SetTransition(CurrentTransition);
 
-   NameList = Obs.GetScenes();
+   NameList = ObsStreamIf->GetScenes();
    TableGui = new SceneTableUi(NameList);
    ui->ActionToSceneQTV->setModel(TableGui->GetModel());
    ui->ActionToSceneQTV->setItemDelegate(TableGui);

@@ -52,7 +52,7 @@ void ObsSceneSwitcher::LoadActions(QString& inifile, OsisIf* osisIf)
       settings.endGroup();
 
       ObsActions.insert(i.key(), new ObsAction(ActionName, SceneDelayMap, osisIf));
-      RowActionMap.insert(row++, i.key());
+Move it to ConfigUI:      RowActionMap.insert(row++, i.key());
    }
 }
 
@@ -72,6 +72,11 @@ QStringList ObsSceneSwitcher::GetRow(int row)
 void ObsSceneSwitcher::Action(int action)
 {
    emit NewAction(action);
+}
+
+QStringList ObsSceneSwitcher::GetScenes()
+{
+
 }
 
 void ObsSceneSwitcher::HandleEvent(int act)

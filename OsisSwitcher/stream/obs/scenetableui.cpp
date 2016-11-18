@@ -2,24 +2,23 @@
 #include <QLabel>
 #include <QSpinBox>
 #include "scenetableui.h"
-#include "sceneswitcher.h"
 
-SceneTableUi::SceneTableUi(QStringList& scenes, ObsSceneSwitcher* switcher)
+SceneTableUi::SceneTableUi(QStringList& scenes, StreamIf* switcher)
    : Switcher(switcher)
 {
-   TableModel = new QStandardItemModel(switcher->GetRowCount(), switcher->GetNumOfScenes() * 2 + 1);
+   TableModel = new QStandardItemModel(switcher->GetNoOfActions(), switcher->GetNoOfSceneTransitions() * 2 + 1);
 
    Scenes << "" << scenes;
 
    QStringList TableHeader;
    TableHeader << "Action";
-   for (int i = 0; i < switcher->GetNumOfScenes(); i++)
+   for (int i = 0; i < switcher->GetNoOfSceneTransitions(); i++)
    {
       TableHeader << "Delay" << "Scene";
    }
    TableModel->setHorizontalHeaderLabels(TableHeader);
 
-   for (int r = 0; r < switcher->GetRowCount(); r++)
+   for (int r = 0; r < switcher->GetNoOfActions(); r++)
    {
       QStringList row = switcher->GetRow(r);
       for (int c = 0; c < row.size(); c++)

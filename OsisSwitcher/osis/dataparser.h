@@ -61,7 +61,7 @@ public:
    };
    Q_ENUM(OsisXmlElements)
 
-   void SetDataIf(DataQueue* dataIf) { DataIf = dataIf; }
+   void SetDataIf(DataQueue* dataIf);
    void SetStreamIf(StreamIf* streamIf);
    OsisIf* GetOsisIf() { return &Competition; }
 

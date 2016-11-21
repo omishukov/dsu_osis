@@ -206,8 +206,7 @@ void MainWindow::InitActionSceneUi()
    }
    ObsStreamIf->SetTransition(CurrentTransition);
 
-   NameList = ObsStreamIf->GetScenes();
-   TableGui = new SceneTableUi(ObsStreamIf, ui->ActionToSceneQTV);
+   TableGui = new SceneTableUi(inifile, OsisDataParser.GetOsisIf(), ObsStreamIf, ui->ActionToSceneQTV);
 }
 
 void MainWindow::on_ChangeObsConfigPathPB_clicked()
@@ -223,5 +222,5 @@ void MainWindow::on_ChangeObsConfigPathPB_clicked()
 void MainWindow::on_TransitionCB_currentIndexChanged(const QString &arg1)
 {
     CurrentTransition = arg1;
-    Obs.SetTransition(CurrentTransition);
+    ObsStreamIf->SetTransition(CurrentTransition);
 }

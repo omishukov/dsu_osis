@@ -13,7 +13,6 @@ ObsSceneSwitcher::ObsSceneSwitcher(QString& inifile, OsisIf* osisIf, QObject *pa
    , CurrentAction(0)
 {
    connect(this, SIGNAL(NewAction(int)), this, SLOT(HandleEvent(int)), Qt::QueuedConnection);
-   LoadActions(inifile, osisIf);
 }
 
 ObsSceneSwitcher::~ObsSceneSwitcher()
@@ -22,19 +21,6 @@ ObsSceneSwitcher::~ObsSceneSwitcher()
    {
       delete action;
    }
-}
-
-QStringList ObsSceneSwitcher::GetRow(int row)
-{
-   if (RowActionMap.contains(row))
-   {
-      int action = RowActionMap[row];
-      if (ObsActions.contains(action))
-      {
-         return ObsActions[action]->GetTableRow();
-      }
-   }
-   return QStringList();
 }
 
 void ObsSceneSwitcher::Action(int action)

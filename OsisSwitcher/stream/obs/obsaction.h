@@ -18,10 +18,9 @@ public:
 public:
    void Execute(ObsAction *previousAction = 0, int nextAction = -1);
 //   SceneInfo* GetScene() { return &Scene;}
-   bool Completed();
+//   bool Completed();
    bool Executable();
    QMap<QString, int>* GetSceneDelays() { return &SceneDelayMap; }
-   QStringList GetTableRow();
 
 public slots:
    void SceneCompleted();
@@ -32,7 +31,7 @@ private:
 //   SceneInfo NextScene;
 //   SceneInfo Transition;
    QMap<QString, int> SceneDelayMap;
-   OsisIf* OsisIf;
+   OsisIf* OsisDataIf;
    bool Repeat;
    SceneData* ObsSceneFiles;
 };

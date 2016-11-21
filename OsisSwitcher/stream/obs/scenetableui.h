@@ -12,7 +12,7 @@ class ObsSceneSwitcher;
 class SceneTableUi : public QStyledItemDelegate
 {
 public:
-   SceneTableUi(OsisIf* osisIf, StreamIf *switcher, QTableView* actionToSceneQTV);
+   SceneTableUi(QString& inifile, OsisIf* osisIf, StreamIf *switcher, QTableView* actionToSceneQTV);
    ~SceneTableUi();
 
    enum COLUMN_ENUM
@@ -46,6 +46,9 @@ private:
    StreamIf* Switcher;
    QTableView *ActionToSceneQTV;
    const QMap<int, QString>* ActionMap;
+   QMap<int, QMap<QString, int>> ActionSceneDelayMap;
+   QMap<int, int> RowActionMap;
+   QString Inifile;
 };
 
 #endif // SCENETABLEUI_H

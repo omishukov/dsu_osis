@@ -6,10 +6,11 @@
 #include <QStandardItemModel>
 #include <QMetaEnum>
 #include "actions.h"
-#include "sceneinfo.h"
+#include "obsscenes.h"
 #include "scenetableui.h"
 #include "osisif.h"
 #include "streamif.h"
+#include "obsaction.h"
 
 
 class ObsSceneSwitcher : public QObject, public StreamIf

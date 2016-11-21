@@ -25,29 +25,19 @@ ObsAction::ObsAction(QString& actionName, QMap<QString, int>& sceneDelay, OsisIf
 
 ObsAction::~ObsAction()
 {
-   Scene.Cancel();
+//   Scene.Cancel();
 }
 
-void ObsAction::Execute()
+void ObsAction::Execute(ObsAction *previousAction, int nextAction)
 {
-   Scene.SwitchScene();
+//   Scene.SwitchScene();
 }
 
-bool ObsAction::Completed()
-{
-   return Scene.Completed();
-}
+//bool ObsAction::Completed()
+//{
+//   return Scene.Completed();
+//}
 
-QStringList ObsAction::GetTableRow()
-{
-   QStringList row;
-   row << ActionName;
-   for(auto scene : SceneDelayMap->keys())
-   {
-      row << QString::number(SceneDelayMap.value(scene)) << scene;
-   }
-   return row;
-}
 
 void ObsAction::SceneCompleted()
 {

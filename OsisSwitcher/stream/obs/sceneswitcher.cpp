@@ -24,38 +24,6 @@ ObsSceneSwitcher::~ObsSceneSwitcher()
    }
 }
 
-void ObsSceneSwitcher::LoadActions(QString& inifile, OsisIf* osisIf)
-{
-   Inifile = inifile;
-   QSettings settings(Inifile, QSettings::IniFormat);
-   QString sceneName;
-   int sceneDelay;
-
-   const QMap<int, QString>* actionList = osisIf->GetActions();
-   QMapIterator<int, QString> i(*actionList);
-   int row = 0;
-   while (i.hasNext())
-   {
-      i.next();
-      QString ActionName = i.value();
-      QMap<QString, int> SceneDelayMap;
-
-      settings.beginGroup(ActionName);
-      for (int sc = 0; sc < NUM_SCENES_PER_ACTION; sc++)
-      {
-         QString Scene = QString("SCENE%s").arg(sc + 1);
-         QString Delay = QString("DELAY%s").arg(sc + 1);
-         sceneName = settings.value(Scene, "").toString();
-         sceneDelay = settings.value(Delay, "0").toInt();
-         SceneDelayMap.insert(sceneName, sceneDelay);
-      }
-      settings.endGroup();
-
-      ObsActions.insert(i.key(), new ObsAction(ActionName, SceneDelayMap, osisIf));
-Move it to ConfigUI:      RowActionMap.insert(row++, i.key());
-   }
-}
-
 QStringList ObsSceneSwitcher::GetRow(int row)
 {
    if (RowActionMap.contains(row))

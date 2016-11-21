@@ -3,17 +3,16 @@
 
 #include <QStyledItemDelegate>
 #include <QStandardItemModel>
-#include "obsaction.h"
-#include "sceneinfo.h"
-#include "obsscenes.h"
+#include <QTableView>
 #include "streamif.h"
+#include "osisif.h"
 
 class ObsSceneSwitcher;
 
 class SceneTableUi : public QStyledItemDelegate
 {
 public:
-   SceneTableUi(QStringList &scenes, StreamIf *switcher);
+   SceneTableUi(OsisIf* osisIf, StreamIf *switcher, QTableView* actionToSceneQTV);
    ~SceneTableUi();
 
    enum COLUMN_ENUM
@@ -39,11 +38,14 @@ public slots:
 private:
    COLUMN_ENUM Column(int c) const;
    int SceneIndex(int c);
+   void LoadActions(QString& inifile, OsisIf* osisIf);
 
    QStringList Scenes;
 
    QStandardItemModel* TableModel;
    StreamIf* Switcher;
+   QTableView *ActionToSceneQTV;
+   const QMap<int, QString>* ActionMap;
 };
 
 #endif // SCENETABLEUI_H

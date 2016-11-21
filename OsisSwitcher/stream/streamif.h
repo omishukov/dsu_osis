@@ -14,8 +14,6 @@ public:
 
    virtual QStringList GetScenes() = 0;
    virtual QStringList GetTransitions() = 0;
-   virtual int GetNoOfActions() = 0;
-   virtual int GetNoOfSceneTransitions() = 0;
 
    virtual void SetTransition(QString currentTransition) = 0;
    virtual void SetDataLocker(QMutex* m) = 0;

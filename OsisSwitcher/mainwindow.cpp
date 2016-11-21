@@ -207,11 +207,7 @@ void MainWindow::InitActionSceneUi()
    ObsStreamIf->SetTransition(CurrentTransition);
 
    NameList = ObsStreamIf->GetScenes();
-   TableGui = new SceneTableUi(NameList);
-   ui->ActionToSceneQTV->setModel(TableGui->GetModel());
-   ui->ActionToSceneQTV->setItemDelegate(TableGui);
-   ui->ActionToSceneQTV->resizeColumnsToContents();
-   ui->ActionToSceneQTV->show();
+   TableGui = new SceneTableUi(ObsStreamIf, ui->ActionToSceneQTV);
 }
 
 void MainWindow::on_ChangeObsConfigPathPB_clicked()

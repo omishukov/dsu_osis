@@ -3,22 +3,26 @@
 #include <QSpinBox>
 #include "scenetableui.h"
 
-SceneTableUi::SceneTableUi(QStringList& scenes, StreamIf* switcher)
-   : Switcher(switcher)
-{
-   TableModel = new QStandardItemModel(switcher->GetNoOfActions(), switcher->GetNoOfSceneTransitions() * 2 + 1);
+const int NUM_SCENES_PER_ACTION = 2;
 
-   Scenes << "" << scenes;
+SceneTableUi::SceneTableUi(OsisIf* osisIf, StreamIf* switcher, QTableView* actionToSceneQTV)
+   : Switcher(switcher)
+   , ActionToSceneQTV(actionToSceneQTV)
+   , ActionMap(osisIf->GetActions())
+{
+   TableModel = new QStandardItemModel(ActionMap->size(), NUM_SCENES_PER_ACTION * 2 + 1);
+
+   Scenes << "" << switcher->GetScenes();
 
    QStringList TableHeader;
    TableHeader << "Action";
-   for (int i = 0; i < switcher->GetNoOfSceneTransitions(); i++)
+   for (int i = 0; i < NUM_SCENES_PER_ACTION; i++)
    {
       TableHeader << "Delay" << "Scene";
    }
    TableModel->setHorizontalHeaderLabels(TableHeader);
 
-   for (int r = 0; r < switcher->GetNoOfActions(); r++)
+   for (int r = 0; r < ActionMap->size(); r++)
    {
       QStringList row = switcher->GetRow(r);
       for (int c = 0; c < row.size(); c++)
@@ -26,6 +30,43 @@ SceneTableUi::SceneTableUi(QStringList& scenes, StreamIf* switcher)
          QModelIndex index = TableModel->index(r, c, QModelIndex());
          TableModel->setData(index, QVariant(row.at(c).toLocal8Bit().constData()));
       }
+   }
+   ActionToSceneQTV->setModel(TableModel);
+   ActionToSceneQTV->setItemDelegate(this);
+   ActionToSceneQTV->resizeColumnsToContents();
+   ActionToSceneQTV->show();
+
+}
+
+void SceneTableUi::LoadActions(QString& inifile, OsisIf* osisIf)
+{
+   Inifile = inifile;
+   QSettings settings(Inifile, QSettings::IniFormat);
+   QString sceneName;
+   int sceneDelay;
+
+   const QMap<int, QString>* actionList = osisIf->GetActions();
+   QMapIterator<int, QString> i(*actionList);
+   int row = 0;
+   while (i.hasNext())
+   {
+      i.next();
+      QString ActionName = i.value();
+      QMap<QString, int> SceneDelayMap;
+
+      settings.beginGroup(ActionName);
+      for (int sc = 0; sc < NUM_SCENES_PER_ACTION; sc++)
+      {
+         QString Scene = QString("SCENE%s").arg(sc + 1);
+         QString Delay = QString("DELAY%s").arg(sc + 1);
+         sceneName = settings.value(Scene, "").toString();
+         sceneDelay = settings.value(Delay, "0").toInt();
+         SceneDelayMap.insert(sceneName, sceneDelay);
+      }
+      settings.endGroup();
+
+      ObsActions.insert(i.key(), new ObsAction(ActionName, SceneDelayMap, osisIf));
+Move it to ConfigUI:      RowActionMap.insert(row++, i.key());
    }
 }
 
@@ -67,7 +108,7 @@ QWidget* SceneTableUi::createEditor(QWidget* parent, const QStyleOptionViewItem&
    return 0;
 }
 
-void SceneTableUi::setEditorData(QWidget* editor, const QModelIndex& index) const
+void SceneTableUi::setEditorData(QWid1get* editor, const QModelIndex& index) const
 {
    int delay = 0;
    int action = index.row()+1;

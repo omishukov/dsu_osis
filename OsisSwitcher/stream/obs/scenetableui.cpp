@@ -1,6 +1,7 @@
 #include <QComboBox>
 #include <QLabel>
 #include <QSpinBox>
+#include <QPushButton>
 #include <QSettings>
 #include "scenetableui.h"
 
@@ -11,7 +12,7 @@ SceneTableUi::SceneTableUi(QString& inifile, OsisIf* osisIf, StreamIf* switcher,
    , ActionToSceneQTV(actionToSceneQTV)
    , ActionMap(osisIf->GetActions())
 {
-   LoadActions(inifile, osisIf);
+   LoadActions(inifile);
 
    TableModel = new QStandardItemModel(ActionMap->size(), NUM_SCENES_PER_ACTION * 2 + 1);
 
@@ -28,11 +29,26 @@ SceneTableUi::SceneTableUi(QString& inifile, OsisIf* osisIf, StreamIf* switcher,
    int c = 0;
    for (int r = 0; r < ActionMap->size(); r++)
    {
+      int action = RowActionMap.value(r);
       QModelIndex index = TableModel->index(r, c++, QModelIndex());
-      TableModel->setData(index, QVariant(ActionMap->value(RowActionMap[r])));
-      for (int sd = 0; sd < NUM_SCENES_PER_ACTION; sd++)
+      TableModel->setData(index, QVariant(ActionMap->value(action)));
+      for (int i = 0; i < NUM_SCENES_PER_ACTION; i++)
       {
-//         TableModel->setData(index, QVariant(row.at(c).toLocal8Bit().constData()));
+         QModelIndex index1 = TableModel->index(r, c++, QModelIndex());
+         TableModel->setData(index1, QVariant(ActionSceneDelayMap.value(action).value(i).key()));
+         QModelIndex index2 = TableModel->index(r, c++, QModelIndex());
+         TableModel->setData(index2, QVariant(sd.key()));
+      }
+      QMapIterator<QString, int> sd(ActionSceneDelayMap.value(action));
+      int i = 0;
+      while (sd.hasNext() && i < NUM_SCENES_PER_ACTION)
+      {
+         sd.next();
+         QModelIndex index1 = TableModel->index(r, c++, QModelIndex());
+         TableModel->setData(index1, QVariant(sd.value()));
+         QModelIndex index2 = TableModel->index(r, c++, QModelIndex());
+         TableModel->setData(index2, QVariant(sd.key()));
+         i++;
       }
    }
    ActionToSceneQTV->setModel(TableModel);
@@ -42,7 +58,7 @@ SceneTableUi::SceneTableUi(QString& inifile, OsisIf* osisIf, StreamIf* switcher,
 //   ActionToSceneQTV->hideRow();
 }
 
-void SceneTableUi::LoadActions(QString& inifile, OsisIf* osisIf)
+void SceneTableUi::LoadActions(QString& inifile)
 {
    Inifile = inifile;
    QSettings settings(Inifile, QSettings::IniFormat);
@@ -63,6 +79,10 @@ void SceneTableUi::LoadActions(QString& inifile, OsisIf* osisIf)
          QString Scene = QString("SCENE%s").arg(sc + 1);
          QString Delay = QString("DELAY%s").arg(sc + 1);
          sceneName = settings.value(Scene, "").toString();
+         if (!Scenes.contains(sceneName))
+         {
+            sceneName.clear();
+         }
          sceneDelay = settings.value(Delay, "0").toInt();
          SceneDelayMap.insert(sceneName, sceneDelay);
       }
@@ -79,18 +99,25 @@ SceneTableUi::~SceneTableUi()
 
 QWidget* SceneTableUi::createEditor(QWidget* parent, const QStyleOptionViewItem& /*option*/, const QModelIndex& index) const
 {
-   int row = index.row();
-
-   QStringList rowList = Switcher->GetRow(row);
+   int column = Column(index.column());
+   int action = RowActionMap.value(index.row());
+   QMapIterator<QString, int> sd(ActionSceneDelayMap.value(action));
+   int i = 0;
+   while (sd.hasNext() && i < column)
+   {
+      sd.next();
+   }
    switch (Column(index.column()))
    {
       case QTV_ACTION:
-         return new QLabel(rowList.at(index.column()).toLocal8Bit().constData());
+      {
+         return new QLabel(ActionMap->value(action));
+      }
       case QTV_DELAY:
       {
          QSpinBox *editor = new QSpinBox(parent);
          editor->setFrame(false);
-         editor->setValue(rowList.at(index.column()).toInt());
+         editor->setValue(sd.value());
          editor->setMinimum(0);
          editor->setMaximum(100);
          return editor;
@@ -99,7 +126,7 @@ QWidget* SceneTableUi::createEditor(QWidget* parent, const QStyleOptionViewItem&
       {
          QComboBox* comboBox = new QComboBox(parent);
          comboBox->addItems(Scenes);
-         int index = comboBox->findText(rowList.at(index.column()).toLocal8Bit().constData());
+         int index = comboBox->findText(sd.key());
          if ( index != -1 )
          {
             comboBox->setCurrentIndex(index);

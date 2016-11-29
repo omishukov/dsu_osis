@@ -9,7 +9,7 @@
 
 class ObsSceneSwitcher;
 
-typedef QMap<QString, int> SceneDelayMap;
+typedef QPair<QString, int> SceneDelayMap;
 typedef QMap<int, SceneDelayMap> IndexSceneDelayMap;
 typedef QMap<int, IndexSceneDelayMap> ActionIndexSceneDelayMap;
 

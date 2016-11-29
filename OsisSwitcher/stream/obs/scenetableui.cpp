@@ -26,29 +26,19 @@ SceneTableUi::SceneTableUi(QString& inifile, OsisIf* osisIf, StreamIf* switcher,
    }
    TableModel->setHorizontalHeaderLabels(TableHeader);
 
-   int c = 0;
+   int c;
    for (int r = 0; r < ActionMap->size(); r++)
    {
+      c = 0;
       int action = RowActionMap.value(r);
       QModelIndex index = TableModel->index(r, c++, QModelIndex());
       TableModel->setData(index, QVariant(ActionMap->value(action)));
-      for (int i = 0; i < NUM_SCENES_PER_ACTION; i++)
+      for (int sceneIndex = 0; sceneIndex < NUM_SCENES_PER_ACTION; sceneIndex++)
       {
          QModelIndex index1 = TableModel->index(r, c++, QModelIndex());
-         TableModel->setData(index1, QVariant(ActionSceneDelayMap.value(action).value(i).key()));
+         TableModel->setData(index1, QVariant(ActionSceneDelayMap.value(action).value(sceneIndex).second));
          QModelIndex index2 = TableModel->index(r, c++, QModelIndex());
-         TableModel->setData(index2, QVariant(sd.key()));
-      }
-      QMapIterator<QString, int> sd(ActionSceneDelayMap.value(action));
-      int i = 0;
-      while (sd.hasNext() && i < NUM_SCENES_PER_ACTION)
-      {
-         sd.next();
-         QModelIndex index1 = TableModel->index(r, c++, QModelIndex());
-         TableModel->setData(index1, QVariant(sd.value()));
-         QModelIndex index2 = TableModel->index(r, c++, QModelIndex());
-         TableModel->setData(index2, QVariant(sd.key()));
-         i++;
+         TableModel->setData(index2, QVariant(ActionSceneDelayMap.value(action).value(sceneIndex).first));
       }
    }
    ActionToSceneQTV->setModel(TableModel);
@@ -65,30 +55,34 @@ void SceneTableUi::LoadActions(QString& inifile)
    QString sceneName;
    int sceneDelay;
 
-   QMapIterator<int, QString> i(*ActionMap);
+   QMapIterator<int, QString> actionIndexIterator(*ActionMap);
    int row = 0;
-   while (i.hasNext())
+   while (actionIndexIterator.hasNext())
    {
-      i.next();
-      QString ActionName = i.value();
-      QMap<QString, int> SceneDelayMap;
-
+      actionIndexIterator.next();
+      QString ActionName = actionIndexIterator.value();
+      IndexSceneDelayMap isdMap;
       settings.beginGroup(ActionName);
-      for (int sc = 0; sc < NUM_SCENES_PER_ACTION; sc++)
+      for (int sceneIndex = 0; sceneIndex < NUM_SCENES_PER_ACTION; sceneIndex++)
       {
-         QString Scene = QString("SCENE%s").arg(sc + 1);
-         QString Delay = QString("DELAY%s").arg(sc + 1);
+         SceneDelayPair sdPair;
+
+         QString Scene = QString("SCENE%s").arg(sceneIndex + 1);
+         QString Delay = QString("DELAY%s").arg(sceneIndex + 1);
+
          sceneName = settings.value(Scene, "").toString();
          if (!Scenes.contains(sceneName))
          {
             sceneName.clear();
          }
          sceneDelay = settings.value(Delay, "0").toInt();
-         SceneDelayMap.insert(sceneName, sceneDelay);
+         sdPair.first = sceneName;
+         sdPair.second = sceneDelay;
+         isdMap.insert(sceneIndex, sdPair);
       }
+      ActionSceneDelayMap.insert(actionIndexIterator.key(), isdMap);
       settings.endGroup();
-      ActionSceneDelayMap.insert(i.key(), SceneDelayMap);
-      RowActionMap.insert(row++, i.key());
+      RowActionMap.insert(row++, actionIndexIterator.key());
    }
 }
 
@@ -99,25 +93,20 @@ SceneTableUi::~SceneTableUi()
 
 QWidget* SceneTableUi::createEditor(QWidget* parent, const QStyleOptionViewItem& /*option*/, const QModelIndex& index) const
 {
-   int column = Column(index.column());
-   int action = RowActionMap.value(index.row());
-   QMapIterator<QString, int> sd(ActionSceneDelayMap.value(action));
-   int i = 0;
-   while (sd.hasNext() && i < column)
-   {
-      sd.next();
-   }
+   int sceneIndex = SceneIndex(index.column());
+   int actionIndex = RowActionMap.value(index.row());
+
    switch (Column(index.column()))
    {
       case QTV_ACTION:
       {
-         return new QLabel(ActionMap->value(action));
+         return new QLabel(ActionMap->value(actionIndex));
       }
       case QTV_DELAY:
       {
          QSpinBox *editor = new QSpinBox(parent);
          editor->setFrame(false);
-         editor->setValue(sd.value());
+         editor->setValue(ActionSceneDelayMap.value(actionIndex).value(sceneIndex). );
          editor->setMinimum(0);
          editor->setMaximum(100);
          return editor;
@@ -126,7 +115,7 @@ QWidget* SceneTableUi::createEditor(QWidget* parent, const QStyleOptionViewItem&
       {
          QComboBox* comboBox = new QComboBox(parent);
          comboBox->addItems(Scenes);
-         int index = comboBox->findText(sd.key());
+         int index = comboBox->findText(ActionSceneDelayMap.value(actionIndex).value(sceneIndex).first);
          if ( index != -1 )
          {
             comboBox->setCurrentIndex(index);

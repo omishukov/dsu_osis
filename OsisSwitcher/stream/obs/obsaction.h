@@ -34,6 +34,7 @@ private:
       int Delay;
    } SceneDelayStruct;
    QString ActionName;
+   int ActionIndex;
    QMap<int, SceneDelayStruct> SceneDelayMap;
    OsisIf* OsisDataIf;
    bool Repeat;

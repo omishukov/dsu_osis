@@ -25,8 +25,9 @@ public:
    QStringList GetTransitions();
    void SetTransition(QString currentTransition);
    void SetDataLocker(QMutex* m);
-   void ActionChanged(int action, int sceneIndex, QString scene);
+   void ActionChanged(int action, int sceneIndex, QString& scene);
    void ActionChanged(int action, int sceneIndex, int delay);
+   void ActionChanged(int action, int sceneIndex, QString& scene, int delay);
 
 signals:
    void NewAction(int);
@@ -37,8 +38,8 @@ public slots:
    ObsAction* GetAction(int action);
 
 private:
-   QMap<QString, QList<int>>* SceneHkeyMap;
-   QMap<QString, QList<int>>* TransitionHkeyMap;
+//   QMap<QString, QList<int>>* SceneHkeyMap;
+//   QMap<QString, QList<int>>* TransitionHkeyMap;
    ObsAction* CurrentAction;
    QList<ObsAction*> ActiveActions;
    QMap<int, ObsAction*> ObsActions;

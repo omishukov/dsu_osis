@@ -32,16 +32,27 @@ void ObsSceneSwitcher::Action(int action)
 
 QStringList ObsSceneSwitcher::GetScenes()
 {
-
+   return Obs.GetScenes();
 }
 
-void ObsSceneSwitcher::ActionChanged(int action, int sceneIndex, QString scene)
+QStringList ObsSceneSwitcher::GetTransitions()
+{
+   return Obs.GetTransitions();
+}
+
+void ObsSceneSwitcher::ActionChanged(int action, int sceneIndex, QString &scene)
 {
    GetAction(action)->SetScene(sceneIndex, scene);
 }
 
 void ObsSceneSwitcher::ActionChanged(int action, int sceneIndex, int delay)
 {
+   GetAction(action)->SetDelay(sceneIndex, delay);
+}
+
+void ObsSceneSwitcher::ActionChanged(int action, int sceneIndex, QString& scene, int delay)
+{
+   GetAction(action)->SetScene(sceneIndex, scene);
    GetAction(action)->SetDelay(sceneIndex, delay);
 }
 
@@ -65,7 +76,7 @@ void ObsSceneSwitcher::Initialize()
 ObsAction *ObsSceneSwitcher::GetAction(int action)
 {
    ObsAction *actionObject;
-   if (!ObsActions.contains(act))
+   if (!ObsActions.contains(action))
    {
       actionObject = new ObsAction(action, OsisDataIf);
       ObsActions[action] = actionObject;

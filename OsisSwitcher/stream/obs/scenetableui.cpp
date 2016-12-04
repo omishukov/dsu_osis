@@ -35,12 +35,15 @@ SceneTableUi::SceneTableUi(QString& inifile, OsisIf* osisIf, StreamIf* switcher,
       TableModel->setData(index, QVariant(ActionMap->value(actionIndex)));
       for (int sceneIndex = 0; sceneIndex < NUM_SCENES_PER_ACTION; sceneIndex++)
       {
-         QModelIndex index1 = TableModel->index(r, c++, QModelIndex());
-         TableModel->setData(index1, QVariant(ActionSceneDelayMap.value(actionIndex).value(sceneIndex).second));
-         QModelIndex index2 = TableModel->index(r, c++, QModelIndex());
-         TableModel->setData(index2, QVariant(ActionSceneDelayMap.value(actionIndex).value(sceneIndex).first));
+         QString scene = ActionSceneDelayMap[actionIndex][sceneIndex].first;
+         int delay = ActionSceneDelayMap[actionIndex][sceneIndex].second;
 
-         Switcher->ActionChanged(actionIndex, sceneIndex, ActionSceneDelayMap[actionIndex][sceneIndex]);
+         QModelIndex index1 = TableModel->index(r, c++, QModelIndex());
+         TableModel->setData(index1, QVariant(delay));
+         QModelIndex index2 = TableModel->index(r, c++, QModelIndex());
+         TableModel->setData(index2, QVariant(scene));
+
+         Switcher->ActionChanged(actionIndex, sceneIndex, scene, delay);
       }
    }
    ActionToSceneQTV->setModel(TableModel);
@@ -132,7 +135,6 @@ void SceneTableUi::setEditorData(QWidget* editor, const QModelIndex& index) cons
 {
    int delay = 0;
    QString scene;
-   bool changed = false;
 
    int sceneIndex = SceneIndex(index.column());
    int actionIndex = RowActionMap.value(index.row());
@@ -148,7 +150,7 @@ void SceneTableUi::setEditorData(QWidget* editor, const QModelIndex& index) cons
          {
             IndexSceneDelayMap iSDM = ActionSceneDelayMap[actionIndex];
             iSDM[sceneIndex].second = delay;
-            changed = true;
+            Switcher->ActionChanged(actionIndex, sceneIndex, delay);
          }
       }
       break;
@@ -169,34 +171,25 @@ void SceneTableUi::setEditorData(QWidget* editor, const QModelIndex& index) cons
          {
             IndexSceneDelayMap iSDM = ActionSceneDelayMap[actionIndex];
             iSDM[sceneIndex].first = scene;
-            changed = true;
+            Switcher->ActionChanged(actionIndex, sceneIndex, scene);
          }
       }
       break;
    default:
       break;
    }
-   if (changed)
-   {
-      Switcher->ActionChanged(actionIndex, sceneIndex, ActionSceneDelayMap[actionIndex][sceneIndex]);
-   }
 }
 
 void SceneTableUi::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
-   int delay = 0;
-   QString scene;
-   QVariant value;
-
    int sceneIndex = SceneIndex(index.column());
    int actionIndex = RowActionMap.value(index.row());
-
-   bool changed = false;
 
    switch (Column(index.column()))
    {
       case QTV_DELAY:
       {
+         int delay = 0;
          QSpinBox *spinBox = static_cast<QSpinBox*>(editor);
          spinBox->interpretText();
          delay = spinBox->value();
@@ -204,32 +197,27 @@ void SceneTableUi::setModelData(QWidget* editor, QAbstractItemModel* model, cons
          {
             IndexSceneDelayMap iSDM = ActionSceneDelayMap[actionIndex];
             iSDM[sceneIndex].second = delay;
-            changed = true;
-            value = delay;
+            model->setData(index, delay, Qt::EditRole);
+            Switcher->ActionChanged(actionIndex, sceneIndex, delay);
          }
       }
       break;
       case QTV_SCENE:
       {
+         QString scene;
          QComboBox *comboBox = static_cast<QComboBox*>(editor);
          scene = comboBox->currentText();
          if (QString::compare(ActionSceneDelayMap[actionIndex][sceneIndex].first, scene))
          {
             IndexSceneDelayMap iSDM = ActionSceneDelayMap[actionIndex];
             iSDM[sceneIndex].first = scene;
-            changed = true;
-            value = scene;
+            Switcher->ActionChanged(actionIndex, sceneIndex, scene);
+            model->setData(index, scene, Qt::EditRole);
          }
       }
       break;
    default:
       break;
-   }
-
-   if (changed)
-   {
-      model->setData(index, value, Qt::EditRole);
-      Switcher->ActionChanged(actionIndex, sceneIndex, ActionSceneDelayMap[actionIndex][sceneIndex]);
    }
 }
 

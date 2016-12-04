@@ -8,7 +8,7 @@
 class StreamIf
 {
 public:
-   virtual ~StreamIf();
+   virtual ~StreamIf() {}
 
    virtual void Action(int newAction) = 0;
 
@@ -18,8 +18,9 @@ public:
    virtual void SetTransition(QString currentTransition) = 0;
    virtual void SetDataLocker(QMutex* m) = 0;
 
-   virtual void ActionChanged(int action, int sceneIndex, QString scene) = 0;
+   virtual void ActionChanged(int action, int sceneIndex, QString& scene) = 0;
    virtual void ActionChanged(int action, int sceneIndex, int delay) = 0;
+   virtual void ActionChanged(int action, int sceneIndex, QString& scene, int delay) = 0;
 
 };
 

@@ -12,7 +12,7 @@ public:
    explicit OsisIf(QObject *parent = 0) : QObject(parent) {}
    virtual ~OsisIf() {}
 
-   virtual const QMap<int, QString>* GetActions() const;
+   virtual const QMap<int, QString>* GetActions() const = 0;
    virtual QString GetActionName(int action) = 0;
 
    virtual QString GetCurrentSkaterName() = 0;

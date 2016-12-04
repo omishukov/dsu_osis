@@ -40,6 +40,16 @@ QStringList ObsSceneSwitcher::GetTransitions()
    return Obs.GetTransitions();
 }
 
+void ObsSceneSwitcher::SetTransition(QString& currentTransition)
+{
+   Obs.SetTransition(currentTransition);
+}
+
+void ObsSceneSwitcher::SetDataLocker(QMutex *m)
+{
+   OsisDataMutex = m;
+}
+
 void ObsSceneSwitcher::ActionChanged(int action, int sceneIndex, QString &scene)
 {
    GetAction(action)->SetScene(sceneIndex, scene);

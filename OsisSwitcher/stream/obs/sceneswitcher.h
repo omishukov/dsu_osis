@@ -23,7 +23,7 @@ public:
    void Action(int action);
    QStringList GetScenes();
    QStringList GetTransitions();
-   void SetTransition(QString currentTransition);
+   void SetTransition(QString& currentTransition);
    void SetDataLocker(QMutex* m);
    void ActionChanged(int action, int sceneIndex, QString& scene);
    void ActionChanged(int action, int sceneIndex, int delay);
@@ -46,6 +46,7 @@ private:
    QString Inifile;
    ObsScenes Obs;
    OsisIf* OsisDataIf;
+   QMutex* OsisDataMutex;
 };
 
 #endif // OBSSCENESWITCHER_H

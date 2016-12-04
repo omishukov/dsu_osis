@@ -12,7 +12,6 @@
 #include "obs/obsaction.h"
 #include "obs/scenetableui.h"
 #include "obs/sceneswitcher.h"
-#include "actiontoscene.h"
 
 namespace Ui {
 class MainWindow;

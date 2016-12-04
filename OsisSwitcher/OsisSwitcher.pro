@@ -45,7 +45,6 @@ SOURCES += main.cpp\
     stream/obs/sceneinfo.cpp \
     stream/obs/sceneswitcher.cpp \
     stream/obs/scenetableui.cpp \
-    actiontoscene.cpp \
     stream/obs/scenedata.cpp \
     stream/obs/obsscenes.cpp
 
@@ -79,7 +78,6 @@ HEADERS  += mainwindow.h \
     stream/obs/sceneinfo.h \
     stream/obs/sceneswitcher.h \
     stream/obs/scenetableui.h \
-    actiontoscene.h \
     trace.h \
     stream/obs/scenedata.h \
     stream/obs/obsscenes.h \

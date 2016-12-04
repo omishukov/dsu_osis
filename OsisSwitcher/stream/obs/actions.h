@@ -6,7 +6,6 @@
 #include <QMetaEnum>
 #include <QMutex>
 #include <osisif.h>
-#include "actiontoscene.h"
 
 class Actions : public QObject
 {

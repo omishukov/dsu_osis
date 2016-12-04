@@ -30,15 +30,17 @@ SceneTableUi::SceneTableUi(QString& inifile, OsisIf* osisIf, StreamIf* switcher,
    for (int r = 0; r < ActionMap->size(); r++)
    {
       c = 0;
-      int action = RowActionMap.value(r);
+      int actionIndex = RowActionMap.value(r);
       QModelIndex index = TableModel->index(r, c++, QModelIndex());
-      TableModel->setData(index, QVariant(ActionMap->value(action)));
+      TableModel->setData(index, QVariant(ActionMap->value(actionIndex)));
       for (int sceneIndex = 0; sceneIndex < NUM_SCENES_PER_ACTION; sceneIndex++)
       {
          QModelIndex index1 = TableModel->index(r, c++, QModelIndex());
-         TableModel->setData(index1, QVariant(ActionSceneDelayMap.value(action).value(sceneIndex).second));
+         TableModel->setData(index1, QVariant(ActionSceneDelayMap.value(actionIndex).value(sceneIndex).second));
          QModelIndex index2 = TableModel->index(r, c++, QModelIndex());
-         TableModel->setData(index2, QVariant(ActionSceneDelayMap.value(action).value(sceneIndex).first));
+         TableModel->setData(index2, QVariant(ActionSceneDelayMap.value(actionIndex).value(sceneIndex).first));
+
+         Switcher->ActionChanged(actionIndex, sceneIndex, ActionSceneDelayMap[actionIndex][sceneIndex]);
       }
    }
    ActionToSceneQTV->setModel(TableModel);
@@ -106,7 +108,7 @@ QWidget* SceneTableUi::createEditor(QWidget* parent, const QStyleOptionViewItem&
       {
          QSpinBox *editor = new QSpinBox(parent);
          editor->setFrame(false);
-         editor->setValue(ActionSceneDelayMap.value(actionIndex).value(sceneIndex). );
+         editor->setValue(ActionSceneDelayMap.value(actionIndex).value(sceneIndex).second);
          editor->setMinimum(0);
          editor->setMaximum(100);
          return editor;
@@ -129,9 +131,12 @@ QWidget* SceneTableUi::createEditor(QWidget* parent, const QStyleOptionViewItem&
 void SceneTableUi::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
    int delay = 0;
-   int action = index.row()+1;
-
    QString scene;
+   bool changed = false;
+
+   int sceneIndex = SceneIndex(index.column());
+   int actionIndex = RowActionMap.value(index.row());
+
    switch (Column(index.column()))
    {
       case QTV_DELAY:
@@ -139,7 +144,12 @@ void SceneTableUi::setEditorData(QWidget* editor, const QModelIndex& index) cons
          delay = index.model()->data(index, Qt::EditRole).toInt();
          QSpinBox *spinBox = static_cast<QSpinBox*>(editor);
          spinBox->setValue(delay);
-         Switcher->SetDelay(action, SceneIndex(index.column()), delay);
+         if (ActionSceneDelayMap[actionIndex][sceneIndex].second != delay)
+         {
+            IndexSceneDelayMap iSDM = ActionSceneDelayMap[actionIndex];
+            iSDM[sceneIndex].second = delay;
+            changed = true;
+         }
       }
       break;
       case QTV_SCENE:
@@ -155,16 +165,33 @@ void SceneTableUi::setEditorData(QWidget* editor, const QModelIndex& index) cons
          {
             scene.clear();
          }
-         Switcher->SetScene(action, SceneIndex(index.column()), scene);
+         if (QString::compare(ActionSceneDelayMap[actionIndex][sceneIndex].first, scene))
+         {
+            IndexSceneDelayMap iSDM = ActionSceneDelayMap[actionIndex];
+            iSDM[sceneIndex].first = scene;
+            changed = true;
+         }
       }
       break;
+   default:
+      break;
+   }
+   if (changed)
+   {
+      Switcher->ActionChanged(actionIndex, sceneIndex, ActionSceneDelayMap[actionIndex][sceneIndex]);
    }
 }
 
 void SceneTableUi::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
-   int action = index.row()+1;
+   int delay = 0;
+   QString scene;
    QVariant value;
+
+   int sceneIndex = SceneIndex(index.column());
+   int actionIndex = RowActionMap.value(index.row());
+
+   bool changed = false;
 
    switch (Column(index.column()))
    {
@@ -172,19 +199,38 @@ void SceneTableUi::setModelData(QWidget* editor, QAbstractItemModel* model, cons
       {
          QSpinBox *spinBox = static_cast<QSpinBox*>(editor);
          spinBox->interpretText();
-         value = spinBox->value();
-         Switcher->SetDelay(action, SceneIndex(index.column()), value.toInt());
+         delay = spinBox->value();
+         if (ActionSceneDelayMap[actionIndex][sceneIndex].second != delay)
+         {
+            IndexSceneDelayMap iSDM = ActionSceneDelayMap[actionIndex];
+            iSDM[sceneIndex].second = delay;
+            changed = true;
+            value = delay;
+         }
       }
       break;
       case QTV_SCENE:
       {
          QComboBox *comboBox = static_cast<QComboBox*>(editor);
-         value = comboBox->currentText();
-         Switcher->SetScene(action, SceneIndex(index.column()), value.toString());
+         scene = comboBox->currentText();
+         if (QString::compare(ActionSceneDelayMap[actionIndex][sceneIndex].first, scene))
+         {
+            IndexSceneDelayMap iSDM = ActionSceneDelayMap[actionIndex];
+            iSDM[sceneIndex].first = scene;
+            changed = true;
+            value = scene;
+         }
       }
       break;
+   default:
+      break;
    }
-   model->setData(index, value, Qt::EditRole);
+
+   if (changed)
+   {
+      model->setData(index, value, Qt::EditRole);
+      Switcher->ActionChanged(actionIndex, sceneIndex, ActionSceneDelayMap[actionIndex][sceneIndex]);
+   }
 }
 
 void SceneTableUi::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& /*index*/) const
@@ -201,7 +247,7 @@ SceneTableUi::COLUMN_ENUM SceneTableUi::Column(int c) const
    return c%2 == 0 ? QTV_SCENE : QTV_DELAY;
 }
 
-int SceneTableUi::SceneIndex(int c)
+int SceneTableUi::SceneIndex(int c) const
 {
    if (c == 0)
    {

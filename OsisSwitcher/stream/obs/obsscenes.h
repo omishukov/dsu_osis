@@ -10,9 +10,9 @@ class ObsScenes : public QObject
 {
    Q_OBJECT
 public:
-   explicit ObsScenes(QObject *parent = 0);
+   explicit ObsScenes(QString& obsconfig, QObject *parent = 0);
 
-   void LoadScenes(QString obsconfig);
+   void LoadScenes(QString& obsconfig);
    QStringList GetScenes();
    QStringList GetTransitions();
    void SetTransition(QString& newTransition);

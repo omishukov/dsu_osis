@@ -12,7 +12,7 @@ class ObsAction : public QObject
    Q_OBJECT
 public:
 //   ObsAction(Action2SceneStruct& actionInfo, ObsAction* previousAction, QObject *parent = 0);
-   ObsAction(QString &actionName, QMap<QString, int>& sceneDelay, OsisIf* osisIf, QObject *parent = 0);
+   ObsAction(int action, OsisIf* osisIf, QObject *parent = 0);
    ~ObsAction();
 
 public:
@@ -20,17 +20,21 @@ public:
 //   SceneInfo* GetScene() { return &Scene;}
 //   bool Completed();
    bool Executable();
-   QMap<QString, int>* GetSceneDelays() { return &SceneDelayMap; }
+
+   void SetScene(int sceneIndex, QString& scene);
+   void SetDelay(int sceneIndex, int delay);
 
 public slots:
    void SceneCompleted();
 
 private:
+   typedef struct
+   {
+      QString Scene;
+      int Delay;
+   } SceneDelayStruct;
    QString ActionName;
-//   SceneInfo Scene;
-//   SceneInfo NextScene;
-//   SceneInfo Transition;
-   QMap<QString, int> SceneDelayMap;
+   QMap<int, SceneDelayStruct> SceneDelayMap;
    OsisIf* OsisDataIf;
    bool Repeat;
    SceneData* ObsSceneFiles;

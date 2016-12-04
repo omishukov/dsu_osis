@@ -13,6 +13,7 @@ public:
    virtual ~OsisIf() {}
 
    virtual const QMap<int, QString>* GetActions() const;
+   virtual QString GetActionName(int action) = 0;
 
    virtual QString GetCurrentSkaterName() = 0;
    virtual QString GetCurrentSkaterNumber() = 0;

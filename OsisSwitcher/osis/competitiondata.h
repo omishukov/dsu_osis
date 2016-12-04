@@ -77,6 +77,7 @@ public: // ObsOsisIf
    void SetStreamIf(StreamIf* streamIf);
 
    virtual const QMap<int, QString>* GetActions() const;
+   QString GetActionName(int action);
 
 private:
    int CurrentStartNumber();

@@ -168,7 +168,24 @@ void Actions::DoActions(int action)
             // Do nothing yet
             break;
          case ActionToScene::ACTION_TST:
-            // Do nothing yet
+            {
+               int stnum = OsisDataIf->GetCurrentSkaterNumber().toInt();
+               if (stnum)
+               {
+                  QMap<int, QList<QString>> WarmUpGroupNameList;
+                  OsisDataIf->GetWarmUpStartList(WarmUpGroupNameList);
+                  GenerateHtml("obs/current_warmup_group.html", WarmUpGroupNameList);
+                  GenerateHtml("obs/current_warmup_group_number", OsisDataIf->GetCurrentWarmUpGroupNumber());
+                  if (!WarmUpList.isEmpty() && WarmUpList.last() == stnum)
+                  {
+                     action = ActionToScene::ACTION_WUP;
+                  }
+               }
+               GenerateHtml("obs/current_skater", OsisDataIf->GetCurrentSkaterName());
+               GenerateHtml("obs/current_start_number", OsisDataIf->GetCurrentSkaterNumber());
+               GenerateHtml("obs/current_skater_club", OsisDataIf->GetCurrentSkaterClub());
+               GenerateHtml("obs/current_skater_nation", OsisDataIf->GetCurrentSkaterNation());
+            }
             break;
          case ActionToScene::ACTION_TPA:
             // Do nothing yet

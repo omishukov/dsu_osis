@@ -542,6 +542,11 @@ const QMap<int, QString>* OsisCompetitionData::GetActions() const
    return &ActionMap;
 }
 
+QString OsisCompetitionData::GetActionName(int action)
+{
+   return ActionMap.value(action);
+}
+
 void OsisCompetitionData::GetWarmUpGroupsList(QList<int>& WarmUpList)
 {
    WarmUpList.clear();

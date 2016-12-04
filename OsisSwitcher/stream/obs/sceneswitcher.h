@@ -17,7 +17,7 @@ class ObsSceneSwitcher : public QObject, public StreamIf
 {
    Q_OBJECT
 public:
-   explicit ObsSceneSwitcher(QString& inifile, OsisIf* osisIf, QObject *parent = 0);
+   explicit ObsSceneSwitcher(QString& configPath, OsisIf* osisIf, QObject *parent = 0);
    ~ObsSceneSwitcher();
 
    void Action(int action);
@@ -25,6 +25,8 @@ public:
    QStringList GetTransitions();
    void SetTransition(QString currentTransition);
    void SetDataLocker(QMutex* m);
+   void ActionChanged(int action, int sceneIndex, QString scene);
+   void ActionChanged(int action, int sceneIndex, int delay);
 
 signals:
    void NewAction(int);
@@ -32,6 +34,7 @@ signals:
 public slots:
    void HandleEvent(int act);
    void Initialize();
+   ObsAction* GetAction(int action);
 
 private:
    QMap<QString, QList<int>>* SceneHkeyMap;
@@ -41,6 +44,7 @@ private:
    QMap<int, ObsAction*> ObsActions;
    QString Inifile;
    ObsScenes Obs;
+   OsisIf* OsisDataIf;
 };
 
 #endif // OBSSCENESWITCHER_H

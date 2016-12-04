@@ -26,7 +26,7 @@ MainWindow::MainWindow(QWidget *parent)
    OsisDataParser.SetDataIf(&OsisDataQueue);
    OsisDataParser.moveToThread(&OsisIfThread);
 
-   ObsStreamIf = new ObsSceneSwitcher(inifile, OsisDataParser.GetOsisIf());
+   ObsStreamIf = new ObsSceneSwitcher(OBS_Path, OsisDataParser.GetOsisIf());
    ObsStreamIf->moveToThread(&StreamIfThread);
    OsisDataParser.SetStreamIf(ObsStreamIf);
 

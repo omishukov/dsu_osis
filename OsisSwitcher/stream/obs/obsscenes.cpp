@@ -6,13 +6,14 @@
 #include <windows.h>
 #include "obsscenes.h"
 
-ObsScenes::ObsScenes(QObject *parent)
+ObsScenes::ObsScenes(QString& obsconfig, QObject *parent)
    : QObject(parent)
    , MetaObsKeyEnum(QMetaEnum::fromType<obs_key>())
 {
+   LoadScenes(obsconfig);
 }
 
-void ObsScenes::LoadScenes(QString obsconfig)
+void ObsScenes::LoadScenes(QString &obsconfig)
 {
    QString obsJson = ReadObsConfiguration(obsconfig);
    if (obsJson.isEmpty())

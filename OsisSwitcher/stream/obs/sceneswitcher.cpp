@@ -8,9 +8,11 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-ObsSceneSwitcher::ObsSceneSwitcher(QString& inifile, OsisIf* osisIf, QObject *parent)
+ObsSceneSwitcher::ObsSceneSwitcher(QString& configPath, OsisIf* osisIf, QObject *parent)
    : QObject(parent)
    , CurrentAction(0)
+   , Obs(configPath)
+   , OsisDataIf(osisIf)
 {
    connect(this, SIGNAL(NewAction(int)), this, SLOT(HandleEvent(int)), Qt::QueuedConnection);
 }
@@ -33,11 +35,21 @@ QStringList ObsSceneSwitcher::GetScenes()
 
 }
 
+void ObsSceneSwitcher::ActionChanged(int action, int sceneIndex, QString scene)
+{
+   GetAction(action)->SetScene(sceneIndex, scene);
+}
+
+void ObsSceneSwitcher::ActionChanged(int action, int sceneIndex, int delay)
+{
+   GetAction(action)->SetDelay(sceneIndex, delay);
+}
+
 void ObsSceneSwitcher::HandleEvent(int act)
 {
    if (ObsActions.contains(act))
    {
-      ObsAction *action = ObsActions[act];
+      ObsAction *action = GetAction(act);
       if (action->Executable())
       {
          action->Execute(CurrentAction);
@@ -48,4 +60,19 @@ void ObsSceneSwitcher::HandleEvent(int act)
 
 void ObsSceneSwitcher::Initialize()
 {
+}
+
+ObsAction *ObsSceneSwitcher::GetAction(int action)
+{
+   ObsAction *actionObject;
+   if (!ObsActions.contains(act))
+   {
+      actionObject = new ObsAction(action, OsisDataIf);
+      ObsActions[action] = actionObject;
+   }
+   else
+   {
+      actionObject = ObsActions[action];
+   }
+   return actionObject;
 }

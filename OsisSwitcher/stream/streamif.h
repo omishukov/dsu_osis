@@ -17,6 +17,10 @@ public:
 
    virtual void SetTransition(QString currentTransition) = 0;
    virtual void SetDataLocker(QMutex* m) = 0;
+
+   virtual void ActionChanged(int action, int sceneIndex, QString scene) = 0;
+   virtual void ActionChanged(int action, int sceneIndex, int delay) = 0;
+
 };
 
 #endif // STREAMIF_H

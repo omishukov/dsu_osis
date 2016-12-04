@@ -16,10 +16,11 @@
 //   connect(&Scene, SIGNAL(ActionDone()), this, SLOT(SceneCompleted()));
 //}
 
-ObsAction::ObsAction(QString& actionName, QMap<QString, int>& sceneDelay, OsisIf* osisIf, QObject* parent)
+ObsAction::ObsAction(int action, OsisIf* osisIf, QObject* parent)
    : QObject(parent)
-   , ActionName(actionName)
+   , ActionName(osisIf->GetActionName(action))
 {
+   osisIf->GetActionName(action);
 
 }
 
@@ -30,7 +31,28 @@ ObsAction::~ObsAction()
 
 void ObsAction::Execute(ObsAction *previousAction, int nextAction)
 {
-//   Scene.SwitchScene();
+   //   Scene.SwitchScene();
+}
+
+void ObsAction::SetScene(int sceneIndex, QString &scene)
+{
+   if (SceneDelayMap.contains(sceneIndex))
+   {
+      SceneDelayMap[sceneIndex].Scene = scene;
+   }
+   else
+   {
+      SceneDelayStruct newScene;
+      newScene.Scene = scene;
+      newScene.Delay = 0;
+      SceneDelayMap.insert(sceneIndex, newScene);
+   }
+
+}
+
+void ObsAction::SetDelay(int sceneIndex, int delay)
+{
+
 }
 
 //bool ObsAction::Completed()

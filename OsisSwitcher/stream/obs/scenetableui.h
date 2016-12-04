@@ -9,8 +9,8 @@
 
 class ObsSceneSwitcher;
 
-typedef QPair<QString, int> SceneDelayMap;
-typedef QMap<int, SceneDelayMap> IndexSceneDelayMap;
+typedef QPair<QString, int> SceneDelayPair;
+typedef QMap<int, SceneDelayPair> IndexSceneDelayMap;
 typedef QMap<int, IndexSceneDelayMap> ActionIndexSceneDelayMap;
 
 class SceneTableUi : public QStyledItemDelegate
@@ -41,7 +41,7 @@ public slots:
 
 private:
    COLUMN_ENUM Column(int c) const;
-   int SceneIndex(int c);
+   int SceneIndex(int c) const;
    void LoadActions(QString& inifile);
 
    QStringList Scenes;

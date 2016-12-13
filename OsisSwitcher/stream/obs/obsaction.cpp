@@ -20,6 +20,7 @@ ObsAction::ObsAction(int action, OsisIf* osisIf, QObject* parent)
    : QObject(parent)
    , ActionName(osisIf->GetActionName(action))
    , ActionIndex(action)
+   , OsisDataIf(osisIf)
 {
    osisIf->GetActionName(action);
 
@@ -37,7 +38,7 @@ void ObsAction::Execute(ObsAction *previousAction, int nextAction)
 
 bool ObsAction::Executable()
 {
-   return (SceneDelayMap.contains(ActionIndex) && !SceneDelayMap[ActionIndex].Scene.isEmpty());
+   return (SceneDelayMap.contains(0) && !SceneDelayMap[0].Scene.isEmpty());
 }
 
 void ObsAction::SetScene(int sceneIndex, QString &scene)

@@ -128,6 +128,15 @@ QStringList ObsScenes::GetScenes()
    return SceneHkeyMap.uniqueKeys();
 }
 
+QStringList ObsScenes::GetSceneFiles(const QString& scene)
+{
+   if (SceneHkeyMap.contains(scene))
+   {
+      return SceneFiles[scene];
+   }
+   return QStringList();
+}
+
 QStringList ObsScenes::GetTransitions()
 {
    return TransitionHkeyMap.uniqueKeys();

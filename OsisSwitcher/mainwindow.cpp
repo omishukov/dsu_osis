@@ -206,7 +206,7 @@ void MainWindow::InitActionSceneUi()
    }
    ObsStreamIf->SetTransition(CurrentTransition);
 
-   TableGui = new SceneTableUi(inifile, OsisDataParser.GetOsisIf(), ObsStreamIf, ui->ActionToSceneQTV);
+   TableGui = new SwitcherConfig(inifile, OsisDataParser.GetOsisIf(), ObsStreamIf, ui->ActionToSceneQTV);
 }
 
 void MainWindow::on_ChangeObsConfigPathPB_clicked()

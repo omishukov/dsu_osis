@@ -14,6 +14,7 @@ public:
 
    void LoadScenes(QString& obsconfig);
    QStringList GetScenes();
+   QStringList GetSceneFiles(const QString& scene);
    QStringList GetTransitions();
    void SetTransition(QString& newTransition);
    void Switch(QString& scene);

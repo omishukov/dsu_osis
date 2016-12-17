@@ -13,11 +13,11 @@ typedef QPair<QString, int> SceneDelayPair;
 typedef QMap<int, SceneDelayPair> IndexSceneDelayMap;
 typedef QMap<int, IndexSceneDelayMap> ActionIndexSceneDelayMap;
 
-class SceneTableUi : public QStyledItemDelegate
+class SwitcherConfig : public QStyledItemDelegate
 {
 public:
-   SceneTableUi(QString& inifile, OsisIf* osisIf, StreamIf *switcher, QTableView* actionToSceneQTV);
-   ~SceneTableUi();
+   SwitcherConfig(QString& inifile, OsisIf* osisIf, StreamIf *switcher, QTableView* actionToSceneQTV);
+   ~SwitcherConfig();
 
    enum COLUMN_ENUM
    {

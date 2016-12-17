@@ -1,6 +1,5 @@
 #include <QDebug>
 #include "dataparser.h"
-#include "actiontoscene.h"
 
 OsisParser::OsisParser(QObject *parent)
    : QObject(parent)

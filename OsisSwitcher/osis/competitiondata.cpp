@@ -1,6 +1,6 @@
 #include <QDebug>
+#include <QMetaEnum>
 #include "competitiondata.h"
-#include "actiontoscene.h"
 
 OsisCompetitionData::OsisCompetitionData()
    : Current_DB_ID(-1)
@@ -270,7 +270,7 @@ void OsisCompetitionData::AddAction(OsisAction* newAction)
       CurrentParticipantId = Current_Action->Current_Participant_Id;
    }
 
-   const QMetaObject &mo = ActionToScene::staticMetaObject;
+   const QMetaObject &mo = OsisIf::staticMetaObject;
    int index = mo.indexOfEnumerator("OsisActionCommand");
    QMetaEnum metaEnum = mo.enumerator(index);
    QString elementName = newAction->GetAttribute(OsisAction::Command);
@@ -278,7 +278,7 @@ void OsisCompetitionData::AddAction(OsisAction* newAction)
    elementName.prepend("ACTION_");
    int xmlElementTag = metaEnum.keyToValue(&elementName.toStdString()[0]);
    NewAction(xmlElementTag);
-   if (xmlElementTag == ActionToScene::ACTION_STP)
+   if (xmlElementTag == OsisIf::ACTION_STP)
    {
       delete Current_Action;
       Current_Action = 0;

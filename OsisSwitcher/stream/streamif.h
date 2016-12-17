@@ -13,6 +13,7 @@ public:
    virtual void Action(int newAction) = 0;
 
    virtual QStringList GetScenes() = 0;
+   virtual QStringList GetSceneFiles(const QString& scene) = 0;
    virtual QStringList GetTransitions() = 0;
 
    virtual void SetTransition(QString& currentTransition) = 0;

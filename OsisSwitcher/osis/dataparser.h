@@ -80,7 +80,7 @@ private:
    DataQueue* DataIf;
    QMutex M;
    OsisCompetitionData Competition;
-   Actions* ObsDataSaver;
+   StreamDataSaver* ObsDataSaver;
 };
 
 #endif // OSISPARSER_H

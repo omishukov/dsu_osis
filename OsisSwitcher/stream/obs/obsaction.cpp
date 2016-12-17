@@ -21,6 +21,7 @@ ObsAction::ObsAction(int action, OsisIf* osisIf, QObject* parent)
    , ActionName(osisIf->GetActionName(action))
    , ActionIndex(action)
    , OsisDataIf(osisIf)
+   , Active(false)
 {
    osisIf->GetActionName(action);
 
@@ -33,6 +34,10 @@ ObsAction::~ObsAction()
 
 void ObsAction::Execute(ObsAction *previousAction, int nextAction)
 {
+   if (!Active)
+   {
+      iSDMap = SceneDelayMap.constBegin();
+   }
    //   Scene.SwitchScene();
 }
 

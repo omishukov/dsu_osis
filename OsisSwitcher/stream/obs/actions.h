@@ -7,12 +7,11 @@
 #include <QMutex>
 #include <osisif.h>
 
-class Actions : public QObject
+class StreamDataSaver : public QObject
 {
    Q_OBJECT
-
 public:
-   Actions(ActionToScene* actionInfo, QObject *parent = 0);
+   StreamDataSaver(OsisIf* osisIf, QObject *parent = 0);
 
    inline void SetOsisInfoIf(OsisIf* obsOsisIf) { OsisDataIf = obsOsisIf; }
 
@@ -34,9 +33,8 @@ private:
 
 private:
    QList<int> ActionList;
-   OsisIf* OsisDataIf;
    QMutex* M;
-   ActionToScene* ActionInfo;
+   OsisIf* OsisDataIf;
    QList<int> WarmUpList;
 };
 

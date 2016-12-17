@@ -44,9 +44,9 @@ SOURCES += main.cpp\
     stream/obs/obsaction.cpp \
     stream/obs/sceneinfo.cpp \
     stream/obs/sceneswitcher.cpp \
-    stream/obs/scenetableui.cpp \
     stream/obs/scenedata.cpp \
-    stream/obs/obsscenes.cpp
+    stream/obs/obsscenes.cpp \
+    stream/obs/switcherconfig.cpp
 
 HEADERS  += mainwindow.h \
     ../OsisProxy/isucalclink.h \
@@ -77,12 +77,12 @@ HEADERS  += mainwindow.h \
     stream/obs/obsaction.h \
     stream/obs/sceneinfo.h \
     stream/obs/sceneswitcher.h \
-    stream/obs/scenetableui.h \
     trace.h \
     stream/obs/scenedata.h \
     stream/obs/obsscenes.h \
     osis/osisif.h \
-    stream/streamif.h
+    stream/streamif.h \
+    stream/obs/switcherconfig.h
 
 FORMS    += mainwindow.ui
 

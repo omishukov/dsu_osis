@@ -3,11 +3,11 @@
 #include <QSpinBox>
 #include <QPushButton>
 #include <QSettings>
-#include "scenetableui.h"
+#include "switcherconfig.h"
 
 const int NUM_SCENES_PER_ACTION = 2;
 
-SceneTableUi::SceneTableUi(QString& inifile, OsisIf* osisIf, StreamIf* switcher, QTableView* actionToSceneQTV)
+SwitcherConfig::SwitcherConfig(QString& inifile, OsisIf* osisIf, StreamIf* switcher, QTableView* actionToSceneQTV)
    : Switcher(switcher)
    , ActionToSceneQTV(actionToSceneQTV)
    , ActionMap(osisIf->GetActions())
@@ -53,7 +53,7 @@ SceneTableUi::SceneTableUi(QString& inifile, OsisIf* osisIf, StreamIf* switcher,
 //   ActionToSceneQTV->hideRow();
 }
 
-void SceneTableUi::LoadActions(QString& inifile)
+void SwitcherConfig::LoadActions(QString& inifile)
 {
    Inifile = inifile;
    QSettings settings(Inifile, QSettings::IniFormat);
@@ -91,12 +91,12 @@ void SceneTableUi::LoadActions(QString& inifile)
    }
 }
 
-SceneTableUi::~SceneTableUi()
+SwitcherConfig::~SwitcherConfig()
 {
    delete TableModel;
 }
 
-QWidget* SceneTableUi::createEditor(QWidget* parent, const QStyleOptionViewItem& /*option*/, const QModelIndex& index) const
+QWidget* SwitcherConfig::createEditor(QWidget* parent, const QStyleOptionViewItem& /*option*/, const QModelIndex& index) const
 {
    int sceneIndex = SceneIndex(index.column());
    int actionIndex = RowActionMap.value(index.row());
@@ -131,7 +131,7 @@ QWidget* SceneTableUi::createEditor(QWidget* parent, const QStyleOptionViewItem&
    return 0;
 }
 
-void SceneTableUi::setEditorData(QWidget* editor, const QModelIndex& index) const
+void SwitcherConfig::setEditorData(QWidget* editor, const QModelIndex& index) const
 {
    int delay = 0;
    QString scene;
@@ -180,7 +180,7 @@ void SceneTableUi::setEditorData(QWidget* editor, const QModelIndex& index) cons
    }
 }
 
-void SceneTableUi::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
+void SwitcherConfig::setModelData(QWidget* editor, QAbstractItemModel* model, const QModelIndex& index) const
 {
    int sceneIndex = SceneIndex(index.column());
    int actionIndex = RowActionMap.value(index.row());
@@ -221,12 +221,12 @@ void SceneTableUi::setModelData(QWidget* editor, QAbstractItemModel* model, cons
    }
 }
 
-void SceneTableUi::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& /*index*/) const
+void SwitcherConfig::updateEditorGeometry(QWidget* editor, const QStyleOptionViewItem& option, const QModelIndex& /*index*/) const
 {
    editor->setGeometry(option.rect);
 }
 
-SceneTableUi::COLUMN_ENUM SceneTableUi::Column(int c) const
+SwitcherConfig::COLUMN_ENUM SwitcherConfig::Column(int c) const
 {
    if (c == 0)
    {
@@ -235,7 +235,7 @@ SceneTableUi::COLUMN_ENUM SceneTableUi::Column(int c) const
    return c%2 == 0 ? QTV_SCENE : QTV_DELAY;
 }
 
-int SceneTableUi::SceneIndex(int c) const
+int SwitcherConfig::SceneIndex(int c) const
 {
    if (c == 0)
    {

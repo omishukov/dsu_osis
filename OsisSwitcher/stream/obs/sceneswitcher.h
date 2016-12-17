@@ -7,7 +7,7 @@
 #include <QMetaEnum>
 #include "actions.h"
 #include "obsscenes.h"
-#include "scenetableui.h"
+#include "switcherconfig.h"
 #include "osisif.h"
 #include "streamif.h"
 #include "obsaction.h"
@@ -22,6 +22,7 @@ public:
 
    void Action(int action);
    QStringList GetScenes();
+   QStringList GetSceneFiles(const QString& scene);
    QStringList GetTransitions();
    void SetTransition(QString& currentTransition);
    void SetDataLocker(QMutex* m);

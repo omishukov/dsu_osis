@@ -5,14 +5,13 @@
 #include <QMutexLocker>
 #include "actions.h"
 
-Actions::Actions(ActionToScene* actionInfo, QObject* parent)
+StreamDataSaver::StreamDataSaver(OsisIf* osisIf, QObject* parent)
    : QObject(parent)
-   , OsisDataIf(0)
-   , ActionInfo(actionInfo)
+   , OsisDataIf(osisIf)
 {
 }
 
-void Actions::DoActions(int action)
+void StreamDataSaver::DoActions(int action)
 {
    if (!OsisDataIf)
    {
@@ -24,12 +23,12 @@ void Actions::DoActions(int action)
    bool passToObs;
    foreach(int action, ActionList)
    {
-      GenerateHtml("obs/current_action", ActionInfo->GetActionName(action));
+      GenerateHtml("obs/current_action", OsisDataIf->GetActionName(action));
 
       passToObs = true;
       switch (action)
       {
-         case ActionToScene::ACTION_1SC:
+         case OsisIf::ACTION_1SC:
             {
                GenerateHtml("obs/points", OsisDataIf->GetPoints());
                GenerateHtml("obs/tes", OsisDataIf->GetTES());
@@ -43,16 +42,16 @@ void Actions::DoActions(int action)
                GenerateHtml("obs/segment_result_list.html", SegmentResultList);
             }
             break;
-         case ActionToScene::ACTION_CLR:
+         case OsisIf::ACTION_CLR:
             // Do nothing yet
             break;
-         case ActionToScene::ACTION_ELM:
+         case OsisIf::ACTION_ELM:
             // Do nothing yet
             break;
-         case ActionToScene::ACTION_ELS:
+         case OsisIf::ACTION_ELS:
             // Do nothing yet
             break;
-         case ActionToScene::ACTION_INI:
+         case OsisIf::ACTION_INI:
             {
                GenerateHtml("obs/event_name", OsisDataIf->GetEventName());
                GenerateHtml("obs/event_abbreviation", OsisDataIf->GetEventAbbreviation());
@@ -84,34 +83,34 @@ void Actions::DoActions(int action)
                GenerateHtml("obs/segment_result_list.html", SegmentResultList);
             }
             break;
-         case ActionToScene::ACTION_IDT:
+         case OsisIf::ACTION_IDT:
             // Do nothing yet
             break;
-         case ActionToScene::ACTION_IRS:
+         case OsisIf::ACTION_IRS:
             // Do nothing yet
             break;
-         case ActionToScene::ACTION_JDG:
+         case OsisIf::ACTION_JDG:
             // Do nothing yet
             break;
-         case ActionToScene::ACTION_LTV:
+         case OsisIf::ACTION_LTV:
             // Do nothing yet
             break;
-         case ActionToScene::ACTION_NAM:
+         case OsisIf::ACTION_NAM:
             // Do nothing yet
             break;
-         case ActionToScene::ACTION_NXP:
+         case OsisIf::ACTION_NXP:
             // Do nothing yet
             break;
-         case ActionToScene::ACTION_RES:
+         case OsisIf::ACTION_RES:
             // Do nothing yet
             break;
-         case ActionToScene::ACTION_SEG:
+         case OsisIf::ACTION_SEG:
             // Do nothing yet
             break;
-         case ActionToScene::ACTION_STL:
+         case OsisIf::ACTION_STL:
             // Do nothing yet
             break;
-         case ActionToScene::ACTION_STP:
+         case OsisIf::ACTION_STP:
             {
                GenerateHtml("obs/current_skater", "");
                GenerateHtml("obs/current_start_number", "");
@@ -129,7 +128,7 @@ void Actions::DoActions(int action)
                GenerateHtml("obs/current_warmup_group.html", WarmUpGroupNameList);
             }
             break;
-         case ActionToScene::ACTION_NXT:
+         case OsisIf::ACTION_NXT:
             {
                int stnum = OsisDataIf->GetCurrentSkaterNumber().toInt();
                if (stnum)
@@ -142,7 +141,7 @@ void Actions::DoActions(int action)
                   {
                      if (stnum == group+1)
                      {
-                        action = ActionToScene::ACTION_WUP;
+                        action = OsisIf::ACTION_WUP;
                      }
                   }
                }
@@ -152,22 +151,22 @@ void Actions::DoActions(int action)
                GenerateHtml("obs/current_skater_nation", OsisDataIf->GetCurrentSkaterNation());
             }
             break;
-         case ActionToScene::ACTION_PRV:
+         case OsisIf::ACTION_PRV:
             // Do nothing yet
             break;
-         case ActionToScene::ACTION_TBW:
+         case OsisIf::ACTION_TBW:
             // Do nothing yet
             break;
-         case ActionToScene::ACTION_TFW:
+         case OsisIf::ACTION_TFW:
             // Do nothing yet
             break;
-         case ActionToScene::ACTION_TR1:
+         case OsisIf::ACTION_TR1:
             // Do nothing yet
             break;
-         case ActionToScene::ACTION_TR2:
+         case OsisIf::ACTION_TR2:
             // Do nothing yet
             break;
-         case ActionToScene::ACTION_TST:
+         case OsisIf::ACTION_TST:
             {
                int stnum = OsisDataIf->GetCurrentSkaterNumber().toInt();
                if (stnum)
@@ -178,7 +177,7 @@ void Actions::DoActions(int action)
                   GenerateHtml("obs/current_warmup_group_number", OsisDataIf->GetCurrentWarmUpGroupNumber());
                   if (!WarmUpList.isEmpty() && WarmUpList.last() == stnum)
                   {
-                     action = ActionToScene::ACTION_WUP;
+                     action = OsisIf::ACTION_WUP;
                   }
                }
                GenerateHtml("obs/current_skater", OsisDataIf->GetCurrentSkaterName());
@@ -187,22 +186,22 @@ void Actions::DoActions(int action)
                GenerateHtml("obs/current_skater_nation", OsisDataIf->GetCurrentSkaterNation());
             }
             break;
-         case ActionToScene::ACTION_TPA:
+         case OsisIf::ACTION_TPA:
             // Do nothing yet
             break;
-         case ActionToScene::ACTION_TCL:
+         case OsisIf::ACTION_TCL:
             // Do nothing yet
             break;
-         case ActionToScene::ACTION_TIM:
+         case OsisIf::ACTION_TIM:
             // Do nothing yet
             break;
-         case ActionToScene::ACTION_URK:
+         case OsisIf::ACTION_URK:
             // Do nothing yet
             break;
-         case ActionToScene::ACTION_VTR:
+         case OsisIf::ACTION_VTR:
             // Do nothing yet
             break;
-         case ActionToScene::ACTION_WUP:
+         case OsisIf::ACTION_WUP:
             // Do nothing yet
             break;
          default:
@@ -217,15 +216,15 @@ void Actions::DoActions(int action)
    ActionList.clear();
 }
 
-void Actions::AddAction(int action)
+void StreamDataSaver::AddAction(int action)
 {
-   if (action > ActionToScene::NO_ACTIONS && action < ActionToScene::LAST_ACTION)
+   if (action > OsisIf::NO_ACTIONS && action < OsisIf::LAST_ACTION)
    {
       ActionList.push_back(action);
    }
 }
 
-void Actions::SaveToFile(const QString& fileName, QString text)
+void StreamDataSaver::SaveToFile(const QString& fileName, QString text)
 {
    QFileInfo info(fileName);
    if (!info.exists())
@@ -248,7 +247,7 @@ void Actions::SaveToFile(const QString& fileName, QString text)
    }
 }
 
-void Actions::GenerateHtml(const QString& fileName, QMap<int, QList<QString> >& outputList)
+void StreamDataSaver::GenerateHtml(const QString& fileName, QMap<int, QList<QString> >& outputList)
 {
    int i;
    QFileInfo fileInfo(fileName);
@@ -282,7 +281,7 @@ void Actions::GenerateHtml(const QString& fileName, QMap<int, QList<QString> >& 
    SaveToFile(fileName, html);
 }
 
-void Actions::GenerateHtml(const QString& fName, const QString& text)
+void StreamDataSaver::GenerateHtml(const QString& fName, const QString& text)
 {
    SaveToFile(fName + ".txt", text.toUtf8());
 

@@ -10,7 +10,7 @@
 #include "osis/dataparser.h"
 #include "obs/actions.h"
 #include "obs/obsaction.h"
-#include "obs/scenetableui.h"
+#include "obs/switcherconfig.h"
 #include "obs/sceneswitcher.h"
 
 namespace Ui {
@@ -69,10 +69,9 @@ private:
    OsisParser OsisDataParser;
    QThread OsisIfThread;
    QString OBS_Path;
-   SceneTableUi* TableGui;
+   SwitcherConfig* TableGui;
    ObsSceneSwitcher *ObsStreamIf;
    QThread StreamIfThread;
-   ActionToScene Action2Scene;
    QString CurrentTransition;
 
 };

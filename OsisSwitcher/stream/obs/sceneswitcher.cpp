@@ -35,6 +35,11 @@ QStringList ObsSceneSwitcher::GetScenes()
    return Obs.GetScenes();
 }
 
+QStringList ObsSceneSwitcher::GetSceneFiles(const QString& scene)
+{
+   return Obs.GetSceneFiles(scene);
+}
+
 QStringList ObsSceneSwitcher::GetTransitions()
 {
    return Obs.GetTransitions();

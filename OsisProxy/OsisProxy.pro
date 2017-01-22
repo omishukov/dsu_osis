@@ -43,6 +43,9 @@ GIT_VERSION = $$system(git --git-dir $$PWD/../.git --work-tree $$PWD describe --
 GIT_VERSION ~= s/v/""
 GIT_VERSION ~= s/g/""
 GIT_VERSION ~= s/b/""
+GIT_VERSION ~= s/a/""
+GIT_VERSION ~= s/d/""
+GIT_VERSION ~= s/f/""
 
 DEFINES += GIT_VERSION=\\\"$$GIT_VERSION\\\"
 

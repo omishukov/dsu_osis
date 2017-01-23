@@ -11,7 +11,7 @@ class IsuCalcLink : public QObject
 {
    Q_OBJECT
 public:
-   IsuCalcLink(QObject* parent = 0);
+   IsuCalcLink(DataQueue* dataIf, QObject* parent = 0);
    ~IsuCalcLink();
 
    void SetDataIf(DataQueue* dataIf) { DataIf = dataIf; }
@@ -38,7 +38,7 @@ private:
    QString HostName;
    quint16 Port;
    bool Reconnect;
-   QTcpSocket* Socket;
+   QTcpSocket m_Socket;
    QTimer* Timer;
    bool IgnoreReconnect;
    DataQueue* DataIf;

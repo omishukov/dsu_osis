@@ -2,6 +2,8 @@
 #define MAINISULINK_H
 
 #include <QMainWindow>
+#include "dataqueue.h"
+#include "isucalclink.h"
 
 namespace Ui {
    class IsuLinkMain;
@@ -17,6 +19,9 @@ public:
 
 private:
    Ui::IsuLinkMain *ui;
+
+   DataQueue m_IsuData;
+   IsuCalcLink m_CalcTcpClient;
 };
 
 #endif // MAINISULINK_H

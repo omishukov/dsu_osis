@@ -5,7 +5,6 @@
 DataQueue::DataQueue(QObject* parent)
    : QObject(parent)
 {
-
 }
 
 DataQueue::~DataQueue()

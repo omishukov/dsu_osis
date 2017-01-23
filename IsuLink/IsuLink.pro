@@ -5,6 +5,8 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT       += network
+QT       += xml
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -24,9 +26,16 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += main.cpp\
-        mainisulink.cpp
+        mainisulink.cpp \
+    ../OsisProxy/dataqueue.cpp \
+    ../OsisProxy/isucalclink.cpp
 
-HEADERS  += mainisulink.h
+HEADERS  += mainisulink.h \
+    ../OsisProxy/dataqueue.h \
+    ../OsisProxy/isucalclink.h
+
+INCLUDEPATH += \
+    $$PWD/../OsisProxy
 
 FORMS    += mainisulink.ui
 

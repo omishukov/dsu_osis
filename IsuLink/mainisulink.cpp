@@ -4,7 +4,8 @@
 
 IsuLinkMain::IsuLinkMain(QWidget *parent) :
    QMainWindow(parent),
-   ui(new Ui::IsuLinkMain)
+   ui(new Ui::IsuLinkMain),
+   m_CalcTcpClient(&m_IsuData)
 {
    ui->setupUi(this);
 

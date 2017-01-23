@@ -9,12 +9,14 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
     , CalcIpValidator(0)
     , PortValidator(0)
+    , CalcLink(&DataIf)
     , MetaCalLinkEnum(QMetaEnum::fromType<IsuCalcLinkButton>())
 {
    ui->setupUi(this);
 
+   qDebug() << "Starting IsuLink";
    QString version(GIT_VERSION);
-   setWindowTitle("DSU IsuCalc Proxy Server " + version);
+   setWindowTitle("DSU IsuLink " + version);
 
    InitIsuCalcLink();
    InitOsisDataProxy();
@@ -39,7 +41,6 @@ MainWindow::~MainWindow()
 
 void MainWindow::InitIsuCalcLink()
 {
-   CalcLink.SetDataIf(&DataIf);
    CalcLink.moveToThread(&CalcLinkThread);
 
    connect(this, SIGNAL(EstablishConnection()), &CalcLink, SLOT(Establish())); // Connect to the IsuCalc
@@ -70,7 +71,6 @@ void MainWindow::InitProxyServer()
    connect(&ProxyServerThread, SIGNAL(started()), &Server, SLOT(Initialize())); // on thread start
    connect(&ProxyServerThread, SIGNAL(finished()), &Server, SLOT(Uninit())); // on thread start
    connect(this, SIGNAL(ChangedProxyServerSettings(quint16)), &Server, SLOT(ChangedSettings(quint16))); // on settings change
-   connect(this, SIGNAL(DisconnectAllClients()), &Server, SLOT(DisconnectAllClients())); // on settings change
    connect(&Server, SIGNAL(ProxyConnected(quint32)), this, SLOT(NewConnection(quint32))); // on settings change
    connect(&Server, SIGNAL(ProxyDisconnected(quint32)), this, SLOT(ClientDisconnected(quint32))); // on settings change
    connect(&DataProxy, SIGNAL(Distribute(QByteArray*)), &Server, SLOT(NewData(QByteArray*))); // on settings change
@@ -162,7 +162,6 @@ void MainWindow::NewConnection(quint32 addr)
       if (label->text().isEmpty())
       {
          label->setText(QString::number(addr));
-         ui->ProxyDisconnect_PB->setEnabled(true);
          label->setStyleSheet("QLabel { background-color : lightgreen; }");
          return;
       }
@@ -183,10 +182,6 @@ void MainWindow::ClientDisconnected(quint32 addr)
          }
       }
    }
-   if (!addr)
-   {
-      ui->ProxyDisconnect_PB->setEnabled(false);
-   }
 }
 
 void MainWindow::SetLinkStatus(QString label, QString buttonText, bool buttonEnabled, bool ipAddrEnabled, bool ipPortEnabled)
@@ -206,9 +201,4 @@ void MainWindow::on_Reconnect_CB_stateChanged(int /*arg1*/)
 void MainWindow::on_ProxyServerPort_LE_editingFinished()
 {
    emit ChangedProxyServerSettings(ui->ProxyServerPort_LE->text().toUShort());
-}
-
-void MainWindow::on_ProxyDisconnect_PB_clicked()
-{
-   DisconnectAllClients();
 }

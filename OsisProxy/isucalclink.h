@@ -14,8 +14,6 @@ public:
    IsuCalcLink(DataQueue* dataIf, QObject* parent = 0);
    ~IsuCalcLink();
 
-   void SetDataIf(DataQueue* dataIf) { DataIf = dataIf; }
-
 public slots:
    void ChangedSettings(const QString& hostName, quint16 port, uint reconnect);
    void Initialize();

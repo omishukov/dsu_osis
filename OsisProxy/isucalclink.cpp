@@ -82,6 +82,9 @@ void IsuCalcLink::SocketError(QAbstractSocket::SocketError /*err*/)
    {
       emit IsuCalcDisconnected();
    }
+   m_Socket.disconnectFromHost();
+   m_Socket.close();
+   m_Socket.reset();
 }
 
 void IsuCalcLink::Establish()

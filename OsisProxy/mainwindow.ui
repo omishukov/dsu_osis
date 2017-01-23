@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>366</width>
-    <height>205</height>
+    <height>293</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -111,22 +111,6 @@
       <string>Port</string>
      </property>
     </widget>
-    <widget class="QPushButton" name="ProxyDisconnect_PB">
-     <property name="enabled">
-      <bool>false</bool>
-     </property>
-     <property name="geometry">
-      <rect>
-       <x>100</x>
-       <y>16</y>
-       <width>61</width>
-       <height>28</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>Disconnect</string>
-     </property>
-    </widget>
     <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
@@ -220,7 +204,7 @@
      <x>0</x>
      <y>0</y>
      <width>366</width>
-     <height>20</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

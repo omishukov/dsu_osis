@@ -37,8 +37,6 @@ private slots:
 
    void on_ProxyServerPort_LE_editingFinished();
 
-   void on_ProxyDisconnect_PB_clicked();
-
 public slots:
    void IsuCalcConnected();
    void IsuCalcReconnecting();

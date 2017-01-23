@@ -29,3 +29,15 @@ SOURCES += main.cpp\
 HEADERS  += mainisulink.h
 
 FORMS    += mainisulink.ui
+
+GIT_VERSION = $$system(git --git-dir $$PWD/../.git --work-tree $$PWD describe --always --tags)
+GIT_VERSION ~= s/v/""
+GIT_VERSION ~= s/g/""
+GIT_VERSION ~= s/b/""
+GIT_VERSION ~= s/d/""
+GIT_VERSION ~= s/f/""
+
+DEFINES += GIT_VERSION=\\\"$$GIT_VERSION\\\"
+
+VERSION = $$GIT_VERSION
+VERSION ~= s/\.\d+\.[a-f0-9]{6,}//

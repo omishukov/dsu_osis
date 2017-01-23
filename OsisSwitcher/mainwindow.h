@@ -47,6 +47,8 @@ private slots:
 
    void on_TransitionCB_currentIndexChanged(const QString &arg1);
 
+   void on_IsuCalcIP_LE_cursorPositionChanged(int arg1, int arg2);
+
 signals:
    void ChangedIsuCalcSettings(const QString&, quint16, uint);
    void EstablishConnection();

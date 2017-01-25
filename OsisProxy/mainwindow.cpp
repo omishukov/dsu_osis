@@ -15,10 +15,11 @@ MainWindow::MainWindow(QWidget *parent)
    ui->setupUi(this);
 
    qDebug() << "Starting IsuLink";
+
    QString version(GIT_VERSION);
    setWindowTitle("DSU IsuLink " + version);
 
-   InitIsuCalcLink();
+   InitIsuCalcFsLink();
    InitOsisDataProxy();
    InitProxyServer();
    ReadSettings();
@@ -26,8 +27,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-   CalcLinkThread.quit();
-   CalcLinkThread.wait();
    DataProxyThread.quit();
    DataProxyThread.wait();
    ProxyServerThread.quit();
@@ -39,21 +38,15 @@ MainWindow::~MainWindow()
    delete ui;
 }
 
-void MainWindow::InitIsuCalcLink()
+void MainWindow::InitIsuCalcFsLink()
 {
-   CalcLink.moveToThread(&CalcLinkThread);
-
    connect(this, SIGNAL(EstablishConnection()), &CalcLink, SLOT(Establish())); // Connect to the IsuCalc
    connect(this, SIGNAL(StopConnection()), &CalcLink, SLOT(StopConnection())); // Disconnect from the IsuCalc
+   connect(this, SIGNAL(ChangedIsuCalcSettings(const QString&, quint16, uint)), &CalcLink, SLOT(ChangedSettings(const QString&, quint16, uint))); // on settings change
    connect(&CalcLink, SIGNAL(Established()), this, SLOT(IsuCalcConnected())); // Update UI
    connect(&CalcLink, SIGNAL(IsuCalcDisconnected()), this, SLOT(IsuCalcDisconnected())); // Update UI
    connect(&CalcLink, SIGNAL(Reconnecting()), this, SLOT(IsuCalcReconnecting())); // Update UI
-   connect(this, SIGNAL(ChangedIsuCalcSettings(const QString&, quint16, uint)),
-           &CalcLink, SLOT(ChangedSettings(const QString&, quint16, uint))); // on settings change
-   connect(&CalcLinkThread, SIGNAL(started()), &CalcLink, SLOT(Initialize())); // on thread start
-   connect(&CalcLinkThread, SIGNAL(finished()), &CalcLink, SLOT(Uninit())); // on thread stop
-
-   CalcLinkThread.start();
+   CalcLink.startThread();
 }
 
 void MainWindow::InitOsisDataProxy()
@@ -201,4 +194,9 @@ void MainWindow::on_Reconnect_CB_stateChanged(int /*arg1*/)
 void MainWindow::on_ProxyServerPort_LE_editingFinished()
 {
    emit ChangedProxyServerSettings(ui->ProxyServerPort_LE->text().toUShort());
+}
+
+void MainWindow::on_IsuCalcIP_LE_editingFinished()
+{
+   on_Reconnect_CB_stateChanged(0);
 }

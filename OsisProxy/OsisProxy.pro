@@ -40,12 +40,7 @@ INCLUDEPATH += \
 RC_ICONS = ../OsisSwitcher/danskate.ico
 
 GIT_VERSION = $$system(git --git-dir $$PWD/../.git --work-tree $$PWD describe --always --tags)
-GIT_VERSION ~= s/v/""
-GIT_VERSION ~= s/g/""
-GIT_VERSION ~= s/b/""
-GIT_VERSION ~= s/a/""
-GIT_VERSION ~= s/d/""
-GIT_VERSION ~= s/f/""
+GIT_VERSION ~= s/'[A-Z]'/""
 
 DEFINES += GIT_VERSION=\\\"$$GIT_VERSION\\\"
 

@@ -9,14 +9,24 @@ IsuCalcLink::IsuCalcLink(DataQueue* dataIf, QObject* parent)
    , IgnoreReconnect(false)
    , DataIf(dataIf)
 {
+   moveToThread(&CalcLinkThread);
    connect(&m_Socket, SIGNAL(connected()), this, SLOT(Connected()));
    connect(&m_Socket, SIGNAL(disconnected()), this, SLOT(Disconnected()));
    connect(&m_Socket, SIGNAL(readyRead()), this, SLOT(ReadyRead()));
    connect(&m_Socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(SocketError(QAbstractSocket::SocketError)));
+   connect(&CalcLinkThread, SIGNAL(started()), this, SLOT(Initialize())); // on thread start
+   connect(&CalcLinkThread, SIGNAL(finished()), this, SLOT(Uninit())); // on thread stop
 }
 
 IsuCalcLink::~IsuCalcLink()
 {
+   CalcLinkThread.quit();
+   CalcLinkThread.wait();
+}
+
+void IsuCalcLink::startThread()
+{
+   CalcLinkThread.start();
 }
 
 void IsuCalcLink::ChangedSettings(const QString& hostName, quint16 port, uint reconnect)
@@ -35,17 +45,20 @@ void IsuCalcLink::Initialize()
 
 void IsuCalcLink::Uninit()
 {
-   StopConnection();
+   CancelConnection();
+   Timer->stop();
    delete Timer;
 }
 
 void IsuCalcLink::Connected()
 {
+   Timer->stop();
    emit Established();
 }
 
 void IsuCalcLink::Disconnected()
 {
+   Timer->stop();
    if (Reconnect && !IgnoreReconnect)
    {
       emit Reconnecting();
@@ -71,20 +84,24 @@ void IsuCalcLink::ReadyRead()
    }
 }
 
-void IsuCalcLink::SocketError(QAbstractSocket::SocketError /*err*/)
+void IsuCalcLink::SocketError(QAbstractSocket::SocketError err)
 {
    QTcpSocket::SocketState connState = m_Socket.state();
    if (connState == QAbstractSocket::UnconnectedState && Reconnect)
    {
-      Timer->start(2250);
+      emit Reconnecting();
+      CancelConnection();
+      Establish();
    }
    else if (connState != QAbstractSocket::ConnectedState)
    {
       emit IsuCalcDisconnected();
+      CancelConnection();
    }
-   m_Socket.disconnectFromHost();
-   m_Socket.close();
-   m_Socket.reset();
+   else
+   {
+      qDebug() << "Socket Error " << err << " in State " << connState;
+   }
 }
 
 void IsuCalcLink::Establish()
@@ -95,6 +112,11 @@ void IsuCalcLink::Establish()
    {
       emit Reconnecting();
       m_Socket.connectToHost(HostName, Port, QIODevice::ReadOnly);
+      Timer->start(2250);
+   }
+   else
+   {
+      qDebug() << "Socket Error state " << m_Socket.state();
    }
 }
 
@@ -104,14 +126,9 @@ void IsuCalcLink::StopConnection()
    if (m_Socket.state() != QAbstractSocket::UnconnectedState)
    {
       IgnoreReconnect = true;
-      m_Socket.disconnectFromHost();
-      m_Socket.close();
-      m_Socket.reset();
+      CancelConnection();
    }
-   else
-   {
-      emit IsuCalcDisconnected();
-   }
+   emit IsuCalcDisconnected();
 }
 
 void IsuCalcLink::TimerExpired()
@@ -122,8 +139,16 @@ void IsuCalcLink::TimerExpired()
    }
    else
    {
+      CancelConnection();
       emit IsuCalcDisconnected();
    }
+}
+
+void IsuCalcLink::CancelConnection()
+{
+   m_Socket.disconnectFromHost();
+   m_Socket.close();
+   m_Socket.reset();
 }
 
 const quint8 STX = 0x02;

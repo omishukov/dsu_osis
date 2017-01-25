@@ -5,6 +5,7 @@
 #include <QTcpSocket>
 #include <QTimer>
 #include <QMutex>
+#include <QThread>
 #include "dataqueue.h"
 
 class IsuCalcLink : public QObject
@@ -14,6 +15,8 @@ public:
    IsuCalcLink(DataQueue* dataIf, QObject* parent = 0);
    ~IsuCalcLink();
 
+   void startThread();
+
 public slots:
    void ChangedSettings(const QString& hostName, quint16 port, uint reconnect);
    void Initialize();
@@ -22,7 +25,7 @@ public slots:
    void Disconnected();
    void ReadyRead();
    void ProcessData(QByteArray qba);
-   void SocketError(QAbstractSocket::SocketError);
+   void SocketError(QAbstractSocket::SocketError err);
    void Establish();
    void StopConnection();
    void TimerExpired();
@@ -33,6 +36,8 @@ signals:
    void Reconnecting();
 
 private:
+   void CancelConnection();
+
    QString HostName;
    quint16 Port;
    bool Reconnect;
@@ -42,7 +47,7 @@ private:
    DataQueue* DataIf;
    QByteArray RemainingQBA;
    QMutex m;
-
+   QThread CalcLinkThread;
 
 };
 

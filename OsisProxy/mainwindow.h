@@ -37,6 +37,8 @@ private slots:
 
    void on_ProxyServerPort_LE_editingFinished();
 
+   void on_IsuCalcIP_LE_editingFinished();
+
 public slots:
    void IsuCalcConnected();
    void IsuCalcReconnecting();
@@ -54,7 +56,7 @@ signals:
 private:
    Ui::MainWindow *ui;
 
-   void InitIsuCalcLink();
+   void InitIsuCalcFsLink();
    void InitOsisDataProxy();
    void InitProxyServer();
    void setIpValitation();
@@ -66,7 +68,6 @@ private:
    QList<QLabel*> ConnStatusUIList;
    QValidator* CalcIpValidator;
    QValidator* PortValidator;
-   QThread CalcLinkThread;
    IsuCalcLink CalcLink;
    QMetaEnum MetaCalLinkEnum;
    DataQueue DataIf;

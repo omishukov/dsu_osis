@@ -61,7 +61,6 @@ void IsuCalcLink::Disconnected()
    Timer->stop();
    if (Reconnect && !IgnoreReconnect)
    {
-      emit Reconnecting();
       Establish();
    }
    else
@@ -89,7 +88,6 @@ void IsuCalcLink::SocketError(QAbstractSocket::SocketError err)
    QTcpSocket::SocketState connState = m_Socket.state();
    if (connState == QAbstractSocket::UnconnectedState && Reconnect)
    {
-      emit Reconnecting();
       CancelConnection();
       Establish();
    }

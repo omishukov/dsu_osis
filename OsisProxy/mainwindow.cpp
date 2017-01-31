@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
     , CalcIpValidator(0)
     , PortValidator(0)
     , CalcLink(&DataIf)
+    , WebsockServer(&DataIf)
     , MetaCalLinkEnum(QMetaEnum::fromType<IsuCalcLinkButton>())
 {
    ui->setupUi(this);
@@ -20,15 +21,15 @@ MainWindow::MainWindow(QWidget *parent)
    setWindowTitle("DSU IsuLink " + version);
 
    InitIsuCalcFsLink();
-   InitOsisDataProxy();
-   InitProxyServer();
+   InitWebsocketServer();
+//   InitProxyServer();
    ReadSettings();
 }
 
 MainWindow::~MainWindow()
 {
-   DataProxyThread.quit();
-   DataProxyThread.wait();
+   WebsockThread.quit();
+   WebsockThread.wait();
    ProxyServerThread.quit();
    ProxyServerThread.wait();
    saveSettings();
@@ -49,26 +50,26 @@ void MainWindow::InitIsuCalcFsLink()
    CalcLink.startThread();
 }
 
-void MainWindow::InitOsisDataProxy()
+void MainWindow::InitWebsocketServer()
 {
-   DataProxy.SetDataIf(&DataIf);
-   DataProxy.moveToThread(&DataProxyThread);
-   connect(&DataIf, SIGNAL(NewData()), &DataProxy, SLOT(ProcessData())); // Update UI
-   DataProxyThread.start();
+   connect(this, SIGNAL(ChangedProxyServerSettings(quint16)), &WebsockServer, SLOT(ChangedSettings(quint16)), Qt::QueuedConnection); // on settings change
+   connect(&WebsockServer, SIGNAL(NewConnection(QString&)), this, SLOT(NewConnection(QString&))); // on settings change
+   connect(&WebsockServer, SIGNAL(ClientDisconnected(QString&)), this, SLOT(ClientDisconnected(QString&))); // on settings change
+   WebsockServer.startThread();
 }
 
-void MainWindow::InitProxyServer()
-{
-   Server.SetProxyIf(&DataProxy);
-   Server.moveToThread(&ProxyServerThread);
-   connect(&ProxyServerThread, SIGNAL(started()), &Server, SLOT(Initialize())); // on thread start
-   connect(&ProxyServerThread, SIGNAL(finished()), &Server, SLOT(Uninit())); // on thread start
-   connect(this, SIGNAL(ChangedProxyServerSettings(quint16)), &Server, SLOT(ChangedSettings(quint16))); // on settings change
-   connect(&Server, SIGNAL(ProxyConnected(quint32)), this, SLOT(NewConnection(quint32))); // on settings change
-   connect(&Server, SIGNAL(ProxyDisconnected(quint32)), this, SLOT(ClientDisconnected(quint32))); // on settings change
-   connect(&DataProxy, SIGNAL(Distribute(QByteArray*)), &Server, SLOT(NewData(QByteArray*))); // on settings change
-   ProxyServerThread.start();
-}
+//void MainWindow::InitProxyServer()
+//{
+//   Server.SetProxyIf(&WebsockServer);
+//   Server.moveToThread(&ProxyServerThread);
+//   connect(&ProxyServerThread, SIGNAL(started()), &Server, SLOT(Initialize())); // on thread start
+//   connect(&ProxyServerThread, SIGNAL(finished()), &Server, SLOT(Uninit())); // on thread start
+//   connect(this, SIGNAL(ChangedProxyServerSettings(quint16)), &Server, SLOT(ChangedSettings(quint16))); // on settings change
+//   connect(&Server, SIGNAL(ProxyConnected(quint32)), this, SLOT(NewConnection(quint32))); // on settings change
+//   connect(&Server, SIGNAL(ProxyDisconnected(quint32)), this, SLOT(ClientDisconnected(quint32))); // on settings change
+//   connect(&WebsockServer, SIGNAL(Distribute(QByteArray*)), &Server, SLOT(NewData(QByteArray*))); // on settings change
+//   ProxyServerThread.start();
+//}
 
 void MainWindow::setIpValitation()
 {
@@ -148,24 +149,24 @@ void MainWindow::IsuCalcDisconnected()
    SetLinkStatus("Disconnected", MetaCalLinkEnum.valueToKey(Connect), true, true, true);
 }
 
-void MainWindow::NewConnection(quint32 addr)
+void MainWindow::NewConnection(QString& addr)
 {
    for (auto label:ConnStatusUIList)
    {
       if (label->text().isEmpty())
       {
-         label->setText(QString::number(addr));
+         label->setText(addr);
          label->setStyleSheet("QLabel { background-color : lightgreen; }");
          return;
       }
    }
 }
 
-void MainWindow::ClientDisconnected(quint32 addr)
+void MainWindow::ClientDisconnected(QString& addr)
 {
    for (auto label:ConnStatusUIList)
    {
-      if (!addr || label->text().toUInt() == addr)
+      if (!addr || !QString::compare(label->text(), addr))
       {
          label->setStyleSheet("QLabel { background-color : red; }");
          label->setText("");

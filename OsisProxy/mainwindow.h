@@ -8,7 +8,7 @@
 #include <QLabel>
 #include "isucalclink.h"
 #include "dataqueue.h"
-#include "osisdataproxy.h"
+#include "websocketserver.h"
 #include "proxyserver.h"
 
 namespace Ui {
@@ -43,8 +43,8 @@ public slots:
    void IsuCalcConnected();
    void IsuCalcReconnecting();
    void IsuCalcDisconnected();
-   void NewConnection(quint32 addr);
-   void ClientDisconnected(quint32 addr);
+   void NewConnection(QString& addr);
+   void ClientDisconnected(QString& addr);
 
 signals:
    void ChangedIsuCalcSettings(const QString&, quint16, uint);
@@ -57,7 +57,7 @@ private:
    Ui::MainWindow *ui;
 
    void InitIsuCalcFsLink();
-   void InitOsisDataProxy();
+   void InitWebsocketServer();
    void InitProxyServer();
    void setIpValitation();
    void ReadSettings();
@@ -71,8 +71,7 @@ private:
    IsuCalcLink CalcLink;
    QMetaEnum MetaCalLinkEnum;
    DataQueue DataIf;
-   OsisDataProxy DataProxy;
-   QThread DataProxyThread;
+   OsisWebsocketServer WebsockServer;
    ProxyServer Server;
    QThread ProxyServerThread;
 

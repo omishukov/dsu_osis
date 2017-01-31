@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     osisdataproxy.cpp \
     ../dsu_osis/osis/osisdata.cpp \
     ../dsu_osis/osis/element/action.cpp \
-    proxyserver.cpp
+    proxyserver.cpp \
+    websocketserver.cpp
 
 HEADERS  += mainwindow.h \
     isucalclink.h \
@@ -29,7 +30,8 @@ HEADERS  += mainwindow.h \
     osisdataproxy.h \
     ../dsu_osis/osis/osisdata.h \
     ../dsu_osis/osis/element/action.h \
-    proxyserver.h
+    proxyserver.h \
+    websocketserver.h
 
 FORMS    += mainwindow.ui
 

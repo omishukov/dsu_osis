@@ -181,11 +181,13 @@ bool OsisParser::ProcessOsisElement(QDomNode& n)
       case Segment_Result_List:
          Competition.ProcessAction(ActionToScene::SEGMENT_RESULT_LIST);
          break;
+      case Category_Result_List:
+         Competition.ProcessAction(ActionToScene::CATEGORY_RESULT_LIST);
+         break;
       case Prf:
       case Participant_List:
       case Category_List:
       case Event_Officials_List:
-      case Category_Result_List:
       case Segment_List:
       case Coaches:
       case Athlete_List:

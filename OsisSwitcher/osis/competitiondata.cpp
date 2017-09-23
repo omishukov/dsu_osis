@@ -556,11 +556,40 @@ bool OsisCompetitionData::GetSegmentResultList(QMap<int, QList<QString> >& segme
    return true;
 }
 
+bool OsisCompetitionData::GetCategoryResultList(QMap<int, QList<QString> >& categoryResultList)
+{
+    int Rank;
+    for( auto participant : Participants)
+    {
+        Rank = participant->GetAttributeInt(OsisParticipant::TRank);
+        if (Rank <= 0)
+        {
+            continue;
+        }
+        QList<QString> NameClubPoints;
+        NameClubPoints << participant->GetAttribute(OsisParticipant::Short_Name) <<
+                          participant->GetAttribute(OsisParticipant::Nation) <<
+                          participant->GetAttribute(OsisParticipant::TPoint);
+
+        categoryResultList[Rank] = NameClubPoints;
+    }
+    return true;
+}
+
 QString OsisCompetitionData::GetPoints()
 {
    if (Current_Performance_Result)
    {
       return Current_Performance_Result->GetAttribute(OsisPrfDetails::Points);
+   }
+   return QString();
+}
+
+QString OsisCompetitionData::GetTPoints()
+{
+   if (CurrentParticipantId != -1 && Participants.contains(CurrentParticipantId))
+   {
+      return Participants[CurrentParticipantId]->GetAttribute(OsisParticipant::TPoint);
    }
    return QString();
 }
@@ -611,6 +640,15 @@ QString OsisCompetitionData::GetRank()
       {
          return performance->GetAttribute(OsisPerformance::Rank);
       }
+   }
+   return QString();
+}
+
+QString OsisCompetitionData::GetTRank()
+{
+   if (CurrentParticipantId != -1 && Participants.contains(CurrentParticipantId))
+   {
+      return Participants[CurrentParticipantId]->GetAttribute(OsisParticipant::TRank);
    }
    return QString();
 }

@@ -35,10 +35,12 @@ signals:
    void Reconnecting();
 
 private:
+   void CancelConnection();
+
    QString HostName;
    quint16 Port;
    bool Reconnect;
-   QTcpSocket* Socket;
+   QTcpSocket m_Socket;
    QTimer* Timer;
    bool IgnoreReconnect;
    DataQueue* DataIf;

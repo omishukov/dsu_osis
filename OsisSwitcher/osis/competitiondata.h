@@ -66,13 +66,16 @@ public:
    bool GetSegmentStartList(QMap<int, QList<QString> >& segmentStartList);
    bool GetWarmUpStartList(QMap<int, QList<QString>>& warmUpStartList);
    bool GetSegmentResultList(QMap<int, QList<QString> >& segmentResultList);
+   bool GetCategoryResultList(QMap<int, QList<QString> >& categoryResultList);
    void GetWarmUpGroupsList(QList<int>& WarmUpList);
    QString GetPoints();
+   QString GetTPoints();
    QString GetTES();
    QString GetTCS();
    QString GetBonus();
    QString GetDeduction();
    QString GetRank();
+   QString GetTRank();
    QString GetCurrentWarmUpGroupNumber();
 
 signals:

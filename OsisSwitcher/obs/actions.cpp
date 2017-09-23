@@ -50,7 +50,14 @@ void Actions::DoActions()
             }
             break;
          case ActionToScene::ACTION_1S3:
-            // Do nothing yet
+            {
+               GenerateHtml("obs/tpoints", OsisIf->GetTPoints());
+               GenerateHtml("obs/current_participant_trank", OsisIf->GetTRank());
+
+               QMap<int, QList<QString>> CategoryResultList;
+               OsisIf->GetCategoryResultList(CategoryResultList);
+               GenerateHtml("obs/category_result_list.html", CategoryResultList);
+            }
             break;
          case ActionToScene::ACTION_1S4:
             // Do nothing yet
@@ -221,6 +228,15 @@ void Actions::DoActions()
             }
             break;
          case ActionToScene::CATEGORY_RESULT_LIST:
+            {
+               QMap<int, QList<QString>> CategoryResultList;
+               OsisIf->GetCategoryResultList(CategoryResultList);
+               if (CategoryResultList.isEmpty())
+               {
+                  passToObs = false;
+               }
+               GenerateHtml("obs/category_result_list.html", CategoryResultList);
+            }
             break;
          default:
             passToObs = false;

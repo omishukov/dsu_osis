@@ -1,0 +1,97 @@
+/* page layout styles */
+@font-face {
+    font-family: TableFont;
+    src: url(AvenirNextLTW01-DemiCn.woff);
+}
+
+body {
+  width: 1920px;
+  height: 1080px;
+  margin-top:0px;
+  margin-left:0px;
+  margin-right:0px;
+  font-family: TableFont;
+}
+
+.dsu_list_bar {
+    position: absolute;
+    top: 160px;
+    left: 160px;
+    border: 0;
+}
+
+/* keyframes #anim_slides */
+@keyframes anim_slides_5 {
+    0% { opacity:0; }
+    5% { opacity:1; }
+    18% { opacity:1; }
+    20% { opacity:0; }
+    100% { opacity:0; }
+}
+.dsu_slides ul li {
+    opacity:0;
+    position:absolute;
+    top:0;
+
+    /* css3 animation */
+    animation-name: anim_slides_5;
+    animation-duration: 75.0s;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-direction: normal;
+    animation-delay: 0s;
+    animation-play-state: running;
+    animation-fill-mode: forwards;
+}
+
+/* css3 delays */
+.dsu_slides ul  li:nth-child(2), .dsu_slides ul  li:nth-child(2) div {
+    animation-delay: 15.0s;
+}
+.dsu_slides ul  li:nth-child(3), .dsu_slides ul  li:nth-child(3) div {
+    animation-delay: 30.0s;
+}
+.dsu_slides ul  li:nth-child(4), .dsu_slides ul  li:nth-child(4) div {
+    animation-delay: 45.0s;
+}
+.dsu_slides ul  li:nth-child(5), .dsu_slides ul  li:nth-child(5) div {
+    animation-delay: 60.0s;
+}
+.dsu_slides ul li img {
+    display:block;
+}
+
+table.dsu_list_table {
+  table-layout:fixed; 
+  width:1300px;
+  position: absolute;
+  top:300px;
+  left: 130px;
+  font-size: 45px;
+  /*font-weight: bold;*/
+}/*Setting the table width is important!*/
+
+table.dsu_list_table td {overflow:hidden;}/*Hide text outside the cell.*/
+table.dsu_list_table td:nth-of-type(1) {width:6px;color: firebrick; text-align:right;}/*Setting the width of column 1.*/
+table.dsu_list_table td:nth-of-type(2) {width:12px;font-size: 30px;font-weight: bold;text-align:center;}/*Setting the width of column 2.*/
+table.dsu_list_table td:nth-of-type(3) {width:100px;white-space: nowrap;}/*Setting the width of column 3.*/
+table.dsu_list_table td:nth-of-type(4) {width:14px;}/*Setting the width of column 4.*/
+
+.dsu_category {
+    position: absolute;
+    top: 97px;
+    left: 200px;
+    border: 0;
+    font-size: 64px;
+    font-weight: bold;
+    color: firebrick;
+}
+.dsu_segment {
+    position: absolute;
+    top: 192px;
+    left: 200px;
+    border: 0;
+    font-size: 47px;
+    font-weight: bold;
+    color: #ffffff;
+}

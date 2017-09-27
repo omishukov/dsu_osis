@@ -1,0 +1,205 @@
+@font-face {
+    font-family: TableFont;
+    src: url(AvenirNextLTW01-DemiCn.woff);
+}
+
+body {
+  width: 1920px;
+  height: 1080px;
+  margin-top:0px;
+  margin-left:0px;
+  margin-right:0px;
+  font-family: TableFont;
+}
+
+div.dsu_bar {
+    position: absolute;
+    top: 900px;
+    left: 180px;
+    border: 0px;
+}
+
+.participant_info {
+    position: absolute;
+    top: 910px;
+    left: 200px;
+    border: 1px;
+    display:inline-block;
+    font-family: TableFont;
+}
+.participant_name {
+	position: relative;
+    float: left;
+    font-size: 60px;
+    border:0px solid red;
+}
+.participant_club
+{
+	position: relative;
+	padding: 20px;
+    float: left;
+	font-size: 30px;
+	font-weight: bold;
+	border:0px solid green;
+}
+.participant_score
+{
+	position: absolute;
+    top: 990px;
+    left: 200px;
+    border: 0px;
+    font-family: TableFont;
+    font-size: 30px;
+	color: white;
+	border:0px solid green;
+}
+.TES {
+	width: auto;
+    font-family: TableFont;
+	float: left;
+	border:0px solid black;
+}
+.TES:after {
+	content: "Technical Elements";
+}
+.TES_score {
+	width: auto;
+	margin-left: 20px;
+	float: left;
+}
+.TCS {
+	width: auto;
+	float: left;
+	margin-left: 40px;
+}
+.TCS:after {
+	content: "Presentation";
+}
+.TCS_score {
+	width: auto;
+	margin-left: 20px;
+	float: left;
+}
+.DED {
+	width: auto;
+	float: left;
+	margin-left: 40px;
+}
+.DED:after {
+	content: "Deduction";
+}
+.DED_value {
+	width: auto;
+	margin-left: 20px;
+	float: left;
+}
+.SC_SP {
+	width: auto;
+	float: left;
+	margin-left: 30px;
+	font-weight: bold;
+	color: firebrick;
+	animation-name: slideLeft;
+    animation-duration: 1s; 
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+
+}
+.SC_SP:after {
+	content: "Short Program";
+}
+.SC_FP {
+	width: auto;
+	float: left;
+	margin-left: 30px;
+	font-weight: bold;
+	color: firebrick;
+	animation-name: slideLeft;
+    animation-duration: 1s; 
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+
+}
+.SC_FP:after {
+	content: "Free Program";
+}
+.SEG_score {
+	position: relative;
+	width: auto;
+	top: -10px;
+	margin-left: 20px;
+	float: left;
+    font-size: 50px;
+	font-weight: bold;
+	color: firebrick;
+	animation-name: slideLeft;
+    animation-duration: 3s; 
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+.TOTAL_text {
+	position: relative;
+	width: auto;
+	float: left;
+	margin-left: 30px;
+	font-weight: bold;
+	color: firebrick;
+	animation-name: slideLeft;
+    animation-duration: 1s; 
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+.TOTAL_text:after {
+	content: "Total";
+}
+.TOTAL_score {
+	position: relative;
+	width: auto;
+	top: -10px;
+	margin-left: 20px;
+	float: left;
+    font-size: 50px;
+	font-weight: bold;
+	color: firebrick;
+	animation-name: slideLeft;
+    animation-duration: 3s; 
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+.rank {
+	position: relative;
+    top: -2px;
+/*    left: 1080px;*/
+    padding: 10px;
+    font-size: 50px;
+	font-weight: bold;
+	width: 80px;
+/*	height: 80px;
+	line-height: 80px;*/
+	margin-left: 60px;
+	text-align: center;
+    float: left;
+/*	background-color: #fe9195;*/
+	background-color: firebrick;
+	color: white;
+	animation-name: slideLeft;
+    animation-duration: 4s; 
+    animation-timing-function: ease-in-out;
+    animation-fill-mode: forwards;
+}
+#score-animation-1 {
+    visibility: hidden;
+    animation-delay: 2s;
+}
+#score-animation-2 {
+    visibility: hidden;
+    animation-delay: 7s;
+}
+#score-animation-3 {
+    visibility: hidden;
+    animation-delay: 9s;
+}
+@keyframes slideLeft {
+    0% {transform: translateX(150%); visibility: visible;}   
+    100% {transform: translateX(0%); visibility: visible;}
+}

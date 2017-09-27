@@ -576,6 +576,26 @@ bool OsisCompetitionData::GetCategoryResultList(QMap<int, QList<QString> >& cate
     return true;
 }
 
+bool OsisCompetitionData::GetResultList(QMap<int, QList<QString> >& resultList)
+{
+   int Rank;
+   for( auto participant : Participants)
+   {
+      Rank = participant->GetAttributeInt(OsisParticipant::TRank);
+      if (Rank <= 0)
+      {
+         continue;
+      }
+      QList<QString> NameClubPoints;
+      NameClubPoints << participant->GetAttribute(OsisParticipant::Nation) <<
+                        participant->GetAttribute(OsisParticipant::Short_Name) <<
+                        participant->GetAttribute(OsisParticipant::TPoint);
+
+      resultList[Rank] = NameClubPoints;
+   }
+   return true;
+}
+
 QString OsisCompetitionData::GetPoints()
 {
    if (Current_Performance_Result)

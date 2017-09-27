@@ -29,6 +29,7 @@ public:
    virtual bool GetSegmentStartList(QMap<int, QList<QString>>& segmentStartList) = 0;
    virtual bool GetSegmentResultList(QMap<int, QList<QString>>& segmentResultList) = 0;
    virtual bool GetCategoryResultList(QMap<int, QList<QString>>& categoryResultList) = 0;
+   virtual bool GetResultList(QMap<int, QList<QString>>& categoryResultList) = 0;
    virtual bool GetWarmUpStartList(QMap<int, QList<QString>>& warmUpStartList) = 0;
    virtual void GetWarmUpGroupsList(QList<int>& WarmUpList) = 0;
 };

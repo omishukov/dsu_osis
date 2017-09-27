@@ -57,6 +57,10 @@ void Actions::DoActions()
                QMap<int, QList<QString>> CategoryResultList;
                OsisIf->GetCategoryResultList(CategoryResultList);
                GenerateHtml("obs/category_result_list.html", CategoryResultList);
+
+               QMap<int, QList<QString>> ResultList;
+               OsisIf->GetResultList(ResultList);
+               GenerateNewHtml("obs/resultlist/index.html", ResultList);
             }
             break;
          case ActionToScene::ACTION_1S4:
@@ -289,6 +293,41 @@ void Actions::GenerateHtml(const QString& fileName, QMap<int, QList<QString> >& 
    QString html;
    html  = "<html>";
    html += "<head> <meta http-equiv=\"Content-Type\" content=\"text/html\"> ";
+   html += "<META HTTP-EQUIV=\"refresh\" CONTENT=\"5\"; URL=http://localhost:8080/" + outputFile + "\">";
+   html += "<link rel=\"stylesheet\" href=\"fs_info.css\"> </head>";
+   html += "<body class=\"PageBody\">";
+   html += "<table width=\"100%\" align=\"center\" border=\"0\" cellspacing=\"1\">";
+   for (auto startNum : outputList.keys())
+   {
+      QList<QString> info = outputList[startNum];
+      int columns = info.size();
+      if (columns == 0)
+      {
+         continue;
+      }
+
+      html += "<tr class=\"Line1White\">";
+      html += "<td>" + QString::number(startNum) + "</td>";
+      html += "<td class=\"CellLeft\"><a>" + info[0].toUtf8() + "</a></td>";
+      for (i = 1; i < columns; i++)
+      {
+         html += "<td>" + info[i].toUtf8() + "</td>";
+      }
+      html += "</tr>";
+   }
+   html += "</table></body></html>";
+   SaveToFile(fileName, html);
+}
+
+void Actions::GenerateNewHtml(const QString& fileName, QMap<int, QList<QString> >& outputList)
+{
+   int i;
+   QFileInfo fileInfo(fileName);
+   QString outputFile = fileInfo.fileName();
+   int groups = ceil(outputList.count() / 8);
+   QString html;
+   html  = "<!DOCTYPE html>";
+   html += "<html><head><meta charset=\"UTF-8\"><link rel=\"stylesheet\" href=\"../css/style" + QString::number(groups) +".css\"></head><body>";
    html += "<META HTTP-EQUIV=\"refresh\" CONTENT=\"5\"; URL=http://localhost:8080/" + outputFile + "\">";
    html += "<link rel=\"stylesheet\" href=\"fs_info.css\"> </head>";
    html += "<body class=\"PageBody\">";

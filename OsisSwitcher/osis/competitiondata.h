@@ -67,6 +67,7 @@ public:
    bool GetWarmUpStartList(QMap<int, QList<QString>>& warmUpStartList);
    bool GetSegmentResultList(QMap<int, QList<QString> >& segmentResultList);
    bool GetCategoryResultList(QMap<int, QList<QString> >& categoryResultList);
+   bool GetResultList(QMap<int, QList<QString> >& resultList);
    void GetWarmUpGroupsList(QList<int>& WarmUpList);
    QString GetPoints();
    QString GetTPoints();

@@ -5,6 +5,8 @@
 #include <QMutexLocker>
 #include "actions.h"
 
+const int MAX_LIST_ENTRIES = 8;
+
 Actions::Actions(ActionToScene* actionInfo, QObject* parent)
    : QObject(parent)
    , OsisIf(0)
@@ -54,13 +56,15 @@ void Actions::DoActions()
                GenerateHtml("obs/tpoints", OsisIf->GetTPoints());
                GenerateHtml("obs/current_participant_trank", OsisIf->GetTRank());
 
+               GenerateResultHtml("obs/result/index.html");
+
                QMap<int, QList<QString>> CategoryResultList;
                OsisIf->GetCategoryResultList(CategoryResultList);
                GenerateHtml("obs/category_result_list.html", CategoryResultList);
 
                QMap<int, QList<QString>> ResultList;
                OsisIf->GetResultList(ResultList);
-               GenerateNewHtml("obs/resultlist/index.html", ResultList);
+               GenerateNewHtmlList("obs/resultlist/index.html", ResultList, "STANDINGS");
             }
             break;
          case ActionToScene::ACTION_1S4:
@@ -100,6 +104,18 @@ void Actions::DoActions()
                OsisIf->GetWarmUpStartList(WarmUpGroupNameList);
                GenerateHtml("obs/current_warmup_group.html", WarmUpGroupNameList);
                GenerateHtml("obs/current_warmup_group_number", OsisIf->GetCurrentWarmUpGroupNumber());
+
+               GenerateEventInfoHtml("obs/event/index.html");
+
+               GenerateSkaterInfoHtml("obs/skater/index.html");
+
+               QMap<int, QList<QString>> StartList;
+               OsisIf->GetStartList(StartList);
+               GenerateNewHtmlList("obs/startlist/index.html", StartList, "START LIST");
+
+               QMap<int, QList<QString>> WarmUpEntries;
+               OsisIf->GetWarmUpList(WarmUpEntries);
+               GenerateNewHtmlList("obs/warmup/index.html", WarmUpEntries, "WARM UP GROUP " + OsisIf->GetCurrentWarmUpGroupNumber());
             }
             break;
          case ActionToScene::ACTION_IDT:
@@ -145,6 +161,13 @@ void Actions::DoActions()
                GenerateHtml("obs/starting_order.html", SegmentStartList);
                QMap<int, QList<QString>> WarmUpGroupNameList;
                GenerateHtml("obs/current_warmup_group.html", WarmUpGroupNameList);
+
+               QMap<int, QList<QString>> StartList;
+               GenerateNewHtmlList("obs/startlist/index.html", StartList, "START LIST");
+
+               QMap<int, QList<QString>> ResultList;
+               OsisIf->GetResultList(ResultList);
+               GenerateNewHtmlList("obs/resultlist/index.html", ResultList, "RESULT");
             }
             break;
          case ActionToScene::ACTION_NXT:
@@ -160,6 +183,10 @@ void Actions::DoActions()
                   {
                      if (stnum == group+1)
                      {
+                        QMap<int, QList<QString>> WarmUpEntries;
+                        OsisIf->GetWarmUpList(WarmUpEntries);
+                        GenerateNewHtmlList("obs/warmup/index.html", WarmUpEntries, "WARM UP GROUP " + OsisIf->GetCurrentWarmUpGroupNumber());
+
                         action = ActionToScene::ACTION_WUP;
                      }
                   }
@@ -168,6 +195,8 @@ void Actions::DoActions()
                GenerateHtml("obs/current_start_number", OsisIf->GetCurrentSkaterNumber());
                GenerateHtml("obs/current_skater_club", OsisIf->GetCurrentSkaterClub());
                GenerateHtml("obs/current_skater_nation", OsisIf->GetCurrentSkaterNation());
+
+               GenerateSkaterInfoHtml("obs/skater/index.html");
             }
             break;
          case ActionToScene::ACTION_PRV:
@@ -319,38 +348,67 @@ void Actions::GenerateHtml(const QString& fileName, QMap<int, QList<QString> >& 
    SaveToFile(fileName, html);
 }
 
-void Actions::GenerateNewHtml(const QString& fileName, QMap<int, QList<QString> >& outputList)
+void Actions::GenerateNewHtmlList(const QString& fileName, QMap<int, QList<QString> >& outputList, const QString& headLine)
 {
    int i;
    QFileInfo fileInfo(fileName);
    QString outputFile = fileInfo.fileName();
-   int groups = ceil(outputList.count() / 8);
+   float groups = (float)outputList.count() / (float)MAX_LIST_ENTRIES;
    QString html;
    html  = "<!DOCTYPE html>";
-   html += "<html><head><meta charset=\"UTF-8\"><link rel=\"stylesheet\" href=\"../css/style" + QString::number(groups) +".css\"></head><body>";
-   html += "<META HTTP-EQUIV=\"refresh\" CONTENT=\"5\"; URL=http://localhost:8080/" + outputFile + "\">";
-   html += "<link rel=\"stylesheet\" href=\"fs_info.css\"> </head>";
-   html += "<body class=\"PageBody\">";
-   html += "<table width=\"100%\" align=\"center\" border=\"0\" cellspacing=\"1\">";
+   html += "<html><head><link rel=\"stylesheet\" href=\"../css/style" + QString::number(ceil(groups)) +".css\"></head><body>";
+   html += "<div class=\"dsu_list_bar\"><img src=\"../img/list.png\"></div>";
+   QString categoryName = OsisIf->GetCategoryName();
+   html += "<div class=\"dsu_category\"><p>" + categoryName.toUtf8() + "</p></div>";
+   QString segmentName = OsisIf->GetSegmentName();
+   html += "<div class=\"dsu_segment\"><p>" + headLine + " - " + segmentName.toUtf8() + "</p></div>";
+   html += "<div class=\"dsu_slides\"><ul>";
+
+   int entry = 0;
    for (auto startNum : outputList.keys())
    {
-      QList<QString> info = outputList[startNum];
-      int columns = info.size();
-      if (columns == 0)
+       QList<QString> info = outputList[startNum];
+       int columns = info.size();
+       if (columns == 0)
+       {
+          continue;
+       }
+
+      if (entry == 0)
       {
-         continue;
+         html += "<li><div class=\"dsu_list\"><table class=\"dsu_list_table\"><tbody>";
       }
 
-      html += "<tr class=\"Line1White\">";
+      html += "<tr>";
       html += "<td>" + QString::number(startNum) + "</td>";
-      html += "<td class=\"CellLeft\"><a>" + info[0].toUtf8() + "</a></td>";
-      for (i = 1; i < columns; i++)
+      for (i = 0; i < columns; i++)
       {
-         html += "<td>" + info[i].toUtf8() + "</td>";
+         if (QString::compare(info[i], "0.00"))
+         {
+            html += "<td>" + info[i].toUtf8() + "</td>";
+         }
+         else
+         {
+            html += "<td></td>";
+         }
       }
       html += "</tr>";
+
+      if (entry == MAX_LIST_ENTRIES - 1)
+      {
+         html += "</tbody></table></div></li>";
+         entry = 0;
+      }
+      else
+      {
+         entry++;
+      }
    }
-   html += "</table></body></html>";
+   if (entry)
+   {
+      html += "</tbody></table></div></li>";
+   }
+   html += "</ul></div></body></html>";
    SaveToFile(fileName, html);
 }
 
@@ -371,4 +429,75 @@ void Actions::GenerateHtml(const QString& fName, const QString& text)
    html += "<td class=\"CellLeft\"><a>" + text.toUtf8() + "</a></td>";
    html += "</tr></table></body></html>";
    SaveToFile(fName + ".html", html);
+}
+
+void Actions::GenerateResultHtml(const QString& fName)
+{
+    QFileInfo fileInfo(fName);
+    QString outputFile = fileInfo.fileName();
+    QString html;
+
+    html = "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"../css/style_result.css\"></head><body>";
+    html +="<div class=\"dsu_list_bar\"><img src=\"../img/info_bar.png\"></div>";
+    html += "<div class=\"dsu_participant_info\">";
+    html += "<div class=\"dsu_participant_name\">" + OsisIf->GetCurrentSkaterName().toUtf8() + "</div>";
+    html += "<div class=\"dsu_participant_club\">" + OsisIf->GetCurrentSkaterNation() + " " + OsisIf->GetCurrentSkaterClub() + "</div>";
+    html += "<div id=\"score-animation-3\" class=\"dsu_rank\">" + OsisIf->GetTRank() + "</div>";
+    html += "</div><div class=\"dsu_participant_score\">";
+    html += "<div class=\"dsu_tes\"></div><div class=\"dsu_tes_score\">" + OsisIf->GetTES() + "</div>";
+    html += "<div class=\"dsu_tcs\"></div><div class=\"dsu_tcs_score\">" + OsisIf->GetTCS() + "</div>";
+    html += "<div class=\"dsu_ded\"></div><div class=\"dsu_ded_value\">" + OsisIf->GetDeduction() + "</div>";
+    if (!QString::compare(OsisIf->GetSegmentAbbreviation(), "SP"))
+    {
+       html += "<div id=\"score-animation-1\" class=\"dsu_short_program\"></div>";
+       html += "<div id=\"score-animation-1\" class=\"dsu_segment_score\">" + OsisIf->GetPoints() + "</div>";
+    }
+    else
+    {
+       html += "<div id=\"score-animation-1\" class=\"dsu_free_program\"></div>";
+       html += "<div id=\"score-animation-1\" class=\"dsu_segment_score\">" + OsisIf->GetPoints() + "</div>";
+       html += "<div id=\"score-animation-2\"  class=\"dsu_total\"></div>";
+       html += "<div id=\"score-animation-2\"  class=\"dsu_total_score\">" + OsisIf->GetTPoints() + "</div>";
+    }
+    html += "</div></body></html>";
+    SaveToFile(fName, html);
+}
+
+void Actions::GenerateSkaterInfoHtml(const QString& fName)
+{
+    QFileInfo fileInfo(fName);
+    QString outputFile = fileInfo.fileName();
+    QString html;
+
+    html = "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"../css/style_name.css\"></head><body>";
+    html +="<div class=\"dsu_list_bar\"><img src=\"../img/info_bar.png\"></div>";
+    html += "<div class=\"dsu_info_table_participant\">";
+    html += "<table class=\"dsu_participant_data\"><tr>";
+    html += "<td>" + OsisIf->GetCurrentSkaterNumber() + "</td>";
+    html += "<td>" + OsisIf->GetCurrentSkaterNation() + " " + OsisIf->GetCurrentSkaterClub() + "</td>";
+    html += "<td>" + OsisIf->GetCurrentSkaterName().toUtf8() + "</td></tr></table></div>";
+    html += "<div class=\"dsu_info_table_info\">";
+    html += "<table class=\"dsu_participant_group\"><tr>";
+    html += "<td>" + OsisIf->GetCategoryName().toUtf8() + "</td>";
+    html += "<td>" + OsisIf->GetSegmentName().toUtf8() + "</td>";
+    if (QString::compare(OsisIf->GetSegmentAbbreviation(), "SP") && QString::compare(OsisIf->GetTPoints(),"0.00"))
+    {
+        html += "<td>Short Program</td><td>" + OsisIf->GetTPoints() + "</td>";
+    }
+    html += "</tr></table></div></body></html>";
+    SaveToFile(fName, html);
+}
+
+void Actions::GenerateEventInfoHtml(const QString& fName)
+{
+    QFileInfo fileInfo(fName);
+    QString outputFile = fileInfo.fileName();
+    QString html;
+
+    html = "<html><head><link rel=\"stylesheet\" type=\"text/css\" href=\"../css/style_event.css\"></head><body>";
+    html +="<div class=\"dsu_list_bar\"><img src=\"../img/info_bar.png\"></div>";
+    html += "<div class=\"dsu_event_type\"></div>";
+    html += "<div class=\"dsu_event_info\"><div class=\"dsu_category\">" + OsisIf->GetCategoryName().toUtf8() + "</div>";
+    html += "<div class=\"dsu_segment\">" + OsisIf->GetSegmentName().toUtf8() + "</div></div></body></html>";
+    SaveToFile(fName, html);
 }

@@ -29,8 +29,11 @@ signals:
 private:
    void SaveToFile(const QString& file, QString text);
    void GenerateHtml(const QString& fileName, QMap<int, QList<QString> >& outputList);
-   void GenerateNewHtml(const QString& fileName, QMap<int, QList<QString> >& outputList);
+   void GenerateNewHtmlList(const QString& fileName, QMap<int, QList<QString> >& outputList, const QString &headLine);
    void GenerateHtml(const QString& fileName, const QString& text);
+   void GenerateEventInfoHtml(const QString& fileName);
+   void GenerateSkaterInfoHtml(const QString& fileName);
+   void GenerateResultHtml(const QString& fileName);
    void GenerateSegmentResultListHtml(QMap<int, QList<QString>>& segmentResultList);
    void GenerateWarmUpStartListHtml(QMap<int, QList<QString>>& warmUpGroupNameList);
 

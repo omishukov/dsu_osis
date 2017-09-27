@@ -12,14 +12,14 @@ body {
   font-family: TableFont;
 }
 
-div.dsu_bar {
+.dsu_list_bar {
     position: absolute;
     top: 900px;
     left: 180px;
     border: 0px;
 }
 
-.participant_info {
+.dsu_participant_info {
     position: absolute;
     top: 910px;
     left: 200px;
@@ -27,13 +27,13 @@ div.dsu_bar {
     display:inline-block;
     font-family: TableFont;
 }
-.participant_name {
+.dsu_participant_name {
 	position: relative;
     float: left;
     font-size: 60px;
     border:0px solid red;
 }
-.participant_club
+.dsu_participant_club
 {
 	position: relative;
 	padding: 20px;
@@ -42,7 +42,7 @@ div.dsu_bar {
 	font-weight: bold;
 	border:0px solid green;
 }
-.participant_score
+.dsu_participant_score
 {
 	position: absolute;
     top: 990px;
@@ -53,47 +53,47 @@ div.dsu_bar {
 	color: white;
 	border:0px solid green;
 }
-.TES {
+.dsu_tes {
 	width: auto;
     font-family: TableFont;
 	float: left;
 	border:0px solid black;
 }
-.TES:after {
+.dsu_tes:after {
 	content: "Technical Elements";
 }
-.TES_score {
+.dsu_tes_score {
 	width: auto;
 	margin-left: 20px;
 	float: left;
 }
-.TCS {
+.dsu_tcs {
 	width: auto;
 	float: left;
 	margin-left: 40px;
 }
-.TCS:after {
+.dsu_tcs:after {
 	content: "Presentation";
 }
-.TCS_score {
+.dsu_tcs_score {
 	width: auto;
 	margin-left: 20px;
 	float: left;
 }
-.DED {
+.dsu_ded {
 	width: auto;
 	float: left;
 	margin-left: 40px;
 }
-.DED:after {
+.dsu_ded:after {
 	content: "Deduction";
 }
-.DED_value {
+.dsu_ded_value {
 	width: auto;
 	margin-left: 20px;
 	float: left;
 }
-.SC_SP {
+.dsu_short_program {
 	width: auto;
 	float: left;
 	margin-left: 30px;
@@ -105,10 +105,10 @@ div.dsu_bar {
     animation-fill-mode: forwards;
 
 }
-.SC_SP:after {
+.dsu_short_program:after {
 	content: "Short Program";
 }
-.SC_FP {
+.dsu_free_program {
 	width: auto;
 	float: left;
 	margin-left: 30px;
@@ -120,10 +120,10 @@ div.dsu_bar {
     animation-fill-mode: forwards;
 
 }
-.SC_FP:after {
+.dsu_free_program:after {
 	content: "Free Program";
 }
-.SEG_score {
+.dsu_segment_score {
 	position: relative;
 	width: auto;
 	top: -10px;
@@ -137,7 +137,7 @@ div.dsu_bar {
     animation-timing-function: ease-in-out;
     animation-fill-mode: forwards;
 }
-.TOTAL_text {
+.dsu_total {
 	position: relative;
 	width: auto;
 	float: left;
@@ -149,10 +149,10 @@ div.dsu_bar {
     animation-timing-function: ease-in-out;
     animation-fill-mode: forwards;
 }
-.TOTAL_text:after {
+.dsu_total:after {
 	content: "Total";
 }
-.TOTAL_score {
+.dsu_total_score {
 	position: relative;
 	width: auto;
 	top: -10px;
@@ -166,7 +166,7 @@ div.dsu_bar {
     animation-timing-function: ease-in-out;
     animation-fill-mode: forwards;
 }
-.rank {
+.dsu_rank {
 	position: relative;
     top: -2px;
 /*    left: 1080px;*/

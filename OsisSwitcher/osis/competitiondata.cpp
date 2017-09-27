@@ -430,6 +430,15 @@ QString OsisCompetitionData::GetSegmentName()
    return Segments[Current_Segment_Id]->GetAttribute(OsisSegment::Name);
 }
 
+QString OsisCompetitionData::GetSegmentAbbreviation()
+{
+    if (Current_Segment_Id == -1 || !Segments.contains(Current_Segment_Id))
+    {
+        return QString();
+    }
+    return Segments[Current_Segment_Id]->GetAttribute(OsisSegment::Abbreviation);
+}
+
 QString OsisCompetitionData::GetCategoryName()
 {
    if (Current_Category_Id == -1 || !Categories.contains(Current_Category_Id))
@@ -455,6 +464,25 @@ bool OsisCompetitionData::GetSegmentStartList(QMap<int, QList<QString> >& segmen
       segmentStartList[StartNum] = NameAndClub;
    }
    return true;
+}
+
+bool OsisCompetitionData::GetStartList(QMap<int, QList<QString> >& segmentStartList)
+{
+    for( auto performance : Performances)
+    {
+        int StartNum = performance->GetAttributeInt(OsisPerformance::Start_Number);
+        if (StartNum == -1 || performance->Id == -1 || !Participants.contains(performance->Id))
+        {
+            continue;
+        }
+        QList<QString> NameAndClub;
+        NameAndClub << Participants[performance->Id]->GetAttribute(OsisParticipant::Nation) <<
+                       Participants[performance->Id]->GetAttribute(OsisParticipant::Short_Name) <<
+                       Participants[performance->Id]->GetAttribute(OsisParticipant::TPoint);
+
+        segmentStartList[StartNum] = NameAndClub;
+    }
+    return true;
 }
 
 int OsisCompetitionData::CurrentStartNumber()
@@ -500,6 +528,42 @@ bool OsisCompetitionData::GetWarmUpStartList(QMap<int, QList<QString> >& warmUpS
       prev = wupNum;
    }
    return true;
+}
+
+bool OsisCompetitionData::GetWarmUpList(QMap<int, QList<QString> >& warmUpList)
+{
+    int stnum = CurrentStartNumber();
+    if (!stnum)
+    {
+        return false;
+    }
+    QList<int> wupGroups;
+    GetWarmUpGroupsList(wupGroups);
+
+    int prev = 0;
+    for (auto wupNum:wupGroups)
+    {
+        if (stnum <= wupNum)
+        {
+            for( auto performance : Performances)
+            {
+                int StartNum = performance->GetAttributeInt(OsisPerformance::Start_Number);
+                if (StartNum == -1 || performance->Id == -1 || StartNum <= prev || StartNum > wupNum || !Participants.contains(performance->Id))
+                {
+                    continue;
+                }
+                QList<QString> NameAndClub;
+                NameAndClub << Participants[performance->Id]->GetAttribute(OsisParticipant::Nation) <<
+                               Participants[performance->Id]->GetAttribute(OsisParticipant::Short_Name) <<
+                               Participants[performance->Id]->GetAttribute(OsisParticipant::TPoint);
+
+                warmUpList[StartNum] = NameAndClub;
+            }
+            break;
+        }
+        prev = wupNum;
+    }
+    return true;
 }
 
 QString OsisCompetitionData::GetCurrentWarmUpGroupNumber()

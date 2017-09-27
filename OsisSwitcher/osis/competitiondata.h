@@ -62,9 +62,12 @@ public:
    QString GetEventName();
    QString GetEventAbbreviation();
    QString GetSegmentName();
+   QString GetSegmentAbbreviation();
    QString GetCategoryName();
    bool GetSegmentStartList(QMap<int, QList<QString> >& segmentStartList);
+   bool GetStartList(QMap<int, QList<QString> >& segmentStartList);
    bool GetWarmUpStartList(QMap<int, QList<QString>>& warmUpStartList);
+   bool GetWarmUpList(QMap<int, QList<QString>>& warmUpList);
    bool GetSegmentResultList(QMap<int, QList<QString> >& segmentResultList);
    bool GetCategoryResultList(QMap<int, QList<QString> >& categoryResultList);
    bool GetResultList(QMap<int, QList<QString> >& resultList);

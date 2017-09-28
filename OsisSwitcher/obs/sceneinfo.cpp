@@ -94,9 +94,8 @@ void SceneInfo::SendHotkey()
        ip.ki.wVk = static_cast<uint16_t>(*it);
        ip.ki.dwFlags = 0; // 0 for key press
        SendInput(1, &ip, sizeof(INPUT));
-       QThread::sleep(250);
    }
-   QThread::sleep(250);
+   Sleep(100);
    // Release the keys in reverse order
    it--;
    for ( ; it != Hotkeys.constBegin(); --it )
@@ -104,12 +103,11 @@ void SceneInfo::SendHotkey()
        ip.ki.wVk = static_cast<uint16_t>(*it);
        ip.ki.dwFlags = KEYEVENTF_KEYUP;
        SendInput(1, &ip, sizeof(INPUT));
-       QThread::sleep(250);
    }
    ip.ki.wVk = static_cast<uint16_t>(*it);
    ip.ki.dwFlags = KEYEVENTF_KEYUP;
    SendInput(1, &ip, sizeof(INPUT));
-   QThread::sleep(300);
+   Sleep(100);
 
    if (Transition)
    {

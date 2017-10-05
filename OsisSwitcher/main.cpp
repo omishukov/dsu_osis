@@ -68,21 +68,24 @@ void logOutput(QtMsgType type, const QMessageLogContext &/*context*/, const QStr
 
 int main(int argc, char *argv[])
 {
+   /// Setup Logging
    QString fileName = argv[0];
    fileName.replace(".exe", ".log");
    logfile = new QFile(fileName);
    if (logfile->open(QIODevice::Append | QIODevice::Text))
    {
       out = new QTextStream(logfile);
+      qInstallMessageHandler(logOutput);
    }
-   qInstallMessageHandler(logOutput);
 
+   /// Start UI
    QApplication a(argc, argv);
    MainWindow w;
    w.show();
 
    bool res = a.exec();
 
+   /// Shitdown Logging
    qInstallMessageHandler(0);
    if (out)
    {

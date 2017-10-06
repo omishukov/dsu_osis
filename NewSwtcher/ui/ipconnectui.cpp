@@ -9,6 +9,10 @@ IpConnectUi::IpConnectUi(Configuration &config, const QString &group, QWidget *p
    : QWidget(parent)
    , qs_GroupBoxName(group)
    , ipConfig(config)
+   , qpb_ConnectionAction(Connect)
+   , ql_ConnectionState(Disconnected)
+   , qme_ConnectionAction(QMetaEnum::fromType<ConnectionButtonAction>())
+   , qme_ConnectionState(QMetaEnum::fromType<ConnectionLabelState>())
 {
    qgb_IsuCalcFsConnect = new QGroupBox(qs_GroupBoxName);
 
@@ -18,14 +22,18 @@ IpConnectUi::IpConnectUi(Configuration &config, const QString &group, QWidget *p
       IpPort = "4000";
    }
 
-   ql_IpAddressPort = new QLabel(IpAddress + ":" + IpPort);
-   ql_IpStatus = new QLabel("Disconnected");
+   ql_IpAddressPort = new QLabel(IpAddress + " : " + IpPort);
+   ql_IpAddressPort->setAlignment(Qt::AlignCenter);
+   ql_IpStatus = new QLabel(qme_ConnectionState.valueToKey(ql_ConnectionState));
    ql_IpStatus->setMaximumWidth(80);
    ql_IpStatus->setStyleSheet("border: 1px solid");
+   ql_IpStatus->setAlignment(Qt::AlignCenter);
+
    qpb_Edit = new QPushButton("...");
    qpb_Edit->setMaximumWidth(20);
    connect(qpb_Edit, SIGNAL (released()), this, SLOT (editButton()));
-   qpb_Connect = new QPushButton("Connect");
+
+   qpb_Connect = new QPushButton(qme_ConnectionAction.valueToKey(qpb_ConnectionAction));
    connect(qpb_Connect, SIGNAL (released()), this, SLOT (connectButton()));
 
    QHBoxLayout *connectionLayout = new QHBoxLayout;
@@ -46,13 +54,21 @@ IpConnectUi::IpConnectUi(Configuration &config, const QString &group, QWidget *p
 
 void IpConnectUi::editButton()
 {
+   // TODO: Disable Edit button in "Connected" state
+
    ChangeIpInfo dialog(IpAddress, IpPort, this);
    if(dialog.exec() == QDialog::Accepted)
    {
-     QString ipAddr;
-     QString ipPort;
-     dialog.GetIpInfo(ipAddr, ipPort);
-     ql_IpAddressPort->setText(ipAddr + " : " + ipPort );
+      QString ipAddr;
+      QString ipPort;
+      dialog.GetIpInfo(ipAddr, ipPort);
+      if (QString::compare(IpAddress, ipAddr) || QString::compare(IpPort, ipPort))
+      {
+         IpAddress = ipAddr;
+         IpPort = ipPort;
+         ipConfig.SaveIpInfo(qs_GroupBoxName, IpAddress, IpPort);
+         ql_IpAddressPort->setText(IpAddress + " : " + IpPort );
+      }
    }
 }
 

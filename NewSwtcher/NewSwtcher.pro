@@ -2,7 +2,8 @@ SOURCES += \
     main.cpp \
     ui/userinterface.cpp \
     ui/ipconnectui.cpp \
-    configuration.cpp
+    configuration.cpp \
+    tracelog.cpp
 
 TEMPLATE = app
 TARGET = name_of_the_app
@@ -14,4 +15,5 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 HEADERS += \
     ui/userinterface.h \
     ui/ipconnectui.h \
-    configuration.h
+    configuration.h \
+    tracelog.h

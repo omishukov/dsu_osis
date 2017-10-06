@@ -9,6 +9,7 @@ public:
    Configuration(QString &fileName);
 
    bool GetIpInfo(const QString& group, QString& ipAddr, QString& ipPort);
+   void SaveIpInfo(const QString& group, const QString& ipAddr, const QString& ipPort);
 
 private:
    QSettings qset_ConfigFile;

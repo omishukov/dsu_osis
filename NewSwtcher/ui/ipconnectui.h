@@ -7,6 +7,7 @@
 #include <QPushButton>
 #include <QDialog>
 #include <QLineEdit>
+#include <QMetaEnum>
 #include <configuration.h>
 
 class IpConnectUi : public QWidget
@@ -14,6 +15,21 @@ class IpConnectUi : public QWidget
    Q_OBJECT
 public:
    explicit IpConnectUi(Configuration& config, const QString& group, QWidget *parent = nullptr);
+
+   typedef enum ConnectionButtonAction
+   {
+      Connect,
+      Disconnect
+   } QPB_ConnectionAction;
+   Q_ENUM(ConnectionButtonAction)
+
+   typedef enum ConnectionLabelState
+   {
+      Disconnected,
+      Connecting,
+      Connected
+   } QL_ConnectionState;
+   Q_ENUM(ConnectionLabelState)
 
 signals:
 
@@ -30,9 +46,11 @@ private:
    QPushButton* qpb_Connect;
    QString IpAddress;
    QString IpPort;
-
-
    Configuration& ipConfig;
+   QPB_ConnectionAction qpb_ConnectionAction;
+   QL_ConnectionState ql_ConnectionState;
+   QMetaEnum qme_ConnectionAction;
+   QMetaEnum qme_ConnectionState;
 };
 
 class ChangeIpInfo : public QDialog

@@ -2,9 +2,14 @@
 #include <QPushButton>
 #include <ui/userinterface.h>
 #include <configuration.h>
+#include "link/osislink.h"
+#include "link/obslink.h"
 
 void SetupLog(QString& fName);
 void CloseLog();
+
+const QString IsuCalcFsGroupName = "IsuCalcFs";
+const QString ObsGroupName = "OBS";
 
 int main(int argc, char **argv)
 {
@@ -17,7 +22,10 @@ int main(int argc, char **argv)
    configFileName.replace(".exe", ".ini");
    Configuration app_Config(configFileName);
 
-   UserInterface ui(app_Config);
+   OsisLink osisLink(IsuCalcFsGroupName, app_Config);
+   ObsLink obsLink(ObsGroupName, app_Config);
+
+   UserInterface ui(osisLink, obsLink);
    ui.setFixedSize(800, 600);
    ui.show();
 

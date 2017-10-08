@@ -2,14 +2,11 @@
 #include <QVBoxLayout>
 #include "userinterface.h"
 
-const QString IsuCalcFsGroupName = "IsuCalcFs";
-const QString ObsGroupName = "OBS";
-
-UserInterface::UserInterface(Configuration &config, QWidget *parent)
+UserInterface::UserInterface(LinkIf& osisLinkIf, LinkIf& obsLinkIf, QWidget *parent)
    : QWidget(parent)
 {
-   qw_calcFsUi = new IpConnectUi(config, IsuCalcFsGroupName);
-   qw_ObsUi = new IpConnectUi(config, ObsGroupName);
+   qw_calcFsUi = new IpConnectUi(osisLinkIf);
+   qw_ObsUi = new IpConnectUi(obsLinkIf);
 
    QHBoxLayout *connectionLayout = new QHBoxLayout;
    connectionLayout->addWidget(qw_calcFsUi);

@@ -3,7 +3,10 @@ SOURCES += \
     ui/userinterface.cpp \
     ui/ipconnectui.cpp \
     configuration.cpp \
-    tracelog.cpp
+    tracelog.cpp \
+    link/osislink.cpp \
+    link/linkif.cpp \
+    link/obslink.cpp
 
 TEMPLATE = app
 TARGET = name_of_the_app
@@ -16,4 +19,6 @@ HEADERS += \
     ui/userinterface.h \
     ui/ipconnectui.h \
     configuration.h \
-    tracelog.h
+    link/osislink.h \
+    link/linkif.h \
+    link/obslink.h

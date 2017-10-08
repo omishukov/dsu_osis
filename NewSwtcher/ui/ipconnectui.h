@@ -8,13 +8,13 @@
 #include <QDialog>
 #include <QLineEdit>
 #include <QMetaEnum>
-#include <configuration.h>
+#include <link/linkif.h>
 
 class IpConnectUi : public QWidget
 {
    Q_OBJECT
 public:
-   explicit IpConnectUi(Configuration& config, const QString& group, QWidget *parent = nullptr);
+   explicit IpConnectUi(LinkIf& linkIf, QWidget *parent = nullptr);
 
    typedef enum ConnectionButtonAction
    {
@@ -46,7 +46,7 @@ private:
    QPushButton* qpb_Connect;
    QString IpAddress;
    QString IpPort;
-   Configuration& ipConfig;
+   LinkIf& link_IF;
    QPB_ConnectionAction qpb_ConnectionAction;
    QL_ConnectionState ql_ConnectionState;
    QMetaEnum qme_ConnectionAction;

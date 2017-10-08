@@ -5,10 +5,10 @@
 #include <QDialogButtonBox>
 #include "ipconnectui.h"
 
-IpConnectUi::IpConnectUi(Configuration &config, const QString &group, QWidget *parent)
+IpConnectUi::IpConnectUi(LinkIf &linkIf, QWidget *parent)
    : QWidget(parent)
-   , qs_GroupBoxName(group)
-   , ipConfig(config)
+   , qs_GroupBoxName(linkIf.GetGroupName())
+   , link_IF(linkIf)
    , qpb_ConnectionAction(Connect)
    , ql_ConnectionState(Disconnected)
    , qme_ConnectionAction(QMetaEnum::fromType<ConnectionButtonAction>())
@@ -16,11 +16,7 @@ IpConnectUi::IpConnectUi(Configuration &config, const QString &group, QWidget *p
 {
    qgb_IsuCalcFsConnect = new QGroupBox(qs_GroupBoxName);
 
-   if (ipConfig.GetIpInfo(qs_GroupBoxName, IpAddress, IpPort) == false)
-   {
-      IpAddress = "127.0.0.1";
-      IpPort = "4000";
-   }
+   link_IF.GetIpInfo(IpAddress, IpPort);
 
    ql_IpAddressPort = new QLabel(IpAddress + " : " + IpPort);
    ql_IpAddressPort->setAlignment(Qt::AlignCenter);
@@ -66,7 +62,7 @@ void IpConnectUi::editButton()
       {
          IpAddress = ipAddr;
          IpPort = ipPort;
-         ipConfig.SaveIpInfo(qs_GroupBoxName, IpAddress, IpPort);
+         link_IF.SaveIpInfo(IpAddress, IpPort);
          ql_IpAddressPort->setText(IpAddress + " : " + IpPort );
       }
    }

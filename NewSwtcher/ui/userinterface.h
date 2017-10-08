@@ -2,13 +2,13 @@
 #include <QGroupBox>
 #include <QStackedWidget>
 #include "ipconnectui.h"
-#include <configuration.h>
+#include <link/linkif.h>
 
 class UserInterface : public QWidget
 {
    Q_OBJECT
 public:
-   explicit UserInterface(Configuration& config, QWidget *parent = nullptr);
+   explicit UserInterface(LinkIf& osisLinkIf, LinkIf& obsLinkIf, QWidget *parent = nullptr);
 
 signals:
 

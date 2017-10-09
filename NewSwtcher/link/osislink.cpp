@@ -61,3 +61,25 @@ void OsisLink::threadStarted()
 void OsisLink::threadFinished()
 {
 }
+
+void OsisLink::socketConnected()
+{
+   if (ui_If) return;
+   ui_If->LinkConnected();
+}
+
+void OsisLink::socketDisconnected()
+{
+   if (ui_If) return;
+   ui_If->LinkDisconnected();
+}
+
+void OsisLink::socketReadyRead()
+{
+
+}
+
+void OsisLink::socketError(QAbstractSocket::SocketError error)
+{
+
+}

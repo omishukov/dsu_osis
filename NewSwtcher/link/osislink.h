@@ -28,6 +28,11 @@ public slots:
    void threadStarted();
    void threadFinished();
 
+   void socketConnected();
+   void socketDisconnected();
+   void socketReadyRead();
+   void socketError(QAbstractSocket::SocketError error);
+
 private:
    QThread osisLinkThread;
    QTcpSocket* qtcp_Socket;

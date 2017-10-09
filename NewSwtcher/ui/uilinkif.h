@@ -4,8 +4,8 @@
 class UiLinkIf
 {
 public:
-   void LinkConnected();
-   void LinkDisconnected();
+   virtual void LinkConnected() = 0;
+   virtual void LinkDisconnected() = 0;
 };
 
 #endif // UILINKIF_H

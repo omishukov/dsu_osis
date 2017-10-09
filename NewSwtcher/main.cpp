@@ -28,6 +28,8 @@ int main(int argc, char **argv)
    obsLink.Start();
 
    UserInterface ui(osisLink, obsLink);
+   osisLink.SetUiIf(ui.GetOsisLinkIf());
+   obsLink.SetUiIf(ui.GetObsLinkIf());
    ui.setFixedSize(800, 600);
    ui.show();
 

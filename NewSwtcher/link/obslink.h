@@ -2,7 +2,8 @@
 #define OBSLINK_H
 
 #include <QObject>
-#include "linkif.h"
+#include <link/linkif.h>
+#include <ui/uilinkif.h>
 #include <configuration.h>
 
 class ObsLink : public QObject, public LinkIf
@@ -17,9 +18,15 @@ public:
    void Start();
    void Stop();
 
+   void SetUiIf(UiLinkIf* uiIf) { ui_If = uiIf; }
+
 signals:
 
 public slots:
+
+private:
+   UiLinkIf* ui_If;
+
 };
 
 #endif // OBSLINK_H

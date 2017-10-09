@@ -3,6 +3,7 @@
 ObsLink::ObsLink(const QString &connectionGroupName, Configuration &configFile, QObject *parent)
    : QObject(parent)
    , LinkIf(connectionGroupName, configFile)
+   , ui_If(0)
 {
 
 }

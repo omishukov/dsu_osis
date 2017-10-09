@@ -9,8 +9,9 @@
 #include <QLineEdit>
 #include <QMetaEnum>
 #include <link/linkif.h>
+#include <ui/uilinkif.h>
 
-class IpConnectUi : public QWidget
+class IpConnectUi : public QWidget, public UiLinkIf
 {
    Q_OBJECT
 public:
@@ -26,16 +27,24 @@ public:
    typedef enum ConnectionLabelState
    {
       Disconnected,
+      Disconnecting,
       Connecting,
       Connected
    } QL_ConnectionState;
    Q_ENUM(ConnectionLabelState)
+
+   void LinkConnected();
+   void LinkDisconnected();
 
 signals:
 
 public slots:
    void editButton();
    void connectButton();
+
+private:
+   void ChangeConnectionButton(QPB_ConnectionAction newAction);
+   void ChangeConnectionState(QL_ConnectionState newState);
 
 private:
    const QString qs_GroupBoxName;

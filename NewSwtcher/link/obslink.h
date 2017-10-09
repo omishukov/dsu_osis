@@ -14,6 +14,9 @@ public:
    void Connect();
    void Disconnect();
 
+   void Start();
+   void Stop();
+
 signals:
 
 public slots:

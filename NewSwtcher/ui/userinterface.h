@@ -10,6 +10,9 @@ class UserInterface : public QWidget
 public:
    explicit UserInterface(LinkIf& osisLinkIf, LinkIf& obsLinkIf, QWidget *parent = nullptr);
 
+   UiLinkIf* GetOsisLinkIf() { return qw_calcFsUi; }
+   UiLinkIf* GetObsLinkIf() { return qw_ObsUi; }
+
 signals:
 
 public slots:

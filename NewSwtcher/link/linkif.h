@@ -11,7 +11,7 @@ public:
 
    virtual void Connect() = 0;
    virtual void Disconnect() = 0;
-   QString GetGroupName() { return groupName; };
+   QString GetGroupName() { return groupName; }
    void GetIpInfo(QString& ipAddr, QString& ipPort);
    void SaveIpInfo(QString& ipAddr, QString& ipPort);
 

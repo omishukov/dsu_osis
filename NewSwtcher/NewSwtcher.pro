@@ -6,12 +6,15 @@ SOURCES += \
     tracelog.cpp \
     link/osislink.cpp \
     link/linkif.cpp \
-    link/obslink.cpp
+    link/obslink.cpp \
+    ui/uilinkif.cpp
 
 TEMPLATE = app
 TARGET = name_of_the_app
 
-QT = core gui
+QT  = core gui
+QT += network
+
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -21,4 +24,5 @@ HEADERS += \
     configuration.h \
     link/osislink.h \
     link/linkif.h \
-    link/obslink.h
+    link/obslink.h \
+    ui/uilinkif.h

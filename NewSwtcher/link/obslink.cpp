@@ -16,3 +16,13 @@ void ObsLink::Disconnect()
 {
 
 }
+
+void ObsLink::Start()
+{
+
+}
+
+void ObsLink::Stop()
+{
+
+}

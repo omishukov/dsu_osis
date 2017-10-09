@@ -48,6 +48,16 @@ IpConnectUi::IpConnectUi(LinkIf &linkIf, QWidget *parent)
    setLayout(mainLayout);
 }
 
+void IpConnectUi::LinkConnected()
+{
+   ChangeConnectionState(Connected);
+}
+
+void IpConnectUi::LinkDisconnected()
+{
+   ChangeConnectionState(Disconnected);
+}
+
 void IpConnectUi::editButton()
 {
    // TODO: Disable Edit button in "Connected" state
@@ -70,7 +80,34 @@ void IpConnectUi::editButton()
 
 void IpConnectUi::connectButton()
 {
+   switch (qpb_ConnectionAction) {
+   case Connect:
+      {
+         link_IF.Connect();
+         ChangeConnectionButton(Disconnect);
+         ChangeConnectionState(Connecting);
+      }
+      break;
+   case Disconnect:
+      {
+         link_IF.Disconnect();
+         ChangeConnectionButton(Connect);
+         ChangeConnectionState(Disconnecting);
+      }
+      break;
+   }
+}
 
+void IpConnectUi::ChangeConnectionButton(IpConnectUi::QPB_ConnectionAction newAction)
+{
+   qpb_ConnectionAction = newAction;
+   qpb_Connect->setText(qme_ConnectionAction.valueToKey(qpb_ConnectionAction));
+}
+
+void IpConnectUi::ChangeConnectionState(IpConnectUi::QL_ConnectionState newState)
+{
+   ql_ConnectionState = newState;
+   ql_IpStatus->setText(qme_ConnectionState.valueToKey(ql_ConnectionState));
 }
 
 ChangeIpInfo::ChangeIpInfo(const QString &ipAddr, const QString &ipPort, QWidget *parent)

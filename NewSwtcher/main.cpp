@@ -24,6 +24,8 @@ int main(int argc, char **argv)
 
    OsisLink osisLink(IsuCalcFsGroupName, app_Config);
    ObsLink obsLink(ObsGroupName, app_Config);
+   osisLink.Start();
+   obsLink.Start();
 
    UserInterface ui(osisLink, obsLink);
    ui.setFixedSize(800, 600);
@@ -31,6 +33,8 @@ int main(int argc, char **argv)
 
    int res = app.exec();
 
+   osisLink.Stop();
+   obsLink.Stop();
    CloseLog();
 
    return res;

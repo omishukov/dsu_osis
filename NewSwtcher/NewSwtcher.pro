@@ -7,7 +7,8 @@ SOURCES += \
     link/osislink.cpp \
     link/linkif.cpp \
     link/obslink.cpp \
-    ui/uilinkif.cpp
+    ui/uilinkif.cpp \
+    osis/dataqueue.cpp
 
 TEMPLATE = app
 TARGET = name_of_the_app
@@ -25,4 +26,5 @@ HEADERS += \
     link/osislink.h \
     link/linkif.h \
     link/obslink.h \
-    ui/uilinkif.h
+    ui/uilinkif.h \
+    osis/dataqueue.h

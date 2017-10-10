@@ -1,3 +1,4 @@
+#include <QMutexLocker>
 #include "obslink.h"
 
 ObsLink::ObsLink(const QString &connectionGroupName, Configuration &configFile, QObject *parent)

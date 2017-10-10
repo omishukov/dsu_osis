@@ -28,6 +28,7 @@ public:
 signals:
    void linkConnect();
    void linkDisconnect();
+   void terminate();
 
 public slots:
    void threadStarted();
@@ -40,6 +41,8 @@ public slots:
    void socketDisconnected();
    void socketReadyRead();
    void socketError(QAbstractSocket::SocketError error);
+
+   void threadTerminate();
 
 private:
    void ProcessData(QByteArray qba);

@@ -14,6 +14,8 @@ OsisLink::OsisLink(const QString &connectionGroupName, Configuration& configFile
 
    connect(this, SIGNAL(linkConnect()), this, SLOT(socketConnect()), Qt::QueuedConnection);
    connect(this, SIGNAL(linkDisconnect()), this, SLOT(socketDisconnect()), Qt::QueuedConnection);
+
+   connect(this, SIGNAL(terminate()), this, SLOT(threadTerminate()), Qt::QueuedConnection);
 }
 
 void OsisLink::Connect()
@@ -33,13 +35,12 @@ void OsisLink::Start()
 
 void OsisLink::Stop()
 {
-   socketDisconnect();
-   osisLinkThread.quit();
-   osisLinkThread.wait();
+   emit terminate();
 }
 
 void OsisLink::threadStarted()
 {
+   qInfo() << "Osis Link started" << endl;
 }
 
 void OsisLink::threadFinished()
@@ -78,8 +79,8 @@ void OsisLink::socketDisconnect()
       if (qtcp_Socket && qtcp_Socket->isOpen())
       {
          qtcp_Socket->disconnectFromHost();
-         qtcp_Socket->close();
-         qtcp_Socket->reset();
+//         qtcp_Socket->close();
+//         qtcp_Socket->reset();
       }
       delete qtcp_Socket;
       qtcp_Socket = 0;
@@ -115,6 +116,13 @@ void OsisLink::socketReadyRead()
 void OsisLink::socketError(QAbstractSocket::SocketError error)
 {
    qInfo() << "Socket error: " << error << endl;
+}
+
+void OsisLink::threadTerminate()
+{
+   socketDisconnect();
+   osisLinkThread.quit();
+//   osisLinkThread.wait();
 }
 
 const quint8 STX = 0x02;

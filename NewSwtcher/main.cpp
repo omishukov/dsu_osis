@@ -29,7 +29,6 @@ int main(int argc, char **argv)
    osisLink.Start();
    obsLink.Start();
 
-   QTcpSocket* sock = new QTcpSocket;
    QApplication app (argc, argv);
    UserInterface ui(osisLink, obsLink);
    osisLink.SetUiIf(ui.GetOsisLinkIf());
@@ -37,8 +36,6 @@ int main(int argc, char **argv)
    ui.setFixedSize(800, 600);
    ui.show();
    int res = app.exec();
-
-   delete sock;
 
    osisLink.SetUiIf(0);
    obsLink.SetUiIf(0);

@@ -15,6 +15,7 @@ TARGET = name_of_the_app
 
 QT  = core gui
 QT += network
+QT += websockets
 
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets

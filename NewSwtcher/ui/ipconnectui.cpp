@@ -51,11 +51,20 @@ IpConnectUi::IpConnectUi(LinkIf &linkIf, QWidget *parent)
 void IpConnectUi::LinkConnected()
 {
    ChangeConnectionState(Connected);
+   ChangeConnectionButton(Disconnect);
 }
 
 void IpConnectUi::LinkDisconnected()
 {
-   ChangeConnectionState(Disconnected);
+   if (ql_ConnectionState == Disconnecting)
+   {
+      ChangeConnectionState(Disconnected);
+      ChangeConnectionButton(Connect);
+   }
+   else
+   {
+      ChangeConnectionState(Connecting);
+   }
 }
 
 void IpConnectUi::editButton()

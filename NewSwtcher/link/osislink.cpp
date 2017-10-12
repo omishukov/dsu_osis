@@ -7,6 +7,8 @@ OsisLink::OsisLink(const QString &connectionGroupName, Configuration& configFile
    , qtcp_Socket(0)
    , ui_If(0)
    , osisDataQueue(dataQueue)
+   , terminateRequest(false)
+   , socketServerClosed(false)
 {
    moveToThread(&osisLinkThread);
    connect(&osisLinkThread, SIGNAL(started()), this, SLOT(threadStarted())); // on thread start
@@ -65,8 +67,7 @@ void OsisLink::socketConnect()
    connect(qtcp_Socket, SIGNAL(readyRead()), this, SLOT(socketReadyRead()));
    connect(qtcp_Socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketError(QAbstractSocket::SocketError)));
 
-   GetIpInfo(Host, Port);
-   qtcp_Socket->connectToHost(Host, Port.toShort(), QIODevice::ReadOnly);
+   Reconnect();
 }
 
 void OsisLink::socketDisconnect()
@@ -75,12 +76,12 @@ void OsisLink::socketDisconnect()
 
    if (qtcp_Socket)
    {
+      qtcp_Socket->disconnect();
       disconnect(qtcp_Socket, 0, 0, 0);
-      if (qtcp_Socket && qtcp_Socket->isOpen())
+      if (qtcp_Socket && qtcp_Socket->state() == QAbstractSocket::ConnectedState)
       {
          qtcp_Socket->disconnectFromHost();
-//         qtcp_Socket->close();
-//         qtcp_Socket->reset();
+         qtcp_Socket->close();
       }
       delete qtcp_Socket;
       qtcp_Socket = 0;
@@ -91,6 +92,8 @@ void OsisLink::socketDisconnect()
 
 void OsisLink::socketConnected()
 {
+   socketServerClosed = false;
+
    if (!ui_If) { return; }
 
    ui_If->LinkConnected();
@@ -98,9 +101,15 @@ void OsisLink::socketConnected()
 
 void OsisLink::socketDisconnected()
 {
-   if (!ui_If) { return; }
+   if (!ui_If || terminateRequest) { return; }
 
    ui_If->LinkDisconnected();
+
+   if (socketServerClosed)
+   {
+      socketServerClosed = false;
+      Reconnect();
+   }
 }
 
 void OsisLink::socketReadyRead()
@@ -116,10 +125,26 @@ void OsisLink::socketReadyRead()
 void OsisLink::socketError(QAbstractSocket::SocketError error)
 {
    qInfo() << "Socket error: " << error << endl;
+
+   if (error == QAbstractSocket::RemoteHostClosedError)
+   {
+      socketServerClosed = true;
+   }
+   else
+   {
+      socketConnect();
+   }
+}
+
+void OsisLink::Reconnect()
+{
+   GetIpInfo(Host, Port);
+   qtcp_Socket->connectToHost(Host, Port.toShort(), QIODevice::ReadOnly);
 }
 
 void OsisLink::threadTerminate()
 {
+   terminateRequest = true;
    socketDisconnect();
    osisLinkThread.quit();
 //   osisLinkThread.wait();

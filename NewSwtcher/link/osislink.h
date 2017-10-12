@@ -46,6 +46,7 @@ public slots:
 
 private:
    void ProcessData(QByteArray qba);
+   void Reconnect();
 
 private:
    QThread osisLinkThread;
@@ -56,7 +57,8 @@ private:
    QByteArray RemainingQBA;
    QString Host;
    QString Port;
-
+   bool terminateRequest;
+   bool socketServerClosed;
 };
 
 #endif // OSISLINK_H

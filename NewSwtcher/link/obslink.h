@@ -2,6 +2,7 @@
 #define OBSLINK_H
 
 #include <QObject>
+#include <QWebSocket>
 #include <link/linkif.h>
 #include <ui/uilinkif.h>
 #include <configuration.h>
@@ -26,6 +27,7 @@ public slots:
 
 private:
    UiLinkIf* ui_If;
+   QWebSocket obsWebSocketClient;
 
 };
 

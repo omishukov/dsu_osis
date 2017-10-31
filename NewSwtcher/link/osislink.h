@@ -57,7 +57,6 @@ private:
    QByteArray RemainingQBA;
    QString Host;
    QString Port;
-   bool terminateRequest;
    bool socketServerClosed;
 };
 

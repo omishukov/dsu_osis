@@ -7,7 +7,6 @@ OsisLink::OsisLink(const QString &connectionGroupName, Configuration& configFile
    , qtcp_Socket(0)
    , ui_If(0)
    , osisDataQueue(dataQueue)
-   , terminateRequest(false)
    , socketServerClosed(false)
 {
    moveToThread(&osisLinkThread);
@@ -38,6 +37,7 @@ void OsisLink::Start()
 void OsisLink::Stop()
 {
    emit terminate();
+   osisLinkThread.wait();
 }
 
 void OsisLink::threadStarted()
@@ -101,7 +101,7 @@ void OsisLink::socketConnected()
 
 void OsisLink::socketDisconnected()
 {
-   if (!ui_If || terminateRequest) { return; }
+   if (!ui_If) { return; }
 
    ui_If->LinkDisconnected();
 
@@ -132,7 +132,7 @@ void OsisLink::socketError(QAbstractSocket::SocketError error)
    }
    else
    {
-      socketConnect();
+      Reconnect();
    }
 }
 
@@ -144,10 +144,9 @@ void OsisLink::Reconnect()
 
 void OsisLink::threadTerminate()
 {
-   terminateRequest = true;
+   ui_If = 0;
    socketDisconnect();
    osisLinkThread.quit();
-//   osisLinkThread.wait();
 }
 
 const quint8 STX = 0x02;

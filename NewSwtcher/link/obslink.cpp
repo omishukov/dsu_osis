@@ -28,3 +28,13 @@ void ObsLink::Stop()
 {
 
 }
+
+void ObsLink::threadStarted()
+{
+
+}
+
+void ObsLink::threadFinished()
+{
+
+}

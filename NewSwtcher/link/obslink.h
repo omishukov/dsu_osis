@@ -22,8 +22,13 @@ public:
    void SetUiIf(UiLinkIf* uiIf) { ui_If = uiIf; }
 
 signals:
+   void linkConnect();
+   void linkDisconnect();
+   void terminate();
 
 public slots:
+   void threadStarted();
+   void threadFinished();
 
 private:
    UiLinkIf* ui_If;

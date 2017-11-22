@@ -8,7 +8,8 @@ SOURCES += \
     link/linkif.cpp \
     link/obslink.cpp \
     ui/uilinkif.cpp \
-    osis/dataqueue.cpp
+    osis/dataqueue.cpp \
+    link/linkbase.cpp
 
 TEMPLATE = app
 TARGET = name_of_the_app
@@ -16,7 +17,6 @@ TARGET = name_of_the_app
 QT  = core gui
 QT += network
 QT += websockets
-
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -28,4 +28,5 @@ HEADERS += \
     link/linkif.h \
     link/obslink.h \
     ui/uilinkif.h \
-    osis/dataqueue.h
+    osis/dataqueue.h \
+    link/linkbase.h

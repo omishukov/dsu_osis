@@ -1,38 +1,33 @@
 #ifndef OBSLINK_H
 #define OBSLINK_H
 
-#include <QObject>
 #include <QWebSocket>
 #include <link/linkif.h>
-#include <ui/uilinkif.h>
 #include <configuration.h>
+#include "link/linkbase.h"
 
-class ObsLink : public QObject, public LinkIf
+class ObsLink : public BaseLink
 {
    Q_OBJECT
 public:
    explicit ObsLink(const QString& connectionGroupName, Configuration& configFile, QObject *parent = nullptr);
 
-   void Connect();
-   void Disconnect();
-
-   void Start();
-   void Stop();
-
-   void SetUiIf(UiLinkIf* uiIf) { ui_If = uiIf; }
-
 signals:
-   void linkConnect();
-   void linkDisconnect();
-   void terminate();
 
 public slots:
-   void threadStarted();
-   void threadFinished();
+   void SlotSocketReadyRead();
+   void SlotSocketError(QAbstractSocket::SocketError error);
 
 private:
-   UiLinkIf* ui_If;
+   virtual void SocketConnectRequest();
+   virtual void SocketDisconnectRequest();
+   virtual void SocketConnected();
+   virtual void SocketDisconnected();
+
+private:
    QWebSocket obsWebSocketClient;
+   QString Host;
+   QString Port;
 
 };
 

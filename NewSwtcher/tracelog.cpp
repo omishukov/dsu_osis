@@ -2,6 +2,7 @@
 #include <QMutex>
 #include <QTextStream>
 #include <QFile>
+#include <QLoggingCategory>
 
 const int LOG_DATA = 0;
 const int LOG_ERROR = 1;
@@ -74,6 +75,8 @@ void SetupLog(QString& fName)
       out = new QTextStream(logfile);
    }
    qInstallMessageHandler(logOutput);
+
+   QLoggingCategory::setFilterRules("qt.network.ssl.warning=false");
 }
 
 void CloseLog()

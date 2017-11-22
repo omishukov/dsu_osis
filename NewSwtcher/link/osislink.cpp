@@ -2,59 +2,18 @@
 #include "link/osislink.h"
 
 OsisLink::OsisLink(const QString &connectionGroupName, Configuration& configFile, DataQueue* dataQueue, QObject *parent)
-   : QObject(parent)
-   , LinkIf(connectionGroupName, configFile)
+   : BaseLink(connectionGroupName, configFile, parent)
    , qtcp_Socket(0)
-   , ui_If(0)
    , osisDataQueue(dataQueue)
-   , socketServerClosed(false)
+   , socketReconnectNeeded(false)
 {
-   moveToThread(&osisLinkThread);
-   connect(&osisLinkThread, SIGNAL(started()), this, SLOT(threadStarted())); // on thread start
-   connect(&osisLinkThread, SIGNAL(finished()), this, SLOT(threadFinished())); // on thread stop
-
-   connect(this, SIGNAL(linkConnect()), this, SLOT(socketConnect()), Qt::QueuedConnection);
-   connect(this, SIGNAL(linkDisconnect()), this, SLOT(socketDisconnect()), Qt::QueuedConnection);
-
-   connect(this, SIGNAL(terminate()), this, SLOT(threadTerminate()), Qt::QueuedConnection);
 }
 
-void OsisLink::Connect()
-{
-   emit linkConnect();
-}
-
-void OsisLink::Disconnect()
-{
-   emit linkDisconnect();
-}
-
-void OsisLink::Start()
-{
-   osisLinkThread.start();
-}
-
-void OsisLink::Stop()
-{
-   emit terminate();
-   osisLinkThread.wait();
-}
-
-void OsisLink::threadStarted()
-{
-   qInfo() << "Osis Link started" << endl;
-}
-
-void OsisLink::threadFinished()
-{
-   socketDisconnect();
-}
-
-void OsisLink::socketConnect()
+void OsisLink::SocketConnectRequest()
 {
    if (qtcp_Socket)
    {
-      socketDisconnect();
+      SocketDisconnectRequest();
    }
 
    QMutexLocker lock(&M);
@@ -62,15 +21,15 @@ void OsisLink::socketConnect()
    RemainingQBA.clear();
 
    qtcp_Socket = new QTcpSocket(this);
-   connect(qtcp_Socket, SIGNAL(connected()), this, SLOT(socketConnected()));
-   connect(qtcp_Socket, SIGNAL(disconnected()), this, SLOT(socketDisconnected()));
-   connect(qtcp_Socket, SIGNAL(readyRead()), this, SLOT(socketReadyRead()));
-   connect(qtcp_Socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(socketError(QAbstractSocket::SocketError)));
+   connect(qtcp_Socket, SIGNAL(connected()), this, SLOT(SlotSocketConnected()));
+   connect(qtcp_Socket, SIGNAL(disconnected()), this, SLOT(SlotSocketDisconnected()));
+   connect(qtcp_Socket, SIGNAL(readyRead()), this, SLOT(SlotSocketReadyRead()));
+   connect(qtcp_Socket, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(SlotSocketError(QAbstractSocket::SocketError)));
 
    Reconnect();
 }
 
-void OsisLink::socketDisconnect()
+void OsisLink::SocketDisconnectRequest()
 {
    QMutexLocker lock(&M);
 
@@ -86,33 +45,25 @@ void OsisLink::socketDisconnect()
       delete qtcp_Socket;
       qtcp_Socket = 0;
 
-      socketDisconnected();
+      SlotSocketDisconnected();
    }
 }
 
-void OsisLink::socketConnected()
+void OsisLink::SocketConnected()
 {
-   socketServerClosed = false;
-
-   if (!ui_If) { return; }
-
-   ui_If->LinkConnected();
+   socketReconnectNeeded = false;
 }
 
-void OsisLink::socketDisconnected()
+void OsisLink::SocketDisconnected()
 {
-   if (!ui_If) { return; }
-
-   ui_If->LinkDisconnected();
-
-   if (socketServerClosed)
+   if (socketReconnectNeeded)
    {
-      socketServerClosed = false;
+      socketReconnectNeeded = false;
       Reconnect();
    }
 }
 
-void OsisLink::socketReadyRead()
+void OsisLink::SlotSocketReadyRead()
 {
    QMutexLocker lock(&M);
 
@@ -122,13 +73,13 @@ void OsisLink::socketReadyRead()
    }
 }
 
-void OsisLink::socketError(QAbstractSocket::SocketError error)
+void OsisLink::SlotSocketError(QAbstractSocket::SocketError error)
 {
-   qInfo() << "Socket error: " << error << endl;
+   qInfo() << GetGroupName() + " Socket error: " << error;
 
    if (error == QAbstractSocket::RemoteHostClosedError)
    {
-      socketServerClosed = true;
+      socketReconnectNeeded = true;
    }
    else
    {
@@ -142,19 +93,12 @@ void OsisLink::Reconnect()
    qtcp_Socket->connectToHost(Host, Port.toShort(), QIODevice::ReadOnly);
 }
 
-void OsisLink::threadTerminate()
-{
-   ui_If = 0;
-   socketDisconnect();
-   osisLinkThread.quit();
-}
-
 const quint8 STX = 0x02;
 const quint8 ETX = 0x03;
 
 void OsisLink::ProcessData(QByteArray qba)
 {
-   qInfo() << qba.constData() << endl;
+   qInfo() << qba.constData();
    // Frame1: s........es....es...
    // Frame2: ....................
    // Frame3: es

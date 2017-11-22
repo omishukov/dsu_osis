@@ -1,40 +1,49 @@
-#include <QMutexLocker>
+#include <QUrl>
 #include "obslink.h"
 
 ObsLink::ObsLink(const QString &connectionGroupName, Configuration &configFile, QObject *parent)
-   : QObject(parent)
-   , LinkIf(connectionGroupName, configFile)
-   , ui_If(0)
+   : BaseLink(connectionGroupName, configFile, parent)
+{
+}
+
+void ObsLink::SlotSocketReadyRead()
 {
 
 }
 
-void ObsLink::Connect()
+void ObsLink::SlotSocketError(QAbstractSocket::SocketError error)
 {
 
 }
 
-void ObsLink::Disconnect()
+void ObsLink::SocketConnectRequest()
+{
+    connect(&obsWebSocketClient, &QWebSocket::connected, this, &BaseLink::SlotSocketConnected);
+    connect(&obsWebSocketClient, &QWebSocket::disconnected, this, &BaseLink::SlotSocketDisconnected);
+    connect(&obsWebSocketClient, &QWebSocket::textMessageReceived, this, &ObsLink::SlotSocketReadyRead);
+    connect(&obsWebSocketClient, SIGNAL(error(QAbstractSocket::SocketError)), this, SLOT(SlotSocketError(QAbstractSocket::SocketError)));
+
+    QString Url_path = "ws://";
+    GetIpInfo(Host, Port);
+    Url_path += Host;
+    Url_path += ":";
+    Url_path += Port;
+    obsWebSocketClient.open(QUrl(Url_path));
+
+}
+
+void ObsLink::SocketDisconnectRequest()
 {
 
 }
 
-void ObsLink::Start()
+void ObsLink::SocketConnected()
 {
 
 }
 
-void ObsLink::Stop()
+void ObsLink::SocketDisconnected()
 {
 
 }
 
-void ObsLink::threadStarted()
-{
-
-}
-
-void ObsLink::threadFinished()
-{
-
-}

@@ -2,6 +2,7 @@
 #define OBSLINK_H
 
 #include <QWebSocket>
+#include <QMutex>
 #include <link/linkif.h>
 #include <configuration.h>
 #include "link/linkbase.h"
@@ -24,11 +25,14 @@ private:
    virtual void SocketConnected();
    virtual void SocketDisconnected();
 
+   void Reconnect();
+
 private:
-   QWebSocket obsWebSocketClient;
+   QWebSocket* obsWebSocketClient;
    QString Host;
    QString Port;
-
+   QMutex M;
+   bool socketReconnectNeeded;
 };
 
 #endif // OBSLINK_H

@@ -12,6 +12,10 @@ UserInterface::UserInterface(LinkIf& osisLinkIf, LinkIf& obsLinkIf, QWidget *par
    connectionLayout->addWidget(qw_calcFsUi);
    connectionLayout->addWidget(qw_ObsUi);
 
+   QHBoxLayout *currentStatusInfoLayout = new QHBoxLayout;
+   currentStatusInfoLayout->addWidget(qw_calcFsUi);
+   currentStatusInfoLayout->addWidget(qw_ObsUi);
+
    QVBoxLayout *mainLayout = new QVBoxLayout;
    mainLayout->addLayout(connectionLayout);
    mainLayout->addStretch(1);

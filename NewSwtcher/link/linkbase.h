@@ -45,7 +45,7 @@ private:
    virtual void SocketDisconnected() = 0;
 
 private:
-   QThread linkThread;
+   QThread LinkThread;
    UiLinkIf* ui_If;
 
 };

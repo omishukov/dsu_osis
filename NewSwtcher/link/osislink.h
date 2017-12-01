@@ -26,6 +26,8 @@ private:
    virtual void SocketConnected();
    virtual void SocketDisconnected();
 
+   virtual void ThreadStarted();
+
    void ProcessData(QByteArray qba);
    void Reconnect();
 

@@ -3,6 +3,7 @@
 
 #include <QWebSocket>
 #include <QMutex>
+#include <QMetaEnum>
 #include <link/linkif.h>
 #include <configuration.h>
 #include "link/linkbase.h"
@@ -16,7 +17,7 @@ public:
 signals:
 
 public slots:
-   void SlotSocketReadyRead();
+   void SlotSocketReadyRead(QString message);
    void SlotSocketError(QAbstractSocket::SocketError error);
 
 private:
@@ -26,13 +27,122 @@ private:
    virtual void SocketDisconnected();
 
    void Reconnect();
+   void WsRequest(int key);
 
-private:
    QWebSocket* obsWebSocketClient;
    QString Host;
    QString Port;
    QMutex M;
    bool socketReconnectNeeded;
+
+   QMetaEnum metaWSRequest;
+   QMetaEnum metaWSEvent;
+
+public:
+   enum WSRequest
+   {  // obs-websocket/src/WSRequestHandler.cpp
+      GetVersion,
+      GetAuthRequired,
+      Authenticate,
+      SetHeartbeat,
+      SetCurrentScene,
+      GetCurrentScene,
+      GetSceneList,
+      SetSourceRender,
+      SetSceneItemRender,
+      SetSceneItemPosition,
+      SetSceneItemTransform,
+      SetSceneItemCrop,
+      GetSceneItemProperties,
+      SetSceneItemProperties,
+      ResetSceneItem,
+      GetStreamingStatus,
+      StartStopStreaming,
+      StartStopRecording,
+      StartStreaming,
+      StopStreaming,
+      StartRecording,
+      StopRecording,
+      StartStopReplayBuffer,
+      StartReplayBuffer,
+      StopReplayBuffer,
+      SaveReplayBuffer,
+      SetRecordingFolder,
+      GetRecordingFolder,
+      GetTransitionList,
+      GetCurrentTransition,
+      SetCurrentTransition,
+      SetTransitionDuration,
+      GetTransitionDuration,
+      SetVolume,
+      GetVolume,
+      ToggleMute,
+      SetMute,
+      GetMute,
+      SetSyncOffset,
+      GetSyncOffset,
+      GetSpecialSources,
+      GetSourcesList,
+      GetSourceTypesList,
+      GetSourceSettings,
+      SetSourceSettings,
+      SetCurrentSceneCollection,
+      GetCurrentSceneCollection,
+      ListSceneCollections,
+      SetCurrentProfile,
+      GetCurrentProfile,
+      ListProfiles,
+      SetStreamSettings,
+      GetStreamSettings,
+      SaveStreamSettings,
+      GetStudioModeStatus,
+      GetPreviewScene,
+      SetPreviewScene,
+      TransitionToProgram,
+      EnableStudioMode,
+      DisableStudioMode,
+      ToggleStudioMode,
+      SetTextGDIPlusProperties,
+      GetTextGDIPlusProperties,
+      GetBrowserSourceProperties,
+      SetBrowserSourceProperties
+   };
+   Q_ENUM(WSRequest)
+   enum WSEvent
+   {
+      SwitchScenes,
+      ScenesChanged,
+      SceneCollectionChanged,
+      SceneCollectionListChanged,
+      SwitchTransition,
+      TransitionListChanged,
+      TransitionDurationChanged,
+      TransitionBegin,
+      ProfileChanged,
+      ProfileListChanged,
+      StreamStarting,
+      StreamStarted,
+      StreamStopping,
+      StreamStopped,
+      StreamStatus,
+      RecordingStarting,
+      RecordingStarted,
+      RecordingStopping,
+      RecordingStopped,
+      ReplayStarting,
+      ReplayStarted,
+      ReplayStopping,
+      ReplayStopped,
+      Exiting,
+      Heartbeat,
+      SourceOrderChanged,
+      SceneItemAdded,
+      SceneItemRemoved,
+      SceneItemVisibilityChanged,
+      PreviewSceneChanged,
+      StudioModeSwitched
+   };
+   Q_ENUM(WSEvent)
 };
 
 #endif // OBSLINK_H

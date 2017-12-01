@@ -6,9 +6,9 @@ BaseLink::BaseLink(const QString &connectionGroupName, Configuration& configFile
    , LinkIf(connectionGroupName, configFile)
    , ui_If(0)
 {
-   moveToThread(&linkThread);
-   connect(&linkThread, SIGNAL(started()), this, SLOT(SlotThreadStarted())); // on thread start
-   connect(&linkThread, SIGNAL(finished()), this, SLOT(SlotThreadFinished())); // on thread stop
+   moveToThread(&LinkThread);
+   connect(&LinkThread, SIGNAL(started()), this, SLOT(SlotThreadStarted())); // on thread start
+   connect(&LinkThread, SIGNAL(finished()), this, SLOT(SlotThreadFinished())); // on thread stop
    connect(this, SIGNAL(SignalThreadTerminateRequest()), this, SLOT(SlotThreadTerminateRequest()), Qt::QueuedConnection);
 
    connect(this, SIGNAL(SignalSocketConnectRequest()), this, SLOT(SlotSocketConnectRequest()), Qt::QueuedConnection);
@@ -31,14 +31,14 @@ void BaseLink::Disconnect()
 void BaseLink::Start()
 {
    qInfo() << GetGroupName() + " thread starting";
-   linkThread.start();
+   LinkThread.start();
 }
 
 void BaseLink::Stop()
 {
    qInfo() << GetGroupName() + " thread stopping";
    emit SignalThreadTerminateRequest();
-   linkThread.wait();
+   LinkThread.wait();
 }
 
 void BaseLink::SlotThreadStarted()
@@ -52,7 +52,7 @@ void BaseLink::SlotThreadTerminateRequest()
    qInfo() << GetGroupName() + " thread termination request";
    ui_If = 0;
    SlotSocketDisconnectRequest();
-   linkThread.quit();
+   LinkThread.quit();
 }
 
 void BaseLink::SlotThreadFinished()

@@ -63,6 +63,11 @@ void OsisLink::SocketDisconnected()
    }
 }
 
+void OsisLink::ThreadStarted()
+{
+
+}
+
 void OsisLink::SlotSocketReadyRead()
 {
    QMutexLocker lock(&M);

@@ -1,5 +1,8 @@
 #include <QMutexLocker>
 #include <QUrl>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 #include "obslink.h"
 
 ObsLink::ObsLink(const QString &connectionGroupName, Configuration &configFile, QObject *parent)
@@ -7,11 +10,68 @@ ObsLink::ObsLink(const QString &connectionGroupName, Configuration &configFile, 
    , obsWebSocketClient(0)
    , socketReconnectNeeded(false)
 {
+   const QMetaObject &mo = staticMetaObject;
+   metaWSRequest = mo.enumerator(mo.indexOfEnumerator("WSRequest"));
+   metaWSEvent = mo.enumerator(mo.indexOfEnumerator("WSEvent"));
 }
 
-void ObsLink::SlotSocketReadyRead()
+void ObsLink::SlotSocketReadyRead(QString message)
 {
+   //qInfo() << " WS msg: " + message;
 
+   QByteArray obsMsg = message.toUtf8();
+   QJsonDocument obsData(QJsonDocument::fromJson(obsMsg));
+   QJsonObject obsJsonData = obsData.object();
+
+   if (obsJsonData.contains("update-type"))
+   {
+      QString updateType = obsJsonData["update-type"].toString();
+
+      switch (metaWSEvent.keyToValue(updateType.toLocal8Bit().constData()))
+      {
+      case ProfileChanged:
+         WsRequest(GetCurrentProfile);
+         break;
+      case SceneCollectionChanged:
+         WsRequest(GetCurrentSceneCollection);
+         break;
+      case ScenesChanged:
+         WsRequest(GetSceneList);
+         break;
+      default:
+         qInfo() << " Unhandled Event: " + updateType;
+         break;
+      }
+   }
+   else if (obsJsonData.contains("message-id"))
+   {
+      QString messageId = obsJsonData["message-id"].toString();
+
+      switch (metaWSRequest.keyToValue(messageId.toLocal8Bit().constData()))
+      {
+      case GetCurrentProfile:
+         qInfo() << " Current Profile: " + obsJsonData["profile-name"].toString();
+         break;
+      case GetCurrentSceneCollection:
+         qInfo() << " Current Scene Collection: " + obsJsonData["sc-name"].toString();
+         break;
+      case GetSceneList:
+         {
+            QJsonArray sceneArray = obsJsonData["scenes"].toArray();
+            QStringList SceneList;
+            for (int i = 0; i < sceneArray.size(); ++i)
+            {
+               QJsonObject obsJsonDataScene = sceneArray[i].toObject();
+               SceneList << obsJsonDataScene["name"].toString();
+            }
+            qInfo() << " Current Scene List: " << SceneList;
+         }
+         break;
+      default:
+         qInfo() << " Unhandled Response: " + messageId;
+         break;
+      }
+   }
 }
 
 void ObsLink::SlotSocketError(QAbstractSocket::SocketError error)
@@ -65,6 +125,10 @@ void ObsLink::SocketDisconnectRequest()
 void ObsLink::SocketConnected()
 {
    socketReconnectNeeded = false;
+
+   WsRequest(GetCurrentProfile);
+   WsRequest(GetCurrentSceneCollection);
+   WsRequest(GetSceneList);
 }
 
 void ObsLink::SocketDisconnected()
@@ -82,3 +146,12 @@ void ObsLink::Reconnect()
    obsWebSocketClient->open(QUrl("ws://" + Host + ":" + Port));
 }
 
+void ObsLink::WsRequest(int key)
+{
+   QJsonObject reqObj;
+   reqObj["message-id"] = metaWSRequest.valueToKey(key);
+   reqObj["request-type"] = metaWSRequest.valueToKey(key);
+
+   QJsonDocument sendReq(reqObj);
+   obsWebSocketClient->sendTextMessage(sendReq.toJson());
+}
